@@ -1,8 +1,19 @@
 <template>
-    <Container>
+    <UContainer>
+        <UHorizontalNavigation :links="links"/>
         <slot/>
-    </Container>
+    </UContainer>
 </template>
 <script setup lang="ts">
-import Container from "~/components/Layout/Container.vue";
+const links = [{
+    label: 'Home',
+    icon: 'i-heroicons-home',
+    to: '/'
+}, {
+    label: 'Login',
+    to: '/login'
+}, {
+    label: 'Register',
+    to: '/register'
+}]
 </script>

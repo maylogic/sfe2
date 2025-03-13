@@ -13,7 +13,7 @@ import CategoryList from "~/components/CategoryList.vue";
 import {useQuery} from "@urql/vue";
 import {GetCategoriesDocument} from "~/gql/graphql.js";
 
-const {data} = useQuery({
+const {data} = await useQuery({
     query: GetCategoriesDocument
 })
 </script>

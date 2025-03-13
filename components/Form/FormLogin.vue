@@ -7,13 +7,13 @@
             <UInput autocomplete="username" v-model="state.email" placeholder="you@example.com" icon="i-heroicons-envelope" />
         </UFormGroup>
         <UFormGroup
-            label="Password"
+            label="Пароль"
             name="password"
         >
             <UInput autocomplete="current-password" v-model="state.password" type="password" icon="i-heroicons-lock-closed" />
         </UFormGroup>
         <UButton type="submit">
-            Submit
+            Войти
         </UButton>
     </UForm>
 </template>
