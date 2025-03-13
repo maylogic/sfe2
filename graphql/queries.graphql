@@ -1,0 +1,20 @@
+query MyQuery {
+    getCustomer {
+        activeCart {
+            id
+        }
+    }
+}
+
+query GetCategories {
+    getCategories {
+        id
+        name
+        slug
+        subcategories {
+            id
+            name
+            slug
+        }
+    }
+}

@@ -1,0 +1,19 @@
+import type {Simplify} from "type-fest";
+import type {SfCurrency} from "~/data";
+
+export interface GetCurrenciesExtendedArgs {
+}
+
+export interface GetCurrenciesCustomArgs {
+}
+
+export type GetCurrenciesArgs = {
+    //$extended?: GetCurrenciesExtendedArgs;
+    //$custom?: GetCurrenciesCustomArgs;
+};
+
+export type GetCurrencies = (args?: Simplify<GetCurrenciesArgs>) => Promise<{
+    currencies: SfCurrency[];
+    defaultCurrency: SfCurrency;
+    currentCurrency: SfCurrency;
+}>;
