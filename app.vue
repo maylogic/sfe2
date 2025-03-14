@@ -29,3 +29,9 @@ useHead({
 });
 
 </script>
+<style>
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
+</style>

@@ -15,10 +15,12 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  */
 type Documents = {
     "fragment CategoryFields on Category {\n  id\n  name\n  slug\n}": typeof types.CategoryFieldsFragmentDoc,
+    "mutation RegisterCustomer($email: String!, $password: String!, $firstName: String!, $lastName: String!, $passwordConfirmation: String!) {\n  registerCustomer(\n    email: $email\n    password: $password\n    first_name: $firstName\n    last_name: $lastName\n    password_confirmation: $passwordConfirmation\n  ) {\n    id\n    user {\n      email\n    }\n  }\n}\n\nmutation LoginCustomer($email: String!, $password: String!) {\n  loginCustomer(email: $email, password: $password)\n}": typeof types.RegisterCustomerDocument,
     "query MyQuery {\n  getCustomer {\n    activeCart {\n      id\n    }\n  }\n}\n\nquery GetCategories {\n  getCategories {\n    id\n    name\n    slug\n    subcategories {\n      id\n      name\n      slug\n    }\n  }\n}": typeof types.MyQueryDocument,
 };
 const documents: Documents = {
     "fragment CategoryFields on Category {\n  id\n  name\n  slug\n}": types.CategoryFieldsFragmentDoc,
+    "mutation RegisterCustomer($email: String!, $password: String!, $firstName: String!, $lastName: String!, $passwordConfirmation: String!) {\n  registerCustomer(\n    email: $email\n    password: $password\n    first_name: $firstName\n    last_name: $lastName\n    password_confirmation: $passwordConfirmation\n  ) {\n    id\n    user {\n      email\n    }\n  }\n}\n\nmutation LoginCustomer($email: String!, $password: String!) {\n  loginCustomer(email: $email, password: $password)\n}": types.RegisterCustomerDocument,
     "query MyQuery {\n  getCustomer {\n    activeCart {\n      id\n    }\n  }\n}\n\nquery GetCategories {\n  getCategories {\n    id\n    name\n    slug\n    subcategories {\n      id\n      name\n      slug\n    }\n  }\n}": types.MyQueryDocument,
 };
 
@@ -40,6 +42,10 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "fragment CategoryFields on Category {\n  id\n  name\n  slug\n}"): (typeof documents)["fragment CategoryFields on Category {\n  id\n  name\n  slug\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation RegisterCustomer($email: String!, $password: String!, $firstName: String!, $lastName: String!, $passwordConfirmation: String!) {\n  registerCustomer(\n    email: $email\n    password: $password\n    first_name: $firstName\n    last_name: $lastName\n    password_confirmation: $passwordConfirmation\n  ) {\n    id\n    user {\n      email\n    }\n  }\n}\n\nmutation LoginCustomer($email: String!, $password: String!) {\n  loginCustomer(email: $email, password: $password)\n}"): (typeof documents)["mutation RegisterCustomer($email: String!, $password: String!, $firstName: String!, $lastName: String!, $passwordConfirmation: String!) {\n  registerCustomer(\n    email: $email\n    password: $password\n    first_name: $firstName\n    last_name: $lastName\n    password_confirmation: $passwordConfirmation\n  ) {\n    id\n    user {\n      email\n    }\n  }\n}\n\nmutation LoginCustomer($email: String!, $password: String!) {\n  loginCustomer(email: $email, password: $password)\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -2,6 +2,7 @@ import {Client, createClient, fetchExchange, type SSRData, ssrExchange} from '@u
 import {defineNuxtPlugin} from '#app'
 import {ref} from "vue";
 import {cacheExchange} from "@urql/vue";
+import Cookies from "js-cookie";
 
 const ssrKey = '__GRAPHQL_DATA__'
 
@@ -26,14 +27,22 @@ export default defineNuxtPlugin(nuxt => {
         })
     }
 
-
+    const token = useCookie('token')
     const client = createClient({
         url: 'http://127.0.1.1/graphql',
         exchanges: [
             cacheExchange,
             ssr, // Add `ssr` in front of the `fetchExchange`
             fetchExchange,
-        ]
+        ],
+        fetchOptions: () => {
+            console.log(token.value)
+            return {
+                headers: {
+                    Authorization: token.value ? `Bearer ${token.value}` : '', // Добавляем токен в заголовки
+                },
+            }
+        }
     })
 
     nuxt.provide('urql', client)

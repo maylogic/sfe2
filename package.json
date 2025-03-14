@@ -19,7 +19,11 @@
     "vue": "latest"
   },
   "dependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@urql/exchange-auth": "^2.2.1",
     "@urql/vue": "^1.4.3",
+    "cookie": "^1.0.2",
+    "js-cookie": "^3.0.5",
     "yup": "^1.6.1"
   }
 }
