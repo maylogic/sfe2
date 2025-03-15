@@ -1,7 +1,11 @@
 <template>
     <ul>
-        <li v-for="category in categories" :key="category.id">
-            <span>{{ category.name }}</span>
+        <li v-for="category in categoryObjects" :key="category.id">
+            <NuxtLink
+                :to="{ name: 'category-slug', params: { slug: category.slug } }"
+            >
+                {{ category.name }}
+            </NuxtLink>
             <CategoryList
                 v-if="category.subcategories?.length"
                 :categories="category.subcategories"
@@ -11,11 +15,21 @@
 </template>
 
 <script setup lang="ts">
-import type { Category } from '~/gql/graphql'
+import { type FragmentType, useFragment } from '~/gql'
+import { CategoryFieldsFragmentDoc } from '~/gql/graphql'
 
-defineProps<{
-    categories: Category[]
+type CategoryData = FragmentType<typeof CategoryFieldsFragmentDoc> & {
+    subcategories: CategoryData[]
+}
+
+const props = defineProps<{
+    categories: Array<CategoryData>
 }>()
+
+const categoryObjects = props.categories.map((category) => ({
+    ...useFragment(CategoryFieldsFragmentDoc, category),
+    subcategories: category.subcategories,
+}))
 </script>
 
 <style scoped>

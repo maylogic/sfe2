@@ -37,8 +37,8 @@
             />
         </UFormGroup>
         <UButton type="submit" :disabled="fetching">
-            Зарегистрироваться</UButton
-        >
+            Зарегистрироваться
+        </UButton>
         <UProgress v-if="fetching" size="xl" />
     </UForm>
 </template>
@@ -83,6 +83,7 @@ const state = reactive({
 
 const { errors, errorHandler } =
     useCombinedErrorHandler<FieldErrors<typeof state>>()
+
 watch(state, (newValue) => {
     errors.value = {}
 })

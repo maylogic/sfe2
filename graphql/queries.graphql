@@ -8,13 +8,33 @@ query MyQuery {
 
 query GetCategories {
     getCategories {
-        id
-        name
-        slug
+        ...CategoryFields
         subcategories {
-            id
-            name
-            slug
+            ...CategoryFields
+            subcategories {
+                ...CategoryFields
+                subcategories {
+                    ...CategoryFields
+                    subcategories {
+                        ...CategoryFields
+                        subcategories {
+                            ...CategoryFields
+                            subcategories {
+                                ...CategoryFields
+                                subcategories {
+                                    ...CategoryFields
+                                    subcategories {
+                                        ...CategoryFields
+                                        subcategories {
+                                            ...CategoryFields
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
