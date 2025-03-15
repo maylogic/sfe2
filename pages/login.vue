@@ -1,5 +1,8 @@
 <template>
-    <form-login/>
+    <form-login />
 </template>
 <script setup lang="ts">
+definePageMeta({
+    middleware: ['auth'],
+})
 </script>

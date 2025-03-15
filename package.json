@@ -15,7 +15,9 @@
     "@graphql-codegen/typescript-vue-urql": "^3.2.0",
     "@nuxt/devtools": "latest",
     "@nuxt/ui": "^2.21.1",
+    "@pinia/nuxt": "^0.10.1",
     "nuxt": "^3.16.0",
+    "prettier": "^3.5.3",
     "vue": "latest"
   },
   "dependencies": {
@@ -24,6 +26,7 @@
     "@urql/vue": "^1.4.3",
     "cookie": "^1.0.2",
     "js-cookie": "^3.0.5",
+    "pinia": "^3.0.1",
     "yup": "^1.6.1"
   }
 }

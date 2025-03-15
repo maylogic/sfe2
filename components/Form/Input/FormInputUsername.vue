@@ -1,25 +1,27 @@
 <template>
-    <UInput :autocomplete="autocomplete"
-            @update:modelValue="onChange"
-            :model-value="modelValue"
-            placeholder="you@example.com"
-            icon="i-heroicons-envelope"/>
+    <UInput
+        :autocomplete="autocomplete"
+        @update:modelValue="onChange"
+        :model-value="modelValue"
+        placeholder="you@example.com"
+        icon="i-heroicons-envelope"
+    />
 </template>
 <script setup>
 defineProps({
     show: {
-        type: Boolean
+        type: Boolean,
     },
     modelValue: {
-        type: String
+        type: String,
     },
     autocomplete: {
         type: String,
-        default: 'username'
-    }
+        default: 'username',
+    },
 })
 const onChange = (val) => {
-    emit('update:modelValue', val);
+    emit('update:modelValue', val)
 }
 const emit = defineEmits(['update:modelValue'])
 </script>

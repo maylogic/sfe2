@@ -1,12 +1,9 @@
 <template>
     <Suspense>
         <template #default>
-            <categories/>
+            <categories />
         </template>
-        <template #fallback>
-            Loading...
-        </template>
+        <template #fallback> Loading...</template>
     </Suspense>
 </template>
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>

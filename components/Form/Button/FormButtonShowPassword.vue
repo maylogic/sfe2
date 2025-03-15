@@ -11,8 +11,8 @@
 <script setup>
 defineProps({
     show: {
-        type: Boolean
-    }
+        type: Boolean,
+    },
 })
 defineEmits(['toggle'])
 </script>

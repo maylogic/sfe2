@@ -1,16 +1,22 @@
-import {Client, createClient, fetchExchange, type SSRData, ssrExchange} from '@urql/core';
-import {defineNuxtPlugin} from '#app'
-import {ref} from "vue";
-import {cacheExchange} from "@urql/vue";
-import Cookies from "js-cookie";
+import {
+    Client,
+    createClient,
+    fetchExchange,
+    type SSRData,
+    ssrExchange,
+} from '@urql/core'
+import { defineNuxtPlugin } from '#app'
+import { ref } from 'vue'
+import { cacheExchange } from '@urql/vue'
+import { ACCESS_TOKEN_COOKIE } from '~/constants/auth'
 
 const ssrKey = '__GRAPHQL_DATA__'
 
-export default defineNuxtPlugin(nuxt => {
-    const {vueApp} = nuxt
+export default defineNuxtPlugin((nuxt) => {
+    const { vueApp } = nuxt
 
     const ssr = ssrExchange({
-        isClient: import.meta.client
+        isClient: import.meta.client,
     })
 
     // when app is created in browser, restore SSR state from nuxt payload
@@ -27,27 +33,27 @@ export default defineNuxtPlugin(nuxt => {
         })
     }
 
-    const token = useCookie('token')
+    const token = useCookie(ACCESS_TOKEN_COOKIE),
+        xdebug = useCookie('XDEBUG_SESSION')
+    const url = 'http://127.0.1.1/graphql'
     const client = createClient({
-        url: 'http://127.0.1.1/graphql',
+        url: xdebug.value ? url + '?XDEBUG_SESSION_START=' + xdebug.value : url,
         exchanges: [
             cacheExchange,
             ssr, // Add `ssr` in front of the `fetchExchange`
             fetchExchange,
         ],
         fetchOptions: () => {
-            console.log(token.value)
             return {
                 headers: {
                     Authorization: token.value ? `Bearer ${token.value}` : '', // Добавляем токен в заголовки
                 },
             }
-        }
+        },
     })
 
     nuxt.provide('urql', client)
     vueApp.provide('$urql', ref(client))
-
 })
 
 declare module '#app' {

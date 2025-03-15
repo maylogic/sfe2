@@ -8,5 +8,11 @@ mutation RegisterCustomer($email: String!, $password: String!, $firstName: Strin
 }
 
 mutation LoginCustomer($email: String!, $password: String!) {
-    loginCustomer(email: $email, password: $password)
+    loginCustomer(email: $email, password: $password) {
+        accessToken
+        refreshToken
+        customer {
+            ...CustomerData
+        }
+    }
 }

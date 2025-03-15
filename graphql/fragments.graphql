@@ -3,3 +3,12 @@ fragment CategoryFields on Category {
     name
     slug
 }
+fragment CustomerData on Customer {
+    id
+    user {
+        id
+        email
+        first_name
+        last_name
+    }
+}

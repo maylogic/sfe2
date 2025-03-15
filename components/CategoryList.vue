@@ -2,13 +2,16 @@
     <ul>
         <li v-for="category in categories" :key="category.id">
             <span>{{ category.name }}</span>
-            <CategoryList v-if="category.subcategories?.length" :categories="category.subcategories"/>
+            <CategoryList
+                v-if="category.subcategories?.length"
+                :categories="category.subcategories"
+            />
         </li>
     </ul>
 </template>
 
 <script setup lang="ts">
-import type {Category} from "~/gql/graphql";
+import type { Category } from '~/gql/graphql'
 
 defineProps<{
     categories: Category[]
