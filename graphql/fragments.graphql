@@ -12,3 +12,19 @@ fragment CustomerData on Customer {
         last_name
     }
 }
+fragment CategoryProductFilters on ProductFilters {
+    priceRange {
+        min
+        max
+    }
+    ratingRange {
+        min
+        max
+    }
+    attributes {
+        code
+        name
+        label
+        values
+    }
+}
