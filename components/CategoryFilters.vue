@@ -42,35 +42,26 @@
             :key="attribute.code"
             class="mb-4"
         >
-            <h3 class="font-semibold">{{ attribute.label }}</h3>
-            <div
-                v-for="value in attribute.values"
-                :key="value"
-                class="flex items-center"
-            >
-                <input
-                    v-model="filters.attributes[attribute.code]"
-                    type="checkbox"
-                    :value="value"
-                    class="mr-2"
-                />
-                <label>{{ value }}</label>
-            </div>
+            <attribute-value-checkboxes
+                :code="attribute.code"
+                :attributes="filters.attributes"
+                :available-values="attribute.values"
+            />
         </div>
 
         <!-- Кнопка применения фильтров -->
-        <button
-            @click="emit('apply-filters')"
-            class="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-            Применить
-        </button>
+        <u-button @click="emit('apply-filters')"> Применить </u-button>
     </aside>
 </template>
 <script setup lang="ts">
-import { GetCategoryProductFiltersDocument } from '~/gql/graphql'
+import {
+    CategoryProductFiltersFragmentDoc,
+    GetCategoryProductFiltersDocument,
+} from '~/gql/graphql'
 import { useQuery } from '@urql/vue'
 import { computed } from 'vue'
+import { useFragment } from '~/gql'
+import AttributeValueCheckboxes from '~/components/Form/AttributeValueCheckboxes.vue'
 
 const props = defineProps<{
     categorySlug: string
@@ -82,7 +73,11 @@ const { data: availableFiltersData } = await useQuery({
     variables: { categorySlug: props.categorySlug },
 })
 const availableFilters = computed(
-    () => availableFiltersData.value?.getCategoryProductFilters || {}
+    () =>
+        useFragment(
+            CategoryProductFiltersFragmentDoc,
+            availableFiltersData.value?.getCategoryProductFilters
+        ) || { attributes: [] }
 )
 const emit = defineEmits(['apply-filters'])
 </script>

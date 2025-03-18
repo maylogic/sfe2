@@ -4,7 +4,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const authStore = useAuthStore()
 
     // Если пользователь авторизован, но пытается попасть на страницу входа
-    if (authStore.isAuthenticated && to.path === '/login') {
+    if (authStore.isAuthenticated && to.meta.requiresGuest) {
         return navigateTo('/profile') // Перенаправляем на страницу профиля
     }
 
