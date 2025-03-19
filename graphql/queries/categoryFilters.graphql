@@ -1,35 +1,7 @@
 query GetFilteredCategoryProducts($categorySlug: String!, $filters: ProductFiltersInput, $first: Int!, $page: Int!) {
     getFilteredCategoryProducts(categorySlug: $categorySlug, filters: $filters, first: $first, page: $page) {
         data {
-            id
-            name
-            slug
-            price {
-                isDiscounted
-                regularPrice {
-                    amount
-                    currency {
-                        symbol
-                    }
-                }
-                value {
-                    amount
-                    currency {
-                        symbol
-                    }
-                }
-            }
-            primaryImage {
-                url
-            }
-            averageRating
-            customAttributes {
-                label
-                name
-                value
-                values
-                type
-            }
+            ...ProductMini
         }
         paginatorInfo {
             currentPage

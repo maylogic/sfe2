@@ -1,9 +1,6 @@
 mutation RegisterCustomer($email: String!, $password: String!, $firstName: String!, $lastName: String!, $passwordConfirmation: String!) {
     registerCustomer(email: $email, password: $password, first_name: $firstName, last_name: $lastName, password_confirmation: $passwordConfirmation) {
-        id
-        user {
-            email
-        }
+        ...CustomerData
     }
 }
 
@@ -14,5 +11,11 @@ mutation LoginCustomer($email: String!, $password: String!) {
         customer {
             ...CustomerData
         }
+    }
+}
+
+mutation AddCartItem($productId: ID!, $quantity: Int!) {
+    addCartItem(productId: $productId, quantity: $quantity) {
+        ...SidebarCart
     }
 }

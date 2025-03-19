@@ -1,7 +1,7 @@
-query MyQuery {
-    getCustomer {
+query CurrentAuthenticatedUser {
+    me {
         activeCart {
-            id
+            ...SidebarCart
         }
     }
 }

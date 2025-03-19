@@ -5,12 +5,9 @@ fragment CategoryFields on Category {
 }
 fragment CustomerData on Customer {
     id
-    user {
-        id
-        email
-        first_name
-        last_name
-    }
+    email
+    first_name
+    last_name
 }
 fragment CategoryProductFilters on ProductFilters {
     priceRange {
@@ -27,4 +24,101 @@ fragment CategoryProductFilters on ProductFilters {
         label
         values
     }
+}
+fragment ProductMini on Product {
+    id
+    name
+    slug
+    price {
+        isDiscounted
+        regularPrice {
+            amount
+        }
+        value {
+            amount
+        }
+    }
+    primaryImage {
+        url
+    }
+    averageRating
+    customAttributes {
+        label
+        name
+        value
+        values
+        type
+    }
+}
+fragment SidebarCartItem on CartItem {
+    custom_attributes {
+        label
+        value
+    }
+    id
+    image {
+        url
+    }
+    quantity
+    product {
+        slug
+        name
+        sku
+    }
+    total_price {
+        amount
+    }
+    unit_price {
+        isDiscounted
+        regularPrice {
+            amount
+        }
+        value {
+            amount
+        }
+    }
+    quantity_limit
+    quantity
+}
+fragment Totals on Cart {
+    subtotalDiscountedPrice {
+        amount
+    }
+    subtotalRegularPrice {
+        amount
+    }
+    totalCouponDiscounts {
+        amount
+    }
+    totalItems
+    totalPrice {
+        amount
+    }
+    totalShippingPrice {
+        amount
+    }
+    totalTax {
+        amount
+    }
+}
+fragment SidebarCart on Cart {
+    id
+    items {
+        ...SidebarCartItem
+    }
+    coupons {
+        coupon {
+            code
+            name
+        }
+    }
+    shippingMethod {
+        name
+        price {
+            amount
+        }
+        estimatedDelivery
+        description
+    }
+    ...Totals
 }

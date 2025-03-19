@@ -17,6 +17,11 @@
         </UFormGroup>
         <UButton type="submit" :disabled="fetching"> Войти</UButton>
         <UProgress v-if="fetching" size="xl" />
+        <u-alert
+            v-if="invalidCredentials"
+            title="Неправильные логин или пароль"
+            color="red"
+        />
     </UForm>
 </template>
 
@@ -27,13 +32,10 @@ import FormInputUsername from '~/components/Form/Input/FormInputUsername.vue'
 import type { FormSubmitEvent } from '#ui/types'
 import { useMutation } from '@urql/vue'
 import { LoginCustomerDocument } from '~/gql/graphql'
-import {
-    type FieldErrors,
-    useCombinedErrorHandler,
-} from '~/composables/useCombinedErrorHandler'
 import { useAuthStore } from '~/stores/auth'
 
-const show = ref(false)
+const show = ref(false),
+    invalidCredentials = ref(false)
 
 const schema = object({
     email: emailValidation,
@@ -48,29 +50,26 @@ const state = reactive({
 })
 
 const { fetching, executeMutation } = useMutation(LoginCustomerDocument)
-const { errors, errorHandler } =
-    useCombinedErrorHandler<FieldErrors<typeof state>>()
 watch(state, (newValue) => {
-    errors.value = {}
+    invalidCredentials.value = false
 })
 
 const auth = useAuthStore()
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-    console.log(event.data)
     if (fetching.value) {
         return
     }
-    errors.value = {}
     const { data, error } = await executeMutation(event.data)
-    errorHandler(error)
-    console.log(data?.loginCustomer)
     if (data?.loginCustomer) {
         auth.setAuthData(
             data.loginCustomer.accessToken,
             data.loginCustomer.refreshToken,
             data.loginCustomer.customer
         )
+    }
+    if (error) {
+        invalidCredentials.value = true
     }
     if (!error) {
         console.log('User logged in:', data)

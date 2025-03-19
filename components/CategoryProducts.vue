@@ -1,35 +1,16 @@
 <template>
     <!-- Сетка карточек товаров -->
     <div class="grid grid-cols-3 gap-4">
-        <div
+        <product-mini-card
+            v-if="products.length"
             v-for="product in products"
-            :key="product.id"
-            class="border p-4 rounded"
-        >
-            <nuxt-link
-                :to="{ name: 'product-slug', params: { slug: product.slug } }"
-            >
-                <img
-                    :src="product.primaryImage?.url"
-                    alt="Product Image"
-                    class="w-full h-48 object-cover mb-2"
-                />
-            </nuxt-link>
-            <nuxt-link
-                :to="{ name: 'product-slug', params: { slug: product.slug } }"
-            >
-                <h3 class="font-semibold">{{ product.name }}</h3>
-            </nuxt-link>
-            <p>
-                {{ product.price.value.amount }}
-                {{ product.price.value.currency.symbol }}
-            </p>
-            <p>Рейтинг: {{ product.averageRating || 'Нет отзывов' }}</p>
-            <UButton> Добавить в корзину</UButton>
-        </div>
+            :product-data="product"
+        />
+        <div v-else>Нет продуктов</div>
     </div>
 
     <UPagination
+        v-if="products.length"
         v-model="currentPage"
         :page-count="pageInfo.lastPage"
         :total="pageInfo.total"
