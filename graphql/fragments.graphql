@@ -41,7 +41,7 @@ fragment ProductMini on Product {
     primaryImage {
         url
     }
-    averageRating
+    average_rating
     customAttributes {
         label
         name
@@ -80,7 +80,7 @@ fragment SidebarCartItem on CartItem {
     quantity_limit
     quantity
 }
-fragment Totals on Cart {
+fragment Totals on Totals {
     subtotalDiscountedPrice {
         amount
     }
@@ -120,5 +120,7 @@ fragment SidebarCart on Cart {
         estimatedDelivery
         description
     }
-    ...Totals
+    totals {
+        ...Totals
+    }
 }

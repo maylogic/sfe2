@@ -16,9 +16,8 @@
         </nuxt-link>
         <p>
             {{ product.price.value.amount }}
-            {{ product.price.value.currency.symbol }}
         </p>
-        <p>Рейтинг: {{ product.averageRating || 'Нет отзывов' }}</p>
+        <p>Рейтинг: {{ product.average_rating || 'Нет отзывов' }}</p>
         <div class="flex items-center justify-between mt-4">
             <UButtonGroup size="sm">
                 <UButton
@@ -73,12 +72,7 @@ const decrementQuantity = () => {
 
 // Метод для добавления товара в корзину
 const addToCart = () => {
-    const cartItem = {
-        ...props.product,
-        quantity: quantity.value,
-    }
-
     // Здесь можно вызвать мутацию Vuex или Pinia для добавления в корзину
-    console.log('Added to cart:', cartItem)
+    // console.log('Added to cart:', cartItem)
 }
 </script>
