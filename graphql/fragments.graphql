@@ -1,104 +1,43 @@
-fragment CategoryFields on Category {
-    id
-    name
-    slug
-}
-fragment CustomerData on Customer {
+fragment CustomerData on User {
     id
     email
-    first_name
-    last_name
-}
-fragment CategoryProductFilters on ProductFilters {
-    priceRange {
-        min
-        max
-    }
-    ratingRange {
-        min
-        max
-    }
-    attributes {
-        code
-        name
-        label
-        values
-    }
+    name
 }
 fragment ProductMini on Product {
     id
     name
     slug
     price {
-        isDiscounted
-        regularPrice {
-            amount
-        }
-        value {
-            amount
-        }
+        regular
+        is_discounted
+        discounted
     }
-    primaryImage {
-        url
-    }
-    average_rating
-    customAttributes {
-        label
-        name
-        value
-        values
-        type
+    gallery {
+        filename
+        is_video
     }
 }
 fragment SidebarCartItem on CartItem {
-    custom_attributes {
-        label
-        value
-    }
     id
-    image {
-        url
-    }
     quantity
     product {
         slug
         name
         sku
-    }
-    total_price {
-        amount
-    }
-    unit_price {
-        isDiscounted
-        regularPrice {
-            amount
-        }
-        value {
-            amount
+        price {
+            regular
+            is_discounted
+            discounted
         }
     }
-    quantity_limit
     quantity
 }
 fragment Totals on Totals {
-    subtotalDiscountedPrice {
-        amount
-    }
-    subtotalRegularPrice {
-        amount
-    }
-    totalCouponDiscounts {
-        amount
-    }
-    totalItems
-    totalPrice {
-        amount
-    }
-    totalShippingPrice {
-        amount
-    }
-    totalTax {
-        amount
+    subtotal
+    grand_total {
+        regular
+        is_discounted
+        discounted
     }
 }
 fragment SidebarCart on Cart {
@@ -107,17 +46,17 @@ fragment SidebarCart on Cart {
         ...SidebarCartItem
     }
     coupons {
-        coupon {
-            code
-            name
-        }
+        code
+        discount_percentage
     }
-    shippingMethod {
+    shipping_method {
         name
         price {
-            amount
+            regular
+            is_discounted
+            discounted
         }
-        estimatedDelivery
+        estimated_delivery
         description
     }
     totals {

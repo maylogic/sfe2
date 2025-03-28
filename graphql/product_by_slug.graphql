@@ -1,0 +1,103 @@
+query ProductBySlug($slug: String!) {
+    getProductBySlug(slug: $slug) {
+        id
+        slug
+        sku
+        name
+        description
+        price {
+            regular
+            is_discounted
+            discounted
+        }
+        line_definitions {
+            label
+            max_length
+            required
+        }
+        designs {
+            id
+            label
+            colors {
+                id
+                label
+                hex
+            }
+            fonts {
+                id
+                label
+                name
+                filename_woff2
+            }
+            bases {
+                id
+                label
+                filename
+                text_areas {
+                    id
+                    width
+                    height
+                    left
+                    top
+                    first_line
+                    lines
+                    text_color
+                    inherit_color
+                }
+            }
+        }
+        options {
+            id
+            label
+            items {
+                id
+                label
+                price {
+                    regular
+                    is_discounted
+                    discounted
+                }
+            }
+        }
+        sizes {
+            id
+            label
+            width
+            height
+            thickness
+            price {
+                regular
+                is_discounted
+                discounted
+            }
+        }
+        gallery {
+            id
+            label
+            is_video
+            filename
+        }
+        reverse_side_base {
+            id
+            label
+            filename
+            text_areas {
+                id
+                width
+                height
+                left
+                top
+                first_line
+                lines
+                text_color
+                inherit_color
+            }
+        }
+        primary_image {
+            id
+            label
+            is_video
+            filename
+        }
+    }
+}

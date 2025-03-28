@@ -62,11 +62,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     }
     const { data, error } = await executeMutation(event.data)
     if (data?.loginCustomer) {
-        auth.setAuthData(
-            data.loginCustomer.accessToken,
-            data.loginCustomer.refreshToken,
-            data.loginCustomer.customer
-        )
+        auth.setAuthData(data.loginCustomer)
     }
     if (error) {
         invalidCredentials.value = true

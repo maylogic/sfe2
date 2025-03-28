@@ -9,6 +9,7 @@ import { defineNuxtPlugin } from '#app'
 import { ref } from 'vue'
 import { cacheExchange } from '@urql/vue'
 import { ACCESS_TOKEN_COOKIE } from '~/constants/auth'
+import { createGraphqlClient } from '~/system/createGraphqlClient'
 
 const ssrKey = '__GRAPHQL_DATA__'
 
@@ -35,22 +36,7 @@ export default defineNuxtPlugin((nuxt) => {
 
     const token = useCookie(ACCESS_TOKEN_COOKIE),
         xdebug = useCookie('XDEBUG_SESSION')
-    const url = 'http://127.0.1.1/graphql'
-    const client = createClient({
-        url: xdebug.value ? url + '?XDEBUG_SESSION_START=' + xdebug.value : url,
-        exchanges: [
-            cacheExchange,
-            ssr, // Add `ssr` in front of the `fetchExchange`
-            fetchExchange,
-        ],
-        fetchOptions: () => {
-            return {
-                headers: {
-                    Authorization: token.value ? `Bearer ${token.value}` : '', // Добавляем токен в заголовки
-                },
-            }
-        },
-    })
+    const client = createGraphqlClient(ssr, xdebug.value)
 
     nuxt.provide('urql', client)
     vueApp.provide('$urql', ref(client))

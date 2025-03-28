@@ -4,7 +4,7 @@
             :to="{ name: 'product-slug', params: { slug: product.slug } }"
         >
             <img
-                :src="product.primaryImage?.url"
+                :src="product.gallery?.url"
                 alt="Product Image"
                 class="w-full h-48 object-cover mb-2"
             />
@@ -15,9 +15,8 @@
             <h3 class="font-semibold">{{ product.name }}</h3>
         </nuxt-link>
         <p>
-            {{ product.price.value.amount }}
+            {{ product.price.regular.amount }}
         </p>
-        <p>Рейтинг: {{ product.average_rating || 'Нет отзывов' }}</p>
         <div class="flex items-center justify-between mt-4">
             <UButtonGroup size="sm">
                 <UButton

@@ -1,9 +1,2 @@
-<template>
-    <Suspense>
-        <template #default>
-            <categories />
-        </template>
-        <template #fallback> Loading...</template>
-    </Suspense>
-</template>
+<template>Лендинг</template>
 <script setup lang="ts"></script>

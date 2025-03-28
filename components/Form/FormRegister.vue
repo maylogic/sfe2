@@ -5,14 +5,9 @@
         :state="state"
         class="space-y-4 max-w-[320px] mx-auto"
     >
-        <div class="flex justify-between gap-10">
-            <UFormGroup label="Имя" name="firstName">
-                <UInput autocomplete="first_name" v-model="state.firstName" />
-            </UFormGroup>
-            <UFormGroup label="Фамилия" name="lastName">
-                <UInput autocomplete="last_name" v-model="state.lastName" />
-            </UFormGroup>
-        </div>
+        <UFormGroup label="Имя" name="name">
+            <UInput autocomplete="name" v-model="state.name" />
+        </UFormGroup>
         <UFormGroup
             label="Email"
             name="email"
@@ -47,10 +42,9 @@
 import { type InferType, object } from 'yup'
 import {
     emailValidation,
-    firstNameValidation,
     getConfirmPasswordValidation,
-    lastNameValidation,
     passwordValidation,
+    usernameValidation,
 } from '~/yup'
 import { useMutation } from '@urql/vue'
 import { RegisterCustomerDocument } from '~/gql/graphql'
@@ -62,8 +56,7 @@ import {
 
 const showPassword = ref(false)
 const schema = object({
-    firstName: firstNameValidation,
-    lastName: lastNameValidation,
+    name: usernameValidation,
     email: emailValidation,
     password: passwordValidation,
     passwordConfirmation: getConfirmPasswordValidation(),
@@ -74,8 +67,7 @@ const { fetching, executeMutation } = useMutation(RegisterCustomerDocument)
 type Schema = InferType<typeof schema>
 
 const state = reactive({
-    firstName: undefined,
-    lastName: undefined,
+    name: undefined,
     email: undefined,
     password: undefined,
     passwordConfirmation: undefined,

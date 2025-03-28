@@ -1,7 +1,7 @@
 import { ref as YupRef, string } from 'yup'
 
 const requiredFieldMessage = 'Обязательное поле'
-export const firstNameValidation = string().required(requiredFieldMessage)
+export const usernameValidation = string().required(requiredFieldMessage)
 export const lastNameValidation = string().required(requiredFieldMessage)
 export const emailValidation = string()
     .email('E-mail введен с ошибками')

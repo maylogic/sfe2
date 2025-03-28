@@ -21,8 +21,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth'
 import CartSidebar from '~/components/CartSidebar.vue'
-import { useQuery } from '@urql/vue'
-import { CurrentAuthenticatedUserDocument } from '~/gql/graphql'
 import { computed } from 'vue'
 
 const auth = useAuthStore()
