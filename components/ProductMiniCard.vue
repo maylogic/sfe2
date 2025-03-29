@@ -1,22 +1,15 @@
 <template>
     <UCard :key="product.id">
-        <nuxt-link
-            :to="{ name: 'product-slug', params: { slug: product.slug } }"
-        >
-            <img
-                :src="product.gallery?.url"
-                alt="Product Image"
-                class="w-full h-48 object-cover mb-2"
+        <product-link :slug="product.slug">
+            <GalleryItem
+                v-if="product.primary_image"
+                :data="product.primary_image"
             />
-        </nuxt-link>
-        <nuxt-link
-            :to="{ name: 'product-slug', params: { slug: product.slug } }"
-        >
+        </product-link>
+        <product-link :slug="product.slug">
             <h3 class="font-semibold">{{ product.name }}</h3>
-        </nuxt-link>
-        <p>
-            {{ product.price.regular.amount }}
-        </p>
+        </product-link>
+        <price :data="product.price" />
         <div class="flex items-center justify-between mt-4">
             <UButtonGroup size="sm">
                 <UButton
@@ -47,13 +40,24 @@
 </template>
 <script setup lang="ts">
 import { type FragmentType, useFragment } from '~/gql'
-import { ProductMiniFragmentDoc } from '~/gql/graphql'
+import {
+    AddCartItemDocument,
+    ProductMiniFragmentDoc,
+    SidebarCartFragmentDoc,
+} from '~/gql/graphql'
+import Price from '~/components/Price.vue'
+import { useMutation } from '@urql/vue'
+import { useCartStore } from '~/stores/cart'
+import ProductLink from '~/components/ProductLink.vue'
 
 const props = defineProps<{
-    productData: FragmentType<typeof ProductMiniFragmentDoc>
+    data: FragmentType<typeof ProductMiniFragmentDoc>
 }>()
+const cart = useCartStore()
 
-const product = useFragment(ProductMiniFragmentDoc, props.productData)
+const product = useFragment(ProductMiniFragmentDoc, props.data)
+
+const { executeMutation } = useMutation(AddCartItemDocument)
 
 // Локальное состояние для количества
 const quantity = ref(1)
@@ -70,8 +74,15 @@ const decrementQuantity = () => {
 }
 
 // Метод для добавления товара в корзину
-const addToCart = () => {
+const addToCart = async () => {
     // Здесь можно вызвать мутацию Vuex или Pinia для добавления в корзину
     // console.log('Added to cart:', cartItem)
+    const { data } = await executeMutation({
+        productId: product.id,
+        quantity: quantity.value,
+    })
+    const cartData = useFragment(SidebarCartFragmentDoc, data?.addCartItem)
+    cart.setData(cartData)
+    console.log(cart.cart, cartData, data)
 }
 </script>

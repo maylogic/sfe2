@@ -16,6 +16,9 @@ export const createGraphqlClient = (
     const url = 'http://127.0.1.1/graphql'
     return createClient({
         url: xdebug ? url + '?XDEBUG_SESSION_START=' + xdebug : url,
+        fetchOptions: () => ({
+            credentials: 'include',
+        }),
         exchanges,
     })
 }

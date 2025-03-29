@@ -8,14 +8,55 @@ fragment ProductMini on Product {
     name
     slug
     price {
-        regular
-        is_discounted
-        discounted
+        ...Price
     }
-    gallery {
-        filename
-        is_video
+    primary_image {
+        ...GalleryItem
     }
+}
+fragment Pagination on PaginatorInfo {
+    count
+    currentPage
+    firstItem
+    hasMorePages
+    lastItem
+    lastPage
+    perPage
+    total
+}
+fragment Price on Price {
+    regular
+    is_discounted
+    discounted
+}
+fragment CartTextLine on CartItemTextLine {
+    definition {
+        ...TextLineDefinition
+    }
+    id
+    value
+}
+fragment TextLineDefinition on ProductLineDefinition {
+    label
+    max_length
+    required
+}
+fragment GalleryItem on ProductGalleryItem {
+    filename
+    is_video
+    label
+    id
+}
+fragment TextArea on BaseTextArea {
+    first_line
+    height
+    id
+    inherit_color
+    left
+    lines
+    text_color
+    width
+    top
 }
 fragment SidebarCartItem on CartItem {
     id
@@ -25,20 +66,38 @@ fragment SidebarCartItem on CartItem {
         name
         sku
         price {
-            regular
-            is_discounted
-            discounted
+            ...Price
         }
+    }
+    option_items {
+        id
+        label
+        price {
+            ...Price
+        }
+    }
+    product_size {
+        height
+        id
+        label
+        price {
+            ...Price
+        }
+        product_id
+        thickness
+        width
+    }
+    text_lines {
+        ...CartTextLine
     }
     quantity
 }
 fragment Totals on Totals {
     subtotal
     grand_total {
-        regular
-        is_discounted
-        discounted
+        ...Price
     }
+    points_used
 }
 fragment SidebarCart on Cart {
     id
@@ -52,9 +111,7 @@ fragment SidebarCart on Cart {
     shipping_method {
         name
         price {
-            regular
-            is_discounted
-            discounted
+            ...Price
         }
         estimated_delivery
         description
@@ -62,4 +119,6 @@ fragment SidebarCart on Cart {
     totals {
         ...Totals
     }
+    apply_balance
+    can_apply_balance
 }

@@ -1,6 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { useQuery } from '@urql/vue'
-import { ProductSlugsDocument } from '~/gql/graphql'
 import { readFileSync } from 'node:fs'
 import { join } from 'pathe'
 
@@ -14,7 +12,7 @@ export default defineNuxtConfig({
     compatibilityDate: '2025-03-13',
     nitro: {
         prerender: {
-            routes: productSlugs.map((slug: string) => `/product/${slug}/`),
+            routes: productSlugs.map((slug: string) => `/product/${slug}`),
         },
     },
 })

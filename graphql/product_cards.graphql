@@ -1,0 +1,12 @@
+query ProductCards($first: Int!, $page: Int!) {
+    products(first: $first, page: $page) {
+        data {
+            id
+            slug
+            ...ProductMini
+        }
+        paginatorInfo {
+            ...Pagination
+        }
+    }
+}
