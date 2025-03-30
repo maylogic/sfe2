@@ -34,8 +34,7 @@ export default defineNuxtPlugin((nuxt) => {
         })
     }
 
-    const token = useCookie(ACCESS_TOKEN_COOKIE),
-        xdebug = useCookie('XDEBUG_SESSION')
+    const xdebug = useCookie('XDEBUG_SESSION')
     const client = createGraphqlClient(ssr, xdebug.value)
 
     nuxt.provide('urql', client)

@@ -1,19 +1,15 @@
 <template>
-    <div class="price-container">
-        <!-- Отображение обычной цены -->
+    <div
+        class="price-container"
+        :class="price.is_discounted ? 'discounted' : ''"
+    >
         <span v-if="price.regular" class="regular-price">
             {{ formatPrice(price.regular) }}
         </span>
 
-        <!-- Отображение скидочной цены, если есть скидка -->
         <span v-if="price.is_discounted" class="discounted-price">
             {{ formatPrice(price.discounted) }}
         </span>
-
-        <!-- Индикатор скидки -->
-        <u-badge v-if="price.is_discounted" color="red" class="discount-badge">
-            SALE
-        </u-badge>
     </div>
 </template>
 
@@ -22,17 +18,13 @@
 import type { FragmentType } from '~/gql/index.js'
 import { useFragment } from '~/gql/index.js'
 import { PriceFragmentDoc } from '~/gql/graphql.js'
+import { formatPrice } from '~/utils/price'
 
 const props = defineProps<{
     data: FragmentType<typeof PriceFragmentDoc>
 }>()
 
 const price = useFragment(PriceFragmentDoc, props.data)
-
-// Форматирование цены (добавление валюты или других символов)
-const formatPrice = (value: number) => {
-    return value ? `₽${value.toFixed(2)}` : 'N/A'
-}
 </script>
 
 <style scoped>
@@ -48,11 +40,14 @@ const formatPrice = (value: number) => {
     opacity: 0.7;
 }
 
+.price-container.discounted .regular-price {
+    text-decoration: line-through;
+}
+
 .discounted-price {
     font-size: 1.2rem;
     color: #e74c3c;
     font-weight: bold;
-    text-decoration: line-through;
 }
 
 .discount-badge {

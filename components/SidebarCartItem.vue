@@ -6,11 +6,14 @@
                 {{ item.product.name }}
             </product-link>
             <p>SKU: {{ item.product.sku }}</p>
-            <p>Quantity: {{ item.quantity }}</p>
             <p>
                 <price :data="item.product.price" />
             </p>
         </div>
+        <quantity-input
+            :quantity="quantity"
+            @update:quantity="quantity = $event"
+        />
 
         <!-- Дополнительные опции -->
         <div v-if="item.option_items.length > 0" class="option-items">
@@ -59,6 +62,7 @@ const props = defineProps<{
 }>()
 
 const item = useFragment(SidebarCartItemFragmentDoc, props.data)
+const quantity = ref(item.quantity)
 </script>
 
 <style scoped>

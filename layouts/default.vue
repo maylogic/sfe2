@@ -1,20 +1,20 @@
 <template>
     <UContainer>
         <UHorizontalNavigation :links="links" />
-        <UButton label="Корзина" @click="cartOpen = true" />
+        <UButton label="Корзина" @click="cartStore.open = true" />
 
-        <USlideover v-model="cartOpen">
-            <sidebar-cart />
-        </USlideover>
+        <cart />
         <slot />
     </UContainer>
 </template>
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth'
 import { computed } from 'vue'
+import { useCartStore } from '~/stores/cart'
+import Cart from '~/components/Cart.vue'
 
-const auth = useAuthStore()
-const cartOpen = ref(false)
+const auth = useAuthStore(),
+    cartStore = useCartStore()
 const links = computed(() => {
     const links = [
         {

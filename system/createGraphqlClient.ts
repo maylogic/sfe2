@@ -13,7 +13,7 @@ export const createGraphqlClient = (
     }
     exchanges.push(fetchExchange)
 
-    const url = 'http://127.0.1.1/graphql'
+    const url = 'http://localhost/graphql'
     return createClient({
         url: xdebug ? url + '?XDEBUG_SESSION_START=' + xdebug : url,
         fetchOptions: () => ({

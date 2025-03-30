@@ -1,7 +1,10 @@
 <template>
     <div class="sidebar-cart">
         <!-- Заголовок -->
-        <h2 class="cart-title">Your Cart</h2>
+        <h2 class="cart-title">
+            Корзина
+            <u-icon name="i-lucide-x" @click="cartStore.open = false" />
+        </h2>
 
         <!-- Элементы корзины -->
         <div v-if="cart.items.length > 0" class="cart-items">
@@ -9,27 +12,28 @@
                 <sidebar-cart-item :data="item" />
             </div>
         </div>
-        <p v-else class="empty-cart">Your cart is empty.</p>
+        <p v-else class="empty-cart">Ваша корзина пуста.</p>
 
         <!-- Промокоды -->
-        <div v-if="cart.coupons.length > 0" class="cart-coupons">
-            <h3>Coupons Applied</h3>
-            <ul>
+        <div class="cart-coupons">
+            <h3>Купоны</h3>
+            <ul v-if="cart.coupons.length > 0">
                 <li v-for="coupon in cart.coupons" :key="coupon.code">
-                    {{ coupon.code }} ({{ coupon.discount_percentage }}% off)
+                    {{ coupon.code }} ({{ coupon.discount_percentage }}% скидка)
                 </li>
             </ul>
+            <coupon-input />
         </div>
 
         <!-- Метод доставки -->
         <div v-if="cart.shipping_method" class="shipping-method">
-            <h3>Shipping Method</h3>
+            <h3>Способ доставки</h3>
             <p>{{ cart.shipping_method.name }}</p>
             <p>
                 <price :data="cart.shipping_method.price" />
             </p>
             <p v-if="cart.shipping_method.estimated_delivery">
-                Estimated Delivery:
+                Примерная продолжительность:
                 {{ cart.shipping_method.estimated_delivery }}
             </p>
             <p v-if="cart.shipping_method.description">
@@ -37,28 +41,17 @@
             </p>
         </div>
 
-        <!-- Итоговые суммы -->
-        <div class="cart-totals">
-            <h3>Totals</h3>
-            <p>
-                Subtotal:
-                <price :data="{ regular: cart.totals.subtotal }" />
-            </p>
-            <p>
-                Grand Total:
-                <price :data="cart.totals.grand_total" />
-            </p>
-            <p v-if="cart.totals.points_used">
-                Points Used: {{ cart.totals.points_used }}
-            </p>
-        </div>
-
         <!-- Баланс -->
         <div v-if="cart.can_apply_balance" class="apply-balance">
             <label>
                 <input type="checkbox" v-model="applyBalance" />
-                Apply Balance
+                Использовать баллы
             </label>
+        </div>
+
+        <!-- Итоговые суммы -->
+        <div class="cart-totals">
+            <totals :data="cart.totals" />
         </div>
     </div>
 </template>
@@ -71,29 +64,35 @@ import { storeToRefs } from 'pinia'
 
 const cartStore = useCartStore()
 const { cart } = storeToRefs(cartStore)
-console.log(cart)
 
-const applyBalance = ref(cart.apply_balance)
+const applyBalance = ref(!!cart.value?.apply_balance)
 </script>
 
 <style scoped>
 .sidebar-cart {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: max-content 1fr repeat(3, min-content) max-content;
     gap: 1.5rem;
     padding: 1rem;
+    max-height: 100dvh;
 }
 
 .cart-title {
     font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
 }
 
 .cart-items {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    overflow-y: scroll;
 }
 
 .empty-cart {
