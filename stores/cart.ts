@@ -5,31 +5,42 @@ import { useQuery } from '@urql/vue'
 import { useFragment } from '~/gql'
 
 export interface CartStoreData {
-    cart: SidebarCartFragment | null
+    cart: SidebarCartFragment
     open: boolean
 }
 
 export const useCartStore = defineStore('cart', {
     state: (): CartStoreData => ({
-        cart: null,
+        cart: {
+            id: '0',
+            items: [],
+            coupons: [],
+            shipping_method: null,
+            can_apply_balance: false,
+            apply_balance: false,
+            key: 'default',
+            totals: {
+                ' $fragmentRefs': undefined,
+            },
+        },
         open: false,
     }),
     actions: {
         setData(data: SidebarCartFragment) {
             this.cart = data
         },
-    },
-    hydrate(storeState) {
-        useQuery({
-            query: GetCartDocument,
-            variables: {},
-        }).then((data) => {
-            if (data?.data.value?.getCart) {
-                storeState.cart = useFragment(
-                    SidebarCartFragmentDoc,
-                    data?.data.value?.getCart
-                )
-            }
-        })
+        hydrate() {
+            return useQuery({
+                query: GetCartDocument,
+                variables: {},
+            }).then((data) => {
+                if (data?.data.value?.getCart) {
+                    this.cart = useFragment(
+                        SidebarCartFragmentDoc,
+                        data?.data.value?.getCart
+                    )
+                }
+            })
+        },
     },
 })

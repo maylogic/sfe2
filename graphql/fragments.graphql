@@ -5,6 +5,7 @@ fragment CustomerData on User {
 }
 fragment ProductMini on Product {
     id
+    key
     name
     slug
     price {
@@ -92,6 +93,13 @@ fragment SidebarCartItem on CartItem {
     }
     quantity
 }
+fragment Customer on User {
+    id
+    email
+    email_verified_at
+    name
+    role
+}
 fragment Totals on Totals {
     subtotal
     grand_total {
@@ -99,14 +107,20 @@ fragment Totals on Totals {
     }
     points_used
 }
+fragment CartCoupon on Coupon {
+    code
+    discount_percentage
+}
 fragment SidebarCart on Cart {
     id
+    key
     items {
+        id
         ...SidebarCartItem
     }
     coupons {
-        code
-        discount_percentage
+        id
+        ...CartCoupon
     }
     shipping_method {
         name

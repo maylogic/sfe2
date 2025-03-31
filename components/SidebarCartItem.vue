@@ -61,8 +61,8 @@ const props = defineProps<{
     data: FragmentType<typeof SidebarCartItemFragmentDoc>
 }>()
 
-const item = useFragment(SidebarCartItemFragmentDoc, props.data)
-const quantity = ref(item.quantity)
+const item = computed(() => useFragment(SidebarCartItemFragmentDoc, props.data))
+const quantity = ref(item.value.quantity)
 </script>
 
 <style scoped>

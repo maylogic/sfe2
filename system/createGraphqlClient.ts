@@ -8,6 +8,7 @@ export const createGraphqlClient = (
 ) => {
     const exchanges = []
     exchanges.push(cacheExchange)
+    // exchanges.push(debugExchange)
     if (ssr) {
         exchanges.push(ssr)
     }

@@ -1,14 +1,6 @@
-import {
-    Client,
-    createClient,
-    fetchExchange,
-    type SSRData,
-    ssrExchange,
-} from '@urql/core'
+import { Client, type SSRData, ssrExchange } from '@urql/core'
 import { defineNuxtPlugin } from '#app'
 import { ref } from 'vue'
-import { cacheExchange } from '@urql/vue'
-import { ACCESS_TOKEN_COOKIE } from '~/constants/auth'
 import { createGraphqlClient } from '~/system/createGraphqlClient'
 
 const ssrKey = '__GRAPHQL_DATA__'

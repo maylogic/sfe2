@@ -4,7 +4,7 @@
         <div class="product-grid">
             <div
                 v-for="product in data?.products.data"
-                :key="product.id"
+                :key="product.key"
                 class="product-card"
             >
                 <ProductMiniCard :data="product" />
@@ -30,12 +30,24 @@ const handlePageChange = (newPage: number) => {
 }
 const currentPage = ref(1)
 
-const { data } = await useQuery({
+const { data, executeQuery } = await useQuery({
     query: ProductCardsDocument,
     variables: {
         first: 10,
         page: 1,
     },
+})
+
+onMounted(() => {
+    if (import.meta.client) {
+        executeQuery({
+            requestPolicy: 'network-only',
+            variables: {
+                first: 10,
+                page: 1,
+            },
+        })
+    }
 })
 </script>
 

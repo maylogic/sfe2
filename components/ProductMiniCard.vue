@@ -1,5 +1,5 @@
 <template>
-    <UCard :key="product.id">
+    <UCard :key="product.key">
         <product-link :slug="product.slug">
             <GalleryItem
                 v-if="product.primary_image"
@@ -50,15 +50,18 @@ const { executeMutation } = useMutation(AddCartItemDocument)
 // Локальное состояние для количества
 const quantity = ref(1)
 
-const addToCart = async () => {
-    const { data } = await executeMutation({
+const addToCart = () => {
+    executeMutation({
         productId: product.id,
         quantity: quantity.value,
+    }).then((result) => {
+        if (result.data?.addCartItem) {
+            const cartData = useFragment(
+                SidebarCartFragmentDoc,
+                result.data?.addCartItem
+            )
+            cart.setData(cartData)
+        }
     })
-    if (data?.addCartItem) {
-        const cartData = useFragment(SidebarCartFragmentDoc, data?.addCartItem)
-        cart.setData(cartData)
-        console.log(cart.cart, cartData, data)
-    }
 }
 </script>

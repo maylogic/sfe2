@@ -1,27 +1,23 @@
 <template>
     <div class="sidebar-cart">
-        <!-- Заголовок -->
-        <h2 class="cart-title">
-            Корзина
-            <u-icon name="i-lucide-x" @click="cartStore.open = false" />
-        </h2>
-
         <!-- Элементы корзины -->
         <div v-if="cart.items.length > 0" class="cart-items">
             <div v-for="item in cart.items" :key="item.id" class="cart-item">
                 <sidebar-cart-item :data="item" />
             </div>
         </div>
-        <p v-else class="empty-cart">Ваша корзина пуста.</p>
+        <p v-else class="empty-cart">Пусто.</p>
 
         <!-- Промокоды -->
         <div class="cart-coupons">
             <h3>Купоны</h3>
-            <ul v-if="cart.coupons.length > 0">
-                <li v-for="coupon in cart.coupons" :key="coupon.code">
-                    {{ coupon.code }} ({{ coupon.discount_percentage }}% скидка)
-                </li>
-            </ul>
+            <div v-if="cart.coupons.length > 0">
+                <cart-coupon
+                    :data="coupon"
+                    v-for="coupon in cart.coupons"
+                    :key="coupon.id"
+                />
+            </div>
             <coupon-input />
         </div>
 
@@ -57,37 +53,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import SidebarCartItem from '~/components/SidebarCartItem.vue'
 import { useCartStore } from '~/stores/cart'
-import { storeToRefs } from 'pinia'
+import CartCoupon from '~/components/CartCoupon.vue'
 
 const cartStore = useCartStore()
-const { cart } = storeToRefs(cartStore)
+const cart = computed(() => cartStore.cart)
 
 const applyBalance = ref(!!cart.value?.apply_balance)
 </script>
 
 <style scoped>
-.sidebar-cart {
-    display: grid;
-    grid-template-rows: max-content 1fr repeat(3, min-content) max-content;
-    gap: 1.5rem;
-    padding: 1rem;
-    max-height: 100dvh;
-}
-
-.cart-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-}
-
 .cart-items {
     display: flex;
     flex-direction: column;

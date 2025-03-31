@@ -38,7 +38,7 @@ const props = defineProps<{
     data: FragmentType<typeof TotalsFragmentDoc>
 }>()
 
-const totals = useFragment(TotalsFragmentDoc, props.data)
+const totals = computed(() => useFragment(TotalsFragmentDoc, props.data))
 </script>
 
 <style scoped>

@@ -1,58 +1,42 @@
 import { defineStore } from 'pinia'
-import { CUSTOMER_LOCALSTORAGE_ITEM } from '~/constants/auth'
 import {
+    CurrentUserDocument,
     type CustomerDataFragment,
     CustomerDataFragmentDoc,
 } from '~/gql/graphql'
-import type { FragmentType } from '~/gql'
 import { useFragment } from '~/gql'
+import { useQuery } from '@urql/vue'
 
 export type AuthStoreState = {
     user: CustomerDataFragment | null
 }
-export const useAuthStore = defineStore('auth', () => {
-    const state = reactive<AuthStoreState>({
+
+export const useAuthStore = defineStore('auth', {
+    state: (): AuthStoreState => ({
         user: null,
-    })
-    const isAuthenticated = computed(() => !!state.user)
-
-    /**
-     * Сохраняет токены и данные пользователя.
-     */
-    function setAuthData(user: FragmentType<typeof CustomerDataFragmentDoc>) {
-        state.user = useFragment(CustomerDataFragmentDoc, user)
-
-        if (user) {
-            localStorage.setItem(
-                CUSTOMER_LOCALSTORAGE_ITEM,
-                JSON.stringify(user)
-            )
-        }
-    }
-
-    /**
-     * Очищает состояние аутентификации.
-     */
-    function clearAuthData() {
-        state.user = null
-        localStorage.removeItem(CUSTOMER_LOCALSTORAGE_ITEM)
-    }
-
-    /**
-     * Восстанавливает состояние аутентификации из cookies и localStorage.
-     */
-    function restoreAuthData() {
-        const customerData = localStorage.getItem(CUSTOMER_LOCALSTORAGE_ITEM)
-        if (customerData) {
-            state.user = JSON.parse(customerData)
-        }
-    }
-
-    return {
-        state,
-        isAuthenticated,
-        setAuthData,
-        clearAuthData,
-        restoreAuthData,
-    }
+    }),
+    actions: {
+        setAuthData(user: CustomerDataFragment) {
+            this.user = user
+        },
+        clearAuthData() {
+            this.user = null
+        },
+        hydrate() {
+            return useQuery({
+                query: CurrentUserDocument,
+                variables: {},
+            }).then((data) => {
+                if (data?.data.value?.currentUser) {
+                    this.user = useFragment(
+                        CustomerDataFragmentDoc,
+                        data?.data.value?.currentUser
+                    )
+                }
+            })
+        },
+    },
+    getters: {
+        isAuthenticated: (state) => state.user !== null,
+    },
 })

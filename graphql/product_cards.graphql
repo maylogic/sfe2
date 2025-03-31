@@ -3,6 +3,7 @@ query ProductCards($first: Int!, $page: Int!) {
         data {
             id
             slug
+            key
             ...ProductMini
         }
         paginatorInfo {
