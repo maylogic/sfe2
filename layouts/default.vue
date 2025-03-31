@@ -43,14 +43,6 @@ const menuItems = [
         label: 'Главная',
         to: '/',
     },
-    {
-        label: 'Регистрация',
-        to: '/register',
-    },
-    {
-        label: 'Логин',
-        to: '/login',
-    },
 ]
 const cartStore = useCartStore()
 </script>

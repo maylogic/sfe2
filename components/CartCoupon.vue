@@ -1,9 +1,14 @@
 <template>
-    <div class="coupon">
+    <div class="flex items-center gap-2">
         <span>
             {{ coupon.code }} ({{ coupon.discount_percentage }}% скидка)
         </span>
-        <u-button @click="remove" color="red">Удалить</u-button>
+        <u-button
+            icon="i-lucide-x"
+            @click="remove"
+            color="red"
+            class="px-1.5"
+        />
     </div>
 </template>
 <script setup lang="ts">

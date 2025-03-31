@@ -39,10 +39,7 @@
 
         <!-- Баланс -->
         <div v-if="cart.can_apply_balance" class="apply-balance">
-            <label>
-                <input type="checkbox" v-model="applyBalance" />
-                Использовать баллы
-            </label>
+            <cart-apply-balance :data="cart?.apply_balance" />
         </div>
 
         <!-- Итоговые суммы -->
@@ -60,8 +57,6 @@ import CartCoupon from '~/components/CartCoupon.vue'
 
 const cartStore = useCartStore()
 const cart = computed(() => cartStore.cart)
-
-const applyBalance = ref(!!cart.value?.apply_balance)
 </script>
 
 <style scoped>

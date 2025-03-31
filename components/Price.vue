@@ -1,9 +1,9 @@
 <template>
     <div
-        class="price-container"
+        class="price-container flex items-center"
         :class="price.is_discounted ? 'discounted' : ''"
     >
-        <span v-if="price.regular" class="regular-price">
+        <span class="regular-price">
             {{ formatPrice(price.regular) }}
         </span>
 
@@ -27,31 +27,27 @@ const props = defineProps<{
 const price = useFragment(PriceFragmentDoc, props.data)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .price-container {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    &.discounted .regular-price {
+        text-decoration: line-through;
+        color: #333;
+        margin-bottom: -1px;
+    }
 }
 
 .regular-price {
     font-size: 1rem;
-    color: #333;
+    color: #000;
     opacity: 0.7;
-}
-
-.price-container.discounted .regular-price {
-    text-decoration: line-through;
 }
 
 .discounted-price {
     font-size: 1.2rem;
-    color: #e74c3c;
+    color: var(--main-price-text-color);
     font-weight: bold;
-}
-
-.discount-badge {
-    font-size: 0.8rem;
-    padding: 0.2rem 0.5rem;
 }
 </style>
