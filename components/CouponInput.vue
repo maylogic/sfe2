@@ -1,8 +1,8 @@
 <template>
     <form @submit.prevent="apply">
         <div class="flex items-center gap-5">
-            <u-input v-model="code" />
-            <u-button type="submit">Применить</u-button>
+            <u-input v-model="code" size="xl" />
+            <u-button variant="outline" size="xl" type="submit">Применить</u-button>
         </div>
         <span v-if="errors.length" class="text-red-500">
             {{ errors[0] }}

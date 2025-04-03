@@ -22,7 +22,13 @@ export const useAuthStore = defineStore('auth', {
         clearAuthData() {
             this.user = null
         },
-        hydrate() {
+        hydrateFromLocalStorage() {
+            const userData = localStorage.getItem('user')
+            if (userData) {
+                this.user = JSON.parse(userData)
+            }
+        },
+        async hydrate() {
             return useQuery({
                 query: CurrentUserDocument,
                 variables: {},
@@ -32,6 +38,9 @@ export const useAuthStore = defineStore('auth', {
                         CustomerDataFragmentDoc,
                         data?.data.value?.currentUser
                     )
+                    localStorage.setItem('user', JSON.stringify(this.user))
+                } else {
+                    localStorage.removeItem('user')
                 }
             })
         },

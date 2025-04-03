@@ -15,11 +15,6 @@
                 class="media-video"
             ></video>
         </div>
-
-        <!-- Отображение метки -->
-        <div v-if="item.label" class="label">
-            {{ item.label }}
-        </div>
     </div>
 </template>
 
@@ -36,12 +31,12 @@ const item = useFragment(GalleryItemFragmentDoc, props.data)
 
 // Формирование URL для изображений
 const getImageUrl = (filename: string) => {
-    return `http://localhost/storage/${filename}` // Замените на реальный путь к изображениям
+    return `http://localhost:8080/storage/${filename}` // Замените на реальный путь к изображениям
 }
 
 // Формирование URL для видео
 const getVideoUrl = (filename: string) => {
-    return `http://localhost/storage/${filename}` // Замените на реальный путь к видео
+    return `http://localhost:8080/storage/${filename}` // Замените на реальный путь к видео
 }
 </script>
 

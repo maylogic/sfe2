@@ -7,7 +7,7 @@
             {{ formatPrice(price.regular) }}
         </span>
 
-        <span v-if="price.is_discounted" class="discounted-price">
+        <span v-if="price.is_discounted" class="discounted-price text-brilliant-rose-500">
             {{ formatPrice(price.discounted) }}
         </span>
     </div>
@@ -47,7 +47,6 @@ const price = useFragment(PriceFragmentDoc, props.data)
 
 .discounted-price {
     font-size: 1.2rem;
-    color: var(--main-price-text-color);
     font-weight: bold;
 }
 </style>

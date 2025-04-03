@@ -1,12 +1,12 @@
 <template>
     <UForm
-        @submit="onSubmit"
+        @submit.prevent="onSubmit"
         :schema="schema"
         :state="state"
         class="space-y-4 max-w-[320px] mx-auto"
     >
         <UFormGroup label="Email" name="email">
-            <form-input-username v-model="state.email" />
+            <form-input-username v-model="state.email"/>
         </UFormGroup>
         <UFormGroup label="Пароль" name="password">
             <form-input-password
@@ -16,7 +16,7 @@
             />
         </UFormGroup>
         <UButton type="submit" :disabled="fetching"> Войти</UButton>
-        <UProgress v-if="fetching" size="xl" />
+        <UProgress v-if="fetching" size="xl"/>
         <u-alert
             v-if="invalidCredentials"
             title="Неправильные логин или пароль"
@@ -26,13 +26,23 @@
 </template>
 
 <script setup lang="ts">
-import { type InferType, object } from 'yup'
-import { emailValidation, passwordValidation } from '~/yup'
+import {
+    type InferType,
+    object
+} from 'yup'
+import {
+    emailValidation,
+    passwordValidation
+} from '~/yup'
 import FormInputUsername from '~/components/Form/Input/FormInputUsername.vue'
 import type { FormSubmitEvent } from '#ui/types'
 import { useMutation } from '@urql/vue'
-import { LoginCustomerDocument } from '~/gql/graphql'
+import {
+    CustomerDataFragmentDoc,
+    LoginCustomerDocument
+} from '~/gql/graphql'
 import { useAuthStore } from '~/stores/auth'
+import { useFragment } from "~/gql";
 
 const show = ref(false),
     invalidCredentials = ref(false)
@@ -49,26 +59,26 @@ const state = reactive({
     password: undefined,
 })
 
-const { fetching, executeMutation } = useMutation(LoginCustomerDocument)
+const {fetching, executeMutation} = useMutation(LoginCustomerDocument)
 watch(state, (newValue) => {
     invalidCredentials.value = false
 })
 
-const auth = useAuthStore()
+const auth = useAuthStore(),
+    router = useRouter()
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (fetching.value) {
         return
     }
-    const { data, error } = await executeMutation(event.data)
+    const {data, error} = await executeMutation(event.data)
     if (data?.loginCustomer) {
-        auth.setAuthData(data.loginCustomer)
+        auth.setAuthData(useFragment(CustomerDataFragmentDoc, data.loginCustomer))
+        await router.push('/profile')
+        return
     }
     if (error) {
         invalidCredentials.value = true
-    }
-    if (!error) {
-        console.log('User logged in:', data)
     }
 }
 </script>

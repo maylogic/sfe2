@@ -1,6 +1,6 @@
 <template>
     <UForm
-        @submit="onSubmit"
+        @submit.prevent="onSubmit"
         :schema="schema"
         :state="state"
         class="space-y-4 max-w-[320px] mx-auto"

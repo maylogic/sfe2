@@ -33,6 +33,7 @@ export const useCartStore = defineStore('cart', {
             return useQuery({
                 query: GetCartDocument,
                 variables: {},
+                requestPolicy: 'network-only',
             }).then((data) => {
                 if (data?.data.value?.getCart) {
                     this.cart = useFragment(

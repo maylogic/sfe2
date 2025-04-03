@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar-cart">
+    <div class="sidebar-cart p-5" :key="cart.key">
         <!-- Элементы корзины -->
         <div v-if="cart.items.length > 0" class="cart-items">
             <div v-for="item in cart.items" :key="item.id" class="cart-item">
@@ -46,20 +46,39 @@
         <div class="cart-totals">
             <totals :data="cart.totals" />
         </div>
+        <div class="checkout-button">
+            <u-button color="robins-egg-blue" class="uppercase font-bold text-xl" size="xl" block>
+                <template #leading>
+                    <u-icon class="text-2xl" name="i-lucide-shield-check"/>
+                </template>
+                Оформить заказ
+            </u-button>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import SidebarCartItem from '~/components/SidebarCartItem.vue'
 import { useCartStore } from '~/stores/cart'
 import CartCoupon from '~/components/CartCoupon.vue'
 
 const cartStore = useCartStore()
+await cartStore.hydrate()
 const cart = computed(() => cartStore.cart)
 </script>
 
 <style scoped>
+.sidebar-cart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 100vh; /* Ограничиваем высоту экрана */
+    overflow: hidden; /* Запрещаем прокрутку всего компонента */
+}
+.checkout-button {
+    letter-spacing: -0.5px;
+}
 .cart-items {
     display: flex;
     flex-direction: column;
@@ -83,6 +102,7 @@ const cart = computed(() => cartStore.cart)
 }
 
 .cart-totals {
+    margin-top: auto;
     border-top: 1px solid #e0e0e0;
     padding-top: 1rem;
 }

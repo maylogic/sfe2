@@ -1,7 +1,7 @@
 export default defineAppConfig({
     ui: {
-        primary: 'orange',
-        gray: 'neutral',
+        primary: 'persian-pink',
+        gray: 'storm-dust',
         icons: {
             arrowLeft: 'i-lucide-arrow-left',
             arrowRight: 'i-lucide-arrow-right',
@@ -21,6 +21,7 @@ export default defineAppConfig({
             minus: 'i-lucide-minus',
             plus: 'i-lucide-plus',
             search: 'i-lucide-search',
-        },
+            user: 'i-lucide-square-user'
+        }
     },
 })

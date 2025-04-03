@@ -7,40 +7,31 @@
             sideOffset: 8,
         }"
         :ui="{
-            width: 'w-64',
+            width: 'auto',
         }"
     >
         <u-button
-            class="w-64 hidden sm:flex"
-            :label="`Здравствуйте, ${auth.user?.name}`"
-            icon="i-lucide-menu"
-            variant="outline"
-        />
-        <u-button
-            class="flex sm:hidden"
-            icon="i-lucide-menu"
-            label="Профиль"
+            icon="i-lucide-user" color="storm-dust" class="hover:text-brilliant-rose-500"
+            label="Кабинет"
             variant="outline"
         />
     </u-dropdown>
 </template>
 <script setup lang="ts">
-import { useAuthStore } from '~/stores/auth'
 
-const auth = useAuthStore()
 const items = [
     [
         {
-            label: 'Profile',
+            label: 'Мой профиль',
             icon: 'i-lucide-user',
         },
         {
-            label: 'Billing',
+            label: 'Мои адреса',
             icon: 'i-lucide-credit-card',
         },
         {
-            label: 'Settings',
-            icon: 'i-lucide-cog',
+            label: 'Мои заказы',
+            icon: 'i-lucide-truck',
         },
     ],
 ]

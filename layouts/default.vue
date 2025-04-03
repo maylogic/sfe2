@@ -7,21 +7,21 @@
                 icon="i-lucide-menu"
                 @click="menuOpen = !menuOpen"
             />
-            <ClientOnly>
-                <div class="ml-auto flex items-center gap-5">
+            <div class="ml-auto flex items-center gap-5">
+                <ClientOnly>
                     <Suspense>
                         <user />
                         <template #fallback>
                             <u-skeleton class="h-8 w-[100px] sm:w-[250px]" />
                         </template>
                     </Suspense>
-                    <u-button
-                        icon="i-lucide-shopping-bag"
-                        label="Корзина"
-                        @click="cartStore.open = true"
-                    />
-                </div>
-            </ClientOnly>
+                </ClientOnly>
+                <u-button
+                    icon="i-lucide-shopping-bag"
+                    label="Корзина"
+                    @click="cartStore.open = true"
+                />
+            </div>
         </div>
         <closable-slideover title="Меню" v-model="menuOpen">
             <u-vertical-navigation :links="menuItems" />

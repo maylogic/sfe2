@@ -1,6 +1,6 @@
 <template>
     <u-slideover :model-value="modelValue" @update:modelValue="update">
-        <div class="p-5">
+        <div class="p-5 h-full grid slideover-content">
             <div
                 class="justify-between flex w-full items-center text-2xl pb-3 font-bold"
             >
@@ -28,3 +28,8 @@ const close = () => {
 }
 const emit = defineEmits(['update:modelValue'])
 </script>
+<style>
+.slideover-content {
+    grid-template-rows: min-content 1fr;
+}
+</style>

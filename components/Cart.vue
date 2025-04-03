@@ -1,11 +1,40 @@
 <template>
-    <closable-slideover v-model="cartStore.open" title="Корзина">
-        <sidebar-cart :key="cartStore.cart.key" />
-    </closable-slideover>
+    <u-slideover v-model="cartStore.open">
+        <div class="h-full grid slideover-content">
+            <div
+                class="justify-between flex w-full items-center text-xl font-bold p-5 bg-picton-blue-500 text-white"
+            >
+                <div class="flex items-center gap-2">
+                    <u-icon name="i-lucide-shopping-cart"/>
+                    Моя корзина
+                </div>
+                <u-icon
+                    class="cursor-pointer"
+                    name="i-lucide-x"
+                    @click="cartStore.open = false"
+                />
+            </div>
+            <Suspense>
+                <template #default>
+                    <sidebar-cart/>
+                </template>
+                <template #fallback>
+                    <div class="flex flex-col gap-2">
+                        Загрузка...
+                        <u-progress/>
+                    </div>
+                </template>
+            </Suspense>
+        </div>
+    </u-slideover>
 </template>
 <script setup lang="ts">
-import { useCartStore } from '~/stores/cart'
+import { useCartStore } from "~/stores/cart";
 
 const cartStore = useCartStore()
-await cartStore.hydrate()
 </script>
+<style>
+.slideover-content {
+    grid-template-rows: min-content 1fr;
+}
+</style>

@@ -4,6 +4,6 @@
 <script setup lang="ts">
 definePageMeta({
     middleware: ['auth'],
-    requiresGuest: true,
+    requiresGuest: true
 })
 </script>

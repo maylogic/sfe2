@@ -87,17 +87,15 @@ const totals = computed(() => useFragment(TotalsFragmentDoc, props.data))
 .grand-total {
     .value {
         .regular-price {
-            color: var(--main-price-text-color);
+            font-weight: bold;
             font-size: 22px;
         }
-        &.is-discounted {
+        &.discounted {
             .regular-price {
-                color: #ccc;
-                font-size: 16px;
+                font-weight: 400;
             }
         }
         .discounted-price {
-            color: var(--main-price-text-color);
             font-size: 22px;
         }
     }
