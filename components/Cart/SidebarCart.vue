@@ -14,7 +14,7 @@
     </div>
     <div class="sidebar-cart p-5" :key="cart.key" v-else>
         <div class="cart-items">
-            <cart-sidebar-cart-item v-for="item in cart.items" :key="item.id" :data="item"/>
+            <cart-sidebar-cart-item v-for="item in cart.items" :key="cart.key+item.id" :data="item"/>
         </div>
 
         <div class="mt-auto flex flex-col gap-2 pt-5">
@@ -115,6 +115,6 @@ const cart = computed(() => cartStore.cart)
 }
 
 .apply-balance {
-    margin-top: 1rem;
+    @apply mb-2;
 }
 </style>

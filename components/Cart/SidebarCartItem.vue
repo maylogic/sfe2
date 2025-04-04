@@ -5,10 +5,15 @@
             <product-link :slug="item.product.slug">
                 {{ item.product.name }}
             </product-link>
-            <p>SKU: {{ item.product.sku }}</p>
-            <p>
-                <price :data="item.product.price" />
-            </p>
+            <u-button
+                icon="i-lucide-trash"
+                @click="remove"
+                :disabled="fetching"
+                color="red"
+                size="xs"
+                class="px-1.5 ml-auto"
+            />
+            <price :data="item.product.price"/>
         </div>
 
         <quantity-input
@@ -22,7 +27,7 @@
             <ul>
                 <li v-for="option in item.option_items" :key="option.id">
                     {{ option.label }}:
-                    <price :data="option.price" />
+                    <price :data="option.price"/>
                 </li>
             </ul>
         </div>
@@ -36,27 +41,28 @@
                     item.product_size.height
                 }}x{{ item.product_size.thickness }}
             </p>
-            <p>
-                <price :data="item.product_size.price" />
-            </p>
+            <price :data="item.product_size.price"/>
         </div>
 
-        <!-- Текстовые строки -->
         <div v-if="!!item.text_lines?.length" class="text-lines">
-            <h4>Custom Text</h4>
-            <ul>
-                <li v-for="line in item.text_lines" :key="line.id">
-                    {{ line.definition.label }}: {{ line.value }}
-                </li>
-            </ul>
+            <cart-text-line :data="item" v-for="item in item.text_lines" :key="item.id"/>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { type FragmentType, useFragment } from '~/gql'
-import { SidebarCartItemFragmentDoc } from '~/gql/graphql'
+import {
+    type FragmentType,
+    useFragment
+} from '~/gql'
+import {
+    RemoveCartItemDocument,
+    SidebarCartFragmentDoc,
+    SidebarCartItemFragmentDoc
+} from '~/gql/graphql'
 import ProductLink from '~/components/ProductLink.vue'
+import { useMutation } from "@urql/vue";
+import { useCartStore } from "~/stores/cart";
 
 const props = defineProps<{
     data: FragmentType<typeof SidebarCartItemFragmentDoc>
@@ -64,6 +70,14 @@ const props = defineProps<{
 
 const item = computed(() => useFragment(SidebarCartItemFragmentDoc, props.data))
 const quantity = ref(item.value.quantity)
+const {executeMutation, fetching} = useMutation(RemoveCartItemDocument)
+const cart = useCartStore()
+const remove = async () => {
+    const {data} = await executeMutation({cartItemId: item.value.id})
+    if (data?.removeCartItem) {
+        cart.setData(useFragment(SidebarCartFragmentDoc, data?.removeCartItem))
+    }
+}
 </script>
 
 <style scoped>
@@ -74,8 +88,8 @@ const quantity = ref(item.value.quantity)
 }
 
 .product-info {
-    display: flex;
-    flex-direction: column;
+    @apply grid-cols-2;
+    display: grid;
     gap: 0.25rem;
 }
 

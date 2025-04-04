@@ -1,0 +1,5 @@
+mutation RemoveCartItem($cartItemId: String!) {
+    removeCartItem(cartItemId:$cartItemId) {
+        ...SidebarCart
+    }
+}

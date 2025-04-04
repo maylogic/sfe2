@@ -12,15 +12,12 @@
                     <span class="label">Использовано баллов:</span>
                     <span class="value">{{ totals.points_used }}</span>
                 </div>
-                <span class="points-description"
-                    >(1 балл = 1 ₽, баллы применяются до применения других
-                    скидок)</span
-                >
+                <span class="points-description">(1 балл = 1 ₽, применяются до других скидок)</span>
             </div>
 
             <div class="totals-item grand-total">
                 <span class="label font-black">Итог:</span>
-                <price class="value" :data="totals.grand_total" />
+                <price class="value" :data="totals.grand_total"/>
             </div>
         </div>
     </div>
@@ -41,7 +38,7 @@ const totals = computed(() => useFragment(TotalsFragmentDoc, props.data))
 
 <style lang="scss">
 .totals-container {
-    border: 1px solid rgba(0,0,26,0.1);
+    border: 1px solid rgba(0, 0, 26, 0.1);
     padding: 1rem;
     background-color: #f5f5f5;
 }
@@ -80,17 +77,20 @@ const totals = computed(() => useFragment(TotalsFragmentDoc, props.data))
     color: #333;
     text-align: right;
 }
+
 .grand-total {
     .value {
         .regular-price {
             font-weight: bold;
             font-size: 22px;
         }
+
         &.discounted {
             .regular-price {
                 font-weight: 400;
             }
         }
+
         .discounted-price {
             font-size: 22px;
         }

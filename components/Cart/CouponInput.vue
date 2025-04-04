@@ -1,12 +1,14 @@
 <template>
-    <form @submit.prevent="apply">
+    <form @submit.prevent="apply" class="coupon-code-form" :class="{'has-error': !!errors.length}">
         <div class="flex items-center gap-5">
             <u-input v-model="code" size="xl" />
-            <u-button variant="outline" class="font-bebas-neue pt-3 leading-[24px] text-[24px] max-h-[44px] uppercase" size="xl" type="submit">
+            <u-button variant="outline"
+                      :disabled="fetching"
+                      class="font-bebas-neue pt-3 leading-[24px] text-[24px] max-h-[44px] uppercase" size="xl" type="submit">
                 Применить
             </u-button>
         </div>
-        <span v-if="errors.length" class="text-red-500 font-fira-sans">
+        <span v-if="errors.length" class="text-red-500 text-sm font-fira-sans">
             {{ errors[0] }}
         </span>
     </form>
@@ -19,7 +21,7 @@ import { useFragment } from '~/gql'
 import { useExceptionHandler } from '~/composables/useExceptionHandler'
 
 const cartStore = useCartStore()
-const { executeMutation } = useMutation(ApplyCouponDocument)
+const { executeMutation, fetching } = useMutation(ApplyCouponDocument)
 const code = ref('')
 
 const { errors, errorHandler } = useExceptionHandler()
@@ -28,6 +30,10 @@ watch(code, () => {
 })
 
 const apply = async () => {
+    if (code.value.length != 9) {
+        errors.value = ['Код должен состоять из 9 символов']
+        return
+    }
     const { data, error } = await executeMutation({
         code: code.value,
     })
@@ -40,3 +46,11 @@ const apply = async () => {
     }
 }
 </script>
+<style>
+.coupon-code-form {
+    @apply pb-6;
+    &.has-error {
+        @apply pb-0;
+    }
+}
+</style>

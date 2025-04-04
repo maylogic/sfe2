@@ -4,7 +4,7 @@
             <div
                 class="justify-between flex w-full items-center text-xl font-bold p-5 bg-picton-blue-500 text-white"
             >
-                <div class="flex items-center gap-2 font-fira-sans tracking-wider">
+                <div class="flex items-center gap-2 font-fira-sans">
                     <u-icon name="i-lucide-shopping-cart"/>
                     Моя корзина
                 </div>

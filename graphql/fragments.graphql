@@ -32,7 +32,9 @@ fragment Price on Price {
 }
 fragment CartTextLine on CartItemTextLine {
     definition {
-        ...TextLineDefinition
+        label
+        max_length
+        required
     }
     id
     value
@@ -89,6 +91,7 @@ fragment SidebarCartItem on CartItem {
         width
     }
     text_lines {
+        id
         ...CartTextLine
     }
     quantity
