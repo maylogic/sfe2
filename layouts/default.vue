@@ -24,7 +24,7 @@
             </div>
         </div>
         <closable-slideover title="Меню" v-model="menuOpen">
-            <u-vertical-navigation :links="menuItems" />
+            <u-vertical-navigation @click="menuOpen = false" :links="menuItems" />
         </closable-slideover>
         <ClientOnly>
             <cart />
