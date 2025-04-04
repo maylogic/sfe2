@@ -1,17 +1,28 @@
 <template>
-    <div class="sidebar-cart p-5" :key="cart.key">
-        <!-- Элементы корзины -->
-        <div v-if="cart.items.length > 0" class="cart-items">
+    <div v-if="cartStore.error" class="p-5">
+        <span class="font-fira-sans text-red-500">Произошла ошибка. Пожалуйста, сообщите об этом администратору и получите извинительный промокод.</span>
+    </div>
+    <div class="empty-cart p-5" v-else-if="!cartStore.isEmpty">
+        <span class="font-fira-sans text-[18px]">Ваша корзина пуста</span>
+        <div autofocus @click="cartStore.open = false"
+             class="rose-pseudo-button font-bebas-neue flex justify-center items-center mt-5">
+            <div class="flex items-center gap-2">
+                <u-icon class="text-[24px] mt-[-5px]" name="i-lucide-shopping-cart"/>
+                Продолжить шоппинг
+            </div>
+        </div>
+    </div>
+    <div class="sidebar-cart p-5" :key="cart.key" v-else>
+        <div class="cart-items">
             <div v-for="item in cart.items" :key="item.id" class="cart-item">
                 <cart-sidebar-cart-item :data="item"/>
             </div>
         </div>
-        <p v-else class="empty-cart">Пусто.</p>
 
         <!-- Промокоды -->
         <div class="flex flex-col gap-2">
             <h3 class="font-fira-sans">Промокод или подарочный ваучер (необязательно)</h3>
-            <div v-if="cart.coupons.length > 0">
+            <div v-if="!!cart.coupons?.length">
                 <cart-coupon
                     :data="coupon"
                     v-for="coupon in cart.coupons"
@@ -43,7 +54,7 @@
         </div>
 
         <!-- Итоговые суммы -->
-        <div class="cart-totals">
+        <div class="cart-totals" v-if="cartStore.isEmpty">
             <totals :data="cart.totals"/>
         </div>
         <nuxt-link to="/checkout" class="checkout-button">
@@ -65,6 +76,7 @@ const cart = computed(() => cartStore.cart)
 </script>
 
 <style scoped lang="scss">
+
 .sidebar-cart {
     display: flex;
     flex-direction: column;

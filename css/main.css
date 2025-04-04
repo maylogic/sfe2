@@ -87,10 +87,18 @@
 
 .font-fira-sans {
     font-family: 'Fira Sans', sans-serif;
+    font-weight: bold;
 }
 .font-bebas-neue {
     font-family: 'Bebas Neue', sans-serif;
 }
 .font-black {
     font-weight: 900;
+}
+.rose-pseudo-button {
+    @apply uppercase bg-brilliant-rose-500 rounded-md text-2xl pt-2 pb-2 text-white cursor-pointer;
+    text-align: center;
+    &.font-bebas-neue {
+        @apply pb-1;
+    }
 }

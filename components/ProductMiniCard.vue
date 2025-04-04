@@ -9,7 +9,7 @@
         />
         <h3>{{ product.name }}</h3>
         <price :data="product.price"/>
-        <div class="create-and-buy">Создать и купить</div>
+        <div class="rose-pseudo-button font-bebas-neue font-bold create-and-buy">Создать и купить</div>
     </product-link>
 </template>
 <script setup lang="ts">
@@ -61,9 +61,7 @@ onUnmounted(() => {
 .product-card {
     @apply border-storm-dust-500 rounded-md p-[1px] relative;
     .create-and-buy {
-        @apply uppercase invisible bg-brilliant-rose-500 rounded-md text-2xl pt-2 pb-1 text-white font-bold;
-        font-family: "Bebas Neue", sans-serif;
-        text-align: center;
+        @apply invisible;
         position: absolute;
         top: 100%;
         left: 0;

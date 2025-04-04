@@ -21,6 +21,7 @@ export const useAuthStore = defineStore('auth', {
         },
         clearAuthData() {
             this.user = null
+            localStorage.removeItem('user')
         },
         hydrateFromLocalStorage() {
             const userData = localStorage.getItem('user')
@@ -29,20 +30,19 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async hydrate() {
-            return useQuery({
+            const {data, error} = await useQuery({
                 query: CurrentUserDocument,
                 variables: {},
-            }).then((data) => {
-                if (data?.data.value?.currentUser) {
-                    this.user = useFragment(
-                        CustomerDataFragmentDoc,
-                        data?.data.value?.currentUser
-                    )
-                    localStorage.setItem('user', JSON.stringify(this.user))
-                } else {
-                    localStorage.removeItem('user')
-                }
             })
+            if (data.value?.currentUser) {
+                this.user = useFragment(
+                    CustomerDataFragmentDoc,
+                    data.value?.currentUser
+                )
+                localStorage.setItem('user', JSON.stringify(this.user))
+            } else {
+                this.clearAuthData()
+            }
         },
     },
     getters: {

@@ -6,7 +6,7 @@
                 Применить
             </u-button>
         </div>
-        <span v-if="errors.length" class="text-red-500">
+        <span v-if="errors.length" class="text-red-500 font-fira-sans">
             {{ errors[0] }}
         </span>
     </form>

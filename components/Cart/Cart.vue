@@ -19,8 +19,8 @@
                     <cart-sidebar-cart/>
                 </template>
                 <template #fallback>
-                    <div class="flex flex-col gap-2">
-                        Загрузка...
+                    <div class="flex flex-col gap-2 p-5">
+                        <span class="font-fira-sans">Загрузка...</span>
                         <u-progress/>
                     </div>
                 </template>

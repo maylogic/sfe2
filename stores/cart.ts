@@ -10,6 +10,7 @@ import { useFragment } from '~/gql'
 export interface CartStoreData {
     cart: SidebarCartFragment
     open: boolean
+    error: boolean
 }
 
 export const useCartStore = defineStore('cart', {
@@ -27,24 +28,31 @@ export const useCartStore = defineStore('cart', {
             },
         },
         open: false,
+        error: false
     }),
     actions: {
         setData(data: SidebarCartFragment) {
+            this.error = false
             this.cart = data
         },
-        hydrate() {
-            return useQuery({
+        async hydrate() {
+            this.error = false
+            const {data, error} = await useQuery({
                 query: GetCartDocument,
                 variables: {},
                 requestPolicy: 'network-only',
-            }).then((data) => {
-                if (data?.data.value?.getCart) {
-                    this.cart = useFragment(
-                        SidebarCartFragmentDoc,
-                        data?.data.value?.getCart
-                    )
-                }
             })
+
+            if (data.value?.getCart) {
+                this.cart = useFragment(
+                    SidebarCartFragmentDoc,
+                    data.value?.getCart
+                )
+            }
+
+            if (error.value) {
+                this.error = true
+            }
         },
     },
     getters: {

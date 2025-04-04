@@ -36,11 +36,12 @@ const price = useFragment(PriceFragmentDoc, props.data)
         @apply text-storm-dust-500 opacity-30;
         text-decoration: line-through;
         margin-bottom: -1px;
+        font-weight: 700;
     }
 }
 
 .regular-price {
-    font-weight: bold;
+    font-weight: 900;
     font-size: 18px;
     color: #000;
 }
