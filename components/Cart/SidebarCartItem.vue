@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar-cart-item">
+    <div class="sidebar-cart-item font-fira-sans">
         <!-- Информация о продукте -->
         <div class="product-info">
             <product-link :slug="item.product.slug">
@@ -10,13 +10,14 @@
                 <price :data="item.product.price" />
             </p>
         </div>
+
         <quantity-input
             :quantity="quantity"
             @update:quantity="quantity = $event"
         />
 
         <!-- Дополнительные опции -->
-        <div v-if="item.option_items.length > 0" class="option-items">
+        <div v-if="!!item.option_items?.length" class="option-items">
             <h4>Options</h4>
             <ul>
                 <li v-for="option in item.option_items" :key="option.id">
@@ -41,7 +42,7 @@
         </div>
 
         <!-- Текстовые строки -->
-        <div v-if="item.text_lines.length > 0" class="text-lines">
+        <div v-if="!!item.text_lines?.length" class="text-lines">
             <h4>Custom Text</h4>
             <ul>
                 <li v-for="line in item.text_lines" :key="line.id">

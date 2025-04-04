@@ -14,55 +14,51 @@
     </div>
     <div class="sidebar-cart p-5" :key="cart.key" v-else>
         <div class="cart-items">
-            <div v-for="item in cart.items" :key="item.id" class="cart-item">
-                <cart-sidebar-cart-item :data="item"/>
+            <cart-sidebar-cart-item v-for="item in cart.items" :key="item.id" :data="item"/>
+        </div>
+
+        <div class="mt-auto flex flex-col gap-2 pt-5">
+            <div class="flex flex-col gap-2">
+                <h3 class="font-fira-sans">Промокод или подарочный ваучер (необязательно)</h3>
+                <div v-if="!!cart.coupons?.length">
+                    <cart-coupon
+                        :data="coupon"
+                        v-for="coupon in cart.coupons"
+                        :key="coupon.id"
+                    />
+                </div>
+                <cart-coupon-input/>
             </div>
-        </div>
 
-        <!-- Промокоды -->
-        <div class="flex flex-col gap-2">
-            <h3 class="font-fira-sans">Промокод или подарочный ваучер (необязательно)</h3>
-            <div v-if="!!cart.coupons?.length">
-                <cart-coupon
-                    :data="coupon"
-                    v-for="coupon in cart.coupons"
-                    :key="coupon.id"
-                />
+            <!-- Метод доставки -->
+            <div v-if="cart.shipping_method" class="shipping-method">
+                <h3>Способ доставки</h3>
+                <p>{{ cart.shipping_method.name }}</p>
+                <p>
+                    <price :data="cart.shipping_method.price"/>
+                </p>
+                <p v-if="cart.shipping_method.estimated_delivery">
+                    Примерная продолжительность:
+                    {{ cart.shipping_method.estimated_delivery }}
+                </p>
+                <p v-if="cart.shipping_method.description">
+                    {{ cart.shipping_method.description }}
+                </p>
             </div>
-            <cart-coupon-input/>
-        </div>
 
-        <!-- Метод доставки -->
-        <div v-if="cart.shipping_method" class="shipping-method">
-            <h3>Способ доставки</h3>
-            <p>{{ cart.shipping_method.name }}</p>
-            <p>
-                <price :data="cart.shipping_method.price"/>
-            </p>
-            <p v-if="cart.shipping_method.estimated_delivery">
-                Примерная продолжительность:
-                {{ cart.shipping_method.estimated_delivery }}
-            </p>
-            <p v-if="cart.shipping_method.description">
-                {{ cart.shipping_method.description }}
-            </p>
-        </div>
-
-        <!-- Баланс -->
-        <div v-if="cart.can_apply_balance" class="apply-balance">
-            <cart-apply-balance :data="cart?.apply_balance"/>
-        </div>
-
-        <!-- Итоговые суммы -->
-        <div class="cart-totals" v-if="cartStore.isEmpty">
-            <totals :data="cart.totals"/>
-        </div>
-        <nuxt-link to="/checkout" class="checkout-button">
-            <div>
-                <u-icon class="text-[32px] mt-[-5px]" name="i-lucide-lock"/>
-                Оформить заказ
+            <!-- Баланс -->
+            <div v-if="cart.can_apply_balance" class="apply-balance">
+                <cart-apply-balance :data="cart?.apply_balance"/>
             </div>
-        </nuxt-link>
+
+            <cart-totals :data="cart.totals"/>
+            <nuxt-link to="/checkout" class="checkout-button">
+                <div>
+                    <u-icon class="text-[32px] mt-[-5px]" name="i-lucide-lock"/>
+                    Оформить заказ
+                </div>
+            </nuxt-link>
+        </div>
     </div>
 </template>
 
@@ -78,11 +74,11 @@ const cart = computed(() => cartStore.cart)
 <style scoped lang="scss">
 
 .sidebar-cart {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 100vh; /* Ограничиваем высоту экрана */
-    overflow: hidden; /* Запрещаем прокрутку всего компонента */
+    @apply grid;
+    grid-template-rows: 1fr min-content;
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow: hidden;
 }
 
 .checkout-button {
@@ -116,12 +112,6 @@ const cart = computed(() => cartStore.cart)
 
 .shipping-method p {
     margin: 0.25rem 0;
-}
-
-.cart-totals {
-    margin-top: auto;
-    border-top: 1px solid #e0e0e0;
-    padding-top: 1rem;
 }
 
 .apply-balance {

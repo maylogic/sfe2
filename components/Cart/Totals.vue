@@ -41,10 +41,9 @@ const totals = computed(() => useFragment(TotalsFragmentDoc, props.data))
 
 <style lang="scss">
 .totals-container {
-    border: 1px solid #e0e0e0;
-    border-radius: 0.5rem;
+    border: 1px solid rgba(0,0,26,0.1);
     padding: 1rem;
-    background-color: #f9f9f9;
+    background-color: #f5f5f5;
 }
 
 .totals-title {

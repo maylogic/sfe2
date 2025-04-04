@@ -1,5 +1,5 @@
 <template>
-    <UButtonGroup size="sm">
+    <div class="flex items-center">
         <UButton
             icon="i-heroicons-minus"
             color="gray"
@@ -9,14 +9,14 @@
         <input
             :value="quantity"
             disabled
-            class="w-12 text-center border rounded-md p-1"
+            class="w-8 text-center p-1"
         />
         <UButton
             icon="i-heroicons-plus"
             color="gray"
             @click="incrementQuantity"
         />
-    </UButtonGroup>
+    </div>
 </template>
 <script setup lang="ts">
 const props = defineProps<{
