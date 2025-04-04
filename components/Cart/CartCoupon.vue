@@ -1,12 +1,13 @@
 <template>
     <div class="flex items-center gap-2">
-        <span>
+        <span class="font-fira-sans tracking-wider text-sm font-bold">
             {{ coupon.code }} ({{ coupon.discount_percentage }}% скидка)
         </span>
         <u-button
             icon="i-lucide-x"
             @click="remove"
             color="red"
+            size="xs"
             class="px-1.5"
         />
     </div>

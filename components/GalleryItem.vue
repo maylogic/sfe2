@@ -60,10 +60,4 @@ const getVideoUrl = (filename: string) => {
     height: 100%;
     object-fit: cover;
 }
-
-.label {
-    font-size: 0.9rem;
-    color: #333;
-    text-align: center;
-}
 </style>

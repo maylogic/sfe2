@@ -6,50 +6,6 @@
                 v-for="product in data?.products.data"
                 :key="product.key"
                 :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
-            <ProductMiniCard
-                v-for="product in data?.products.data"
-                :key="product.key"
-                :data="product"/>
         </div>
 
         <pagination
@@ -101,20 +57,5 @@ onMounted(() => {
 
 .product-grid {
     @apply grid gap-6 grid-cols-1 sm:grid-cols-3 md:grid-cols-4;
-}
-
-.card-link {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1rem;
-}
-
-.product-name {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #333;
 }
 </style>

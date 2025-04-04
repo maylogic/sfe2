@@ -1,6 +1,6 @@
 <template>
     <div
-        class="price-container flex items-center"
+        class="price-container flex items-center font-fira-sans"
         :class="price.is_discounted ? 'discounted' : ''"
     >
         <span class="regular-price">
@@ -40,11 +40,13 @@ const price = useFragment(PriceFragmentDoc, props.data)
 }
 
 .regular-price {
+    font-weight: bold;
     font-size: 18px;
     color: #000;
 }
 
 .discounted-price {
-    font-size: 20px;
+    font-weight: 900;
+    font-size: 18px;
 }
 </style>

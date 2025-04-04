@@ -4,7 +4,7 @@
             <div
                 class="justify-between flex w-full items-center text-xl font-bold p-5 bg-picton-blue-500 text-white"
             >
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 font-fira-sans tracking-wider">
                     <u-icon name="i-lucide-shopping-cart"/>
                     Моя корзина
                 </div>
@@ -16,7 +16,7 @@
             </div>
             <Suspense>
                 <template #default>
-                    <sidebar-cart/>
+                    <cart-sidebar-cart/>
                 </template>
                 <template #fallback>
                     <div class="flex flex-col gap-2">

@@ -1,9 +1,9 @@
 <template>
-    <div class="totals-container">
+    <div class="totals-container font-fira-sans">
         <!-- Список итоговых сумм -->
         <div class="totals-list">
             <div class="totals-item">
-                <span class="label">Подытог:</span>
+                <span class="label font-bold">Подытог:</span>
                 <span class="value">{{ formatPrice(totals.subtotal) }}</span>
             </div>
 
@@ -19,7 +19,7 @@
             </div>
 
             <div class="totals-item grand-total">
-                <span class="label">Итог:</span>
+                <span class="label font-black">Итог:</span>
                 <price class="value" :data="totals.grand_total" />
             </div>
         </div>

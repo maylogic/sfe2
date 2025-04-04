@@ -3,14 +3,14 @@
         <!-- Элементы корзины -->
         <div v-if="cart.items.length > 0" class="cart-items">
             <div v-for="item in cart.items" :key="item.id" class="cart-item">
-                <sidebar-cart-item :data="item"/>
+                <cart-sidebar-cart-item :data="item"/>
             </div>
         </div>
         <p v-else class="empty-cart">Пусто.</p>
 
         <!-- Промокоды -->
-        <div class="cart-coupons">
-            <h3>Купоны</h3>
+        <div class="flex flex-col gap-2">
+            <h3 class="font-fira-sans">Промокод или подарочный ваучер (необязательно)</h3>
             <div v-if="cart.coupons.length > 0">
                 <cart-coupon
                     :data="coupon"
@@ -18,7 +18,7 @@
                     :key="coupon.id"
                 />
             </div>
-            <coupon-input/>
+            <cart-coupon-input/>
         </div>
 
         <!-- Метод доставки -->
@@ -57,9 +57,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import SidebarCartItem from '~/components/SidebarCartItem.vue'
 import { useCartStore } from '~/stores/cart'
-import CartCoupon from '~/components/CartCoupon.vue'
 
 const cartStore = useCartStore()
 await cartStore.hydrate()

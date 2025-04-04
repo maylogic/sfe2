@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia'
 import type { SidebarCartFragment } from '~/gql/graphql'
-import { GetCartDocument, SidebarCartFragmentDoc } from '~/gql/graphql'
+import {
+    GetCartDocument,
+    SidebarCartFragmentDoc
+} from '~/gql/graphql'
 import { useQuery } from '@urql/vue'
 import { useFragment } from '~/gql'
 
@@ -44,4 +47,7 @@ export const useCartStore = defineStore('cart', {
             })
         },
     },
+    getters: {
+        isEmpty: (state) => !!state.cart.items?.length
+    }
 })

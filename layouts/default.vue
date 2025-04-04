@@ -34,7 +34,6 @@
 </template>
 <script setup lang="ts">
 import { useCartStore } from '~/stores/cart'
-import Cart from '~/components/Cart.vue'
 import ClosableSlideover from '~/components/ClosableSlideover.vue'
 
 const menuOpen = ref(false)

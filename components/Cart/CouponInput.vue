@@ -2,7 +2,9 @@
     <form @submit.prevent="apply">
         <div class="flex items-center gap-5">
             <u-input v-model="code" size="xl" />
-            <u-button variant="outline" class="uppercase" size="xl" type="submit">Применить</u-button>
+            <u-button variant="outline" class="font-bebas-neue pt-3 leading-[24px] text-[24px] max-h-[44px] uppercase" size="xl" type="submit">
+                Применить
+            </u-button>
         </div>
         <span v-if="errors.length" class="text-red-500">
             {{ errors[0] }}
