@@ -15,4 +15,7 @@ export default defineNuxtConfig({
             routes: productSlugs.map((slug: string) => `/product/${slug}`),
         },
     },
+    css: [
+        '~/css/main.css'
+    ],
 })

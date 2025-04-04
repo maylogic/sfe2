@@ -3,7 +3,7 @@
         <!-- Элементы корзины -->
         <div v-if="cart.items.length > 0" class="cart-items">
             <div v-for="item in cart.items" :key="item.id" class="cart-item">
-                <sidebar-cart-item :data="item" />
+                <sidebar-cart-item :data="item"/>
             </div>
         </div>
         <p v-else class="empty-cart">Пусто.</p>
@@ -18,7 +18,7 @@
                     :key="coupon.id"
                 />
             </div>
-            <coupon-input />
+            <coupon-input/>
         </div>
 
         <!-- Метод доставки -->
@@ -26,7 +26,7 @@
             <h3>Способ доставки</h3>
             <p>{{ cart.shipping_method.name }}</p>
             <p>
-                <price :data="cart.shipping_method.price" />
+                <price :data="cart.shipping_method.price"/>
             </p>
             <p v-if="cart.shipping_method.estimated_delivery">
                 Примерная продолжительность:
@@ -39,21 +39,19 @@
 
         <!-- Баланс -->
         <div v-if="cart.can_apply_balance" class="apply-balance">
-            <cart-apply-balance :data="cart?.apply_balance" />
+            <cart-apply-balance :data="cart?.apply_balance"/>
         </div>
 
         <!-- Итоговые суммы -->
         <div class="cart-totals">
-            <totals :data="cart.totals" />
+            <totals :data="cart.totals"/>
         </div>
-        <div class="checkout-button">
-            <u-button color="robins-egg-blue" class="uppercase font-bold text-xl" size="xl" block>
-                <template #leading>
-                    <u-icon class="text-2xl" name="i-lucide-shield-check"/>
-                </template>
+        <nuxt-link to="/checkout" class="checkout-button">
+            <div>
+                <u-icon class="text-[32px] mt-[-5px]" name="i-lucide-lock"/>
                 Оформить заказ
-            </u-button>
-        </div>
+            </div>
+        </nuxt-link>
     </div>
 </template>
 
@@ -68,7 +66,7 @@ await cartStore.hydrate()
 const cart = computed(() => cartStore.cart)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .sidebar-cart {
     display: flex;
     flex-direction: column;
@@ -76,9 +74,18 @@ const cart = computed(() => cartStore.cart)
     max-height: 100vh; /* Ограничиваем высоту экрана */
     overflow: hidden; /* Запрещаем прокрутку всего компонента */
 }
+
 .checkout-button {
-    letter-spacing: -0.5px;
+    @apply bg-robins-egg-blue-500 flex items-center justify-center pt-1;
+
+    div {
+        @apply flex items-center gap-2 text-white;
+        letter-spacing: 1px;
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 32px;
+    }
 }
+
 .cart-items {
     display: flex;
     flex-direction: column;

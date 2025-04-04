@@ -4,7 +4,6 @@
     </NuxtLayout>
 </template>
 <script setup lang="ts">
-import './css/vars.css'
 const { siteName } = useAppConfig()
 
 useHead({

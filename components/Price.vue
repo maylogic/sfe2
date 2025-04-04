@@ -33,20 +33,18 @@ const price = useFragment(PriceFragmentDoc, props.data)
     align-items: center;
     gap: 0.5rem;
     &.discounted .regular-price {
+        @apply text-storm-dust-500 opacity-30;
         text-decoration: line-through;
-        color: #333;
         margin-bottom: -1px;
     }
 }
 
 .regular-price {
-    font-size: 1rem;
+    font-size: 18px;
     color: #000;
-    opacity: 0.7;
 }
 
 .discounted-price {
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 20px;
 }
 </style>

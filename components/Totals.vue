@@ -1,8 +1,5 @@
 <template>
     <div class="totals-container">
-        <!-- Подзаголовок -->
-        <h3 class="totals-title">Итого</h3>
-
         <!-- Список итоговых сумм -->
         <div class="totals-list">
             <div class="totals-item">

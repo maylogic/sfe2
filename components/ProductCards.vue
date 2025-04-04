@@ -2,13 +2,54 @@
     <div class="product-grid-container">
         <!-- Сетка карточек -->
         <div class="product-grid">
-            <div
+            <ProductMiniCard
                 v-for="product in data?.products.data"
                 :key="product.key"
-                class="product-card"
-            >
-                <ProductMiniCard :data="product" />
-            </div>
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
+            <ProductMiniCard
+                v-for="product in data?.products.data"
+                :key="product.key"
+                :data="product"/>
         </div>
 
         <pagination
@@ -30,7 +71,7 @@ const handlePageChange = (newPage: number) => {
 }
 const currentPage = ref(1)
 
-const { data, executeQuery } = await useQuery({
+const {data, executeQuery} = await useQuery({
     query: ProductCardsDocument,
     variables: {
         first: 10,
@@ -59,20 +100,7 @@ onMounted(() => {
 }
 
 .product-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-}
-
-.product-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease;
-}
-
-.product-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    @apply grid gap-6 grid-cols-1 sm:grid-cols-3 md:grid-cols-4;
 }
 
 .card-link {

@@ -1,17 +1,16 @@
 <template>
-    <UCard :key="product.key">
-        <product-link :slug="product.slug">
-            <GalleryItem
-                v-if="product.primary_image"
-                :data="product.primary_image"
-            />
-        </product-link>
-        <product-link :slug="product.slug">
-            <h3 class="font-semibold">{{ product.name }}</h3>
-        </product-link>
+    <product-link
+        :class="{ 'in-viewport': isInViewport }"
+        ref="gridItem"
+        class="product-card flex flex-col gap-3" :slug="product.slug">
+        <GalleryItem
+            v-if="product.primary_image"
+            :data="product.primary_image"
+        />
+        <h3>{{ product.name }}</h3>
         <price :data="product.price"/>
-        <u-button class="uppercase" block :to="`/product/${product.slug}`">Создать</u-button>
-    </UCard>
+        <div class="create-and-buy">Создать и купить</div>
+    </product-link>
 </template>
 <script setup lang="ts">
 import {
@@ -27,4 +26,91 @@ const props = defineProps<{
 }>()
 
 const product = useFragment(ProductMiniFragmentDoc, props.data)
+
+const isInViewport = ref(false);
+const gridItem = useTemplateRef<InstanceType<typeof ProductLink>>('gridItem');
+
+let observer: IntersectionObserver
+
+onMounted(() => {
+    if (window && window.screen.width < 1024) {
+        observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    isInViewport.value = entry.isIntersecting;
+                });
+            },
+            {
+                threshold: 1,
+            }
+        );
+
+        if (gridItem.value) {
+            observer.observe(gridItem.value.$el);
+        }
+    }
+});
+
+onUnmounted(() => {
+    if (observer && gridItem.value) {
+        observer.unobserve(gridItem.value.$el);
+    }
+});
 </script>
+<style lang="scss">
+.product-card {
+    @apply border-storm-dust-500 rounded-md p-[1px] relative;
+    .create-and-buy {
+        @apply uppercase invisible bg-brilliant-rose-500 rounded-md text-2xl pt-2 pb-1 text-white font-bold;
+        font-family: "Bebas Neue", sans-serif;
+        text-align: center;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 1rem;
+    }
+
+    &:after {
+        content: "";
+        box-shadow: 0 .25rem .625rem 0 #0006;
+        position: absolute;
+        background: #fff;
+        z-index: -1;
+        top: -.75rem;
+        bottom: -4.75rem;
+        left: -.75rem;
+        right: -.75rem;
+        border-radius: .25rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .12s;
+        will-change: opacity;
+        display: block;
+    }
+
+    &:hover, &.in-viewport {
+        z-index: 1;
+
+        &:after {
+            @apply visible opacity-100;
+        }
+
+        .create-and-buy {
+            @apply visible;
+        }
+    }
+
+    h3 {
+        font-weight: bold;
+    }
+    h3, .price-container {
+        font-weight: bold;
+        font-family: "Fira Sans", sans-serif !important;
+        font-size: 18px !important;
+    }
+    .price-container {
+        font-weight: 900;
+    }
+}
+</style>
