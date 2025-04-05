@@ -15,7 +15,15 @@
                 @toggle="show = !show"
             />
         </UFormGroup>
-        <UButton type="submit" :disabled="fetching"> Войти</UButton>
+        <div class="flex items-center gap-2">
+            <UButton type="submit" :disabled="fetching">
+                Войти
+            </UButton>
+
+            <u-button variant="outline" to="/register">
+                Регистрация
+            </u-button>
+        </div>
         <UProgress v-if="fetching" size="xl"/>
         <u-alert
             v-if="invalidCredentials"

@@ -1,9 +1,7 @@
 <template>
     <div class="flex items-center gap-2" v-if="!auth.isAuthenticated">
-        <u-button variant="outline" color="storm-dust" class="hover:text-brilliant-rose-500" to="/login">Войти
-        </u-button>
-        <u-button variant="outline" color="storm-dust" class="hover:text-brilliant-rose-500" to="/register">
-            Регистрация
+        <u-button variant="outline" color="storm-dust" class="hover:text-primary-500" to="/login">
+            Войти
         </u-button>
     </div>
     <customer-bar v-else/>

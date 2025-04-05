@@ -6,14 +6,14 @@
         class="space-y-4 max-w-[320px] mx-auto"
     >
         <UFormGroup label="Имя" name="name">
-            <UInput autocomplete="name" v-model="state.name" />
+            <UInput autocomplete="name" v-model="state.name"/>
         </UFormGroup>
         <UFormGroup
             label="Email"
             name="email"
             :error="errors.email ? errors.email[0] : undefined"
         >
-            <form-input-username v-model="state.email" />
+            <form-input-username v-model="state.email"/>
         </UFormGroup>
         <UFormGroup label="Пароль" name="password">
             <form-input-password
@@ -31,15 +31,24 @@
                 @toggle="showPassword = !showPassword"
             />
         </UFormGroup>
-        <UButton type="submit" :disabled="fetching">
-            Зарегистрироваться
-        </UButton>
-        <UProgress v-if="fetching" size="xl" />
+
+        <div class="flex items-center gap-2">
+            <UButton type="submit" :disabled="fetching">
+                Зарегистрироваться
+            </UButton>
+            <u-button variant="outline" to="/register">
+                Регистрация
+            </u-button>
+        </div>
+        <UProgress v-if="fetching" size="xl"/>
     </UForm>
 </template>
 
 <script setup lang="ts">
-import { type InferType, object } from 'yup'
+import {
+    type InferType,
+    object
+} from 'yup'
 import {
     emailValidation,
     getConfirmPasswordValidation,
@@ -62,7 +71,7 @@ const schema = object({
     passwordConfirmation: getConfirmPasswordValidation(),
 })
 
-const { fetching, executeMutation } = useMutation(RegisterCustomerDocument)
+const {fetching, executeMutation} = useMutation(RegisterCustomerDocument)
 
 type Schema = InferType<typeof schema>
 
@@ -73,7 +82,7 @@ const state = reactive({
     passwordConfirmation: undefined,
 })
 
-const { errors, errorHandler } =
+const {errors, errorHandler} =
     useCombinedErrorHandler<FieldErrors<typeof state>>()
 
 watch(state, (newValue) => {
@@ -85,7 +94,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         return
     }
     errors.value = {}
-    const { data, error } = await executeMutation(event.data)
+    const {data, error} = await executeMutation(event.data)
     errorHandler(error)
     if (!error) {
         console.log('User registered:', data?.registerCustomer)

@@ -1,6 +1,5 @@
 <template>
     <div class="gallery-item">
-        <!-- Отображение медиафайла -->
         <div class="media-container">
             <img
                 v-if="!item.is_video"
@@ -19,9 +18,12 @@
 </template>
 
 <script setup lang="ts">
-// Принимаем данные через props
-import { type FragmentType, useFragment } from '~/gql'
+import {
+    type FragmentType,
+    useFragment
+} from '~/gql'
 import { GalleryItemFragmentDoc } from '~/gql/graphql'
+import { STORAGE_URL } from "~/constants/storage";
 
 const props = defineProps<{
     data: FragmentType<typeof GalleryItemFragmentDoc>
@@ -29,14 +31,12 @@ const props = defineProps<{
 
 const item = useFragment(GalleryItemFragmentDoc, props.data)
 
-// Формирование URL для изображений
 const getImageUrl = (filename: string) => {
-    return `http://localhost:8080/storage/${filename}` // Замените на реальный путь к изображениям
+    return `${STORAGE_URL}/${filename}`
 }
 
-// Формирование URL для видео
 const getVideoUrl = (filename: string) => {
-    return `http://localhost:8080/storage/${filename}` // Замените на реальный путь к видео
+    return `${STORAGE_URL}/${filename}`
 }
 </script>
 

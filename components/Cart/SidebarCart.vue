@@ -96,7 +96,7 @@ const cart = computed(() => cartStore.cart)
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .empty-cart {

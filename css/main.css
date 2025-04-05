@@ -102,3 +102,9 @@
         @apply pb-1;
     }
 }
+.black-pseudo-button {
+    @apply rounded-md py-2 text-white bg-black cursor-pointer px-2 flex items-center gap-2;
+    &:hover {
+        @apply bg-brilliant-rose-500;
+    }
+}

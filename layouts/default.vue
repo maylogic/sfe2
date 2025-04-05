@@ -1,13 +1,14 @@
 <template>
     <UContainer>
         <div class="flex items-center py-5">
-            <UHorizontalNavigation class="sm:flex hidden" :links="menuItems" />
+            <horizontal-nav v-if="!!menuItems.length" :items="menuItems"/>
             <u-button
+                v-if="!!menuItems.length"
                 class="sm:hidden"
                 icon="i-lucide-menu"
                 @click="menuOpen = !menuOpen"
             />
-            <div class="ml-auto flex items-center gap-5">
+            <div class="ml-auto flex items-center gap-2">
                 <ClientOnly>
                     <Suspense>
                         <user />
@@ -16,11 +17,11 @@
                         </template>
                     </Suspense>
                 </ClientOnly>
-                <u-button
-                    icon="i-lucide-shopping-bag"
-                    label="Корзина"
-                    @click="cartStore.open = true"
-                />
+                <div class="black-pseudo-button font-fira-sans max-h-[32px]"
+                    @click="cartStore.open = true">
+                    <u-icon class="text-[18px]" name="i-lucide-shopping-bag"/>
+                    Корзина
+                </div>
             </div>
         </div>
         <closable-slideover title="Меню" v-model="menuOpen">
@@ -35,6 +36,7 @@
 <script setup lang="ts">
 import { useCartStore } from '~/stores/cart'
 import ClosableSlideover from '~/components/ClosableSlideover.vue'
+import HorizontalNav from "~/components/HorizontalNav.vue";
 
 const menuOpen = ref(false)
 const menuItems = [

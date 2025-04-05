@@ -2,6 +2,7 @@ query ProductBySlug($slug: String!) {
     getProductBySlug(
         slug: $slug
     ) {
+        key
         description
         name
         id

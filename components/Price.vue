@@ -42,12 +42,10 @@ const price = useFragment(PriceFragmentDoc, props.data)
 
 .regular-price {
     font-weight: 900;
-    font-size: 18px;
     color: #000;
 }
 
 .discounted-price {
     font-weight: 900;
-    font-size: 18px;
 }
 </style>

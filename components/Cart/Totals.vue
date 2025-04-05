@@ -10,14 +10,14 @@
             <div v-if="totals.points_used" class="flex flex-col w-full">
                 <div class="totals-item">
                     <span class="label">Использовано баллов:</span>
-                    <span class="value">{{ totals.points_used }}</span>
+                    <span class="text-xl">{{ totals.points_used }}</span>
                 </div>
                 <span class="points-description">(1 балл = 1 ₽, применяются до других скидок)</span>
             </div>
 
             <div class="totals-item grand-total">
                 <span class="label font-black">Итог:</span>
-                <price class="value" :data="totals.grand_total"/>
+                <price class="text-2xl" :data="totals.grand_total"/>
             </div>
         </div>
     </div>
@@ -71,29 +71,4 @@ const totals = computed(() => useFragment(TotalsFragmentDoc, props.data))
     color: #333;
 }
 
-.value {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #333;
-    text-align: right;
-}
-
-.grand-total {
-    .value {
-        .regular-price {
-            font-weight: bold;
-            font-size: 22px;
-        }
-
-        &.discounted {
-            .regular-price {
-                font-weight: 400;
-            }
-        }
-
-        .discounted-price {
-            font-size: 22px;
-        }
-    }
-}
 </style>

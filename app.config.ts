@@ -22,6 +22,6 @@ export default defineAppConfig({
             plus: 'i-lucide-plus',
             search: 'i-lucide-search',
             user: 'i-lucide-square-user'
-        }
+        },
     },
 })

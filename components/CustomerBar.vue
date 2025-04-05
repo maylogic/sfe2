@@ -11,7 +11,7 @@
         }"
     >
         <u-button
-            icon="i-lucide-user" color="storm-dust" class="hover:text-brilliant-rose-500"
+            icon="i-lucide-user" color="storm-dust" class="hover:text-primary-500"
             label="Кабинет"
             variant="outline"
         />
