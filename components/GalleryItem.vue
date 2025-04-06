@@ -3,13 +3,13 @@
         <div class="media-container">
             <img
                 v-if="!item.is_video"
-                :src="getImageUrl(item.filename)"
+                :src="getStorageUrl(item.filename)"
                 :alt="item.label"
                 class="media-image"
             />
             <video
                 v-else
-                :src="getVideoUrl(item.filename)"
+                :src="getStorageUrl(item.filename)"
                 controls
                 class="media-video"
             ></video>
@@ -23,21 +23,13 @@ import {
     useFragment
 } from '~/gql'
 import { GalleryItemFragmentDoc } from '~/gql/graphql'
-import { STORAGE_URL } from "~/constants/storage";
+import { getStorageUrl } from "~/constants/storage";
 
 const props = defineProps<{
     data: FragmentType<typeof GalleryItemFragmentDoc>
 }>()
 
 const item = useFragment(GalleryItemFragmentDoc, props.data)
-
-const getImageUrl = (filename: string) => {
-    return `${STORAGE_URL}/${filename}`
-}
-
-const getVideoUrl = (filename: string) => {
-    return `${STORAGE_URL}/${filename}`
-}
 </script>
 
 <style scoped>

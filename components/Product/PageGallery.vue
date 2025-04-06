@@ -1,7 +1,7 @@
 <template>
     <div class="product-gallery">
         <div class="current-image">
-            <gallery-item :data="gallery[currentItem]"/>
+            <gallery-item v-if="gallery[currentItem]" :data="gallery[currentItem]"/>
         </div>
         <div class="items-carousel">
             <gallery-carousel-item :class="{'selected': index === currentItem}" :data="item"

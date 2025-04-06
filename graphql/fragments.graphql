@@ -139,3 +139,21 @@ fragment SidebarCart on Cart {
     apply_balance
     can_apply_balance
 }
+fragment DesignItem on Design {
+    id
+    preview
+    label
+    bases {
+        filename
+        id
+        label
+        text_areas {
+            ...TextArea
+        }
+    }
+    fonts {
+        name
+        label
+        filename_woff2
+    }
+}

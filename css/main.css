@@ -17,6 +17,7 @@
     src: url(/fonts/FiraSansBoldLatExt.woff2) format('woff2');
     unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+
 /* latin */
 @font-face {
     font-family: 'Fira Sans';
@@ -36,6 +37,7 @@
     src: url(/fonts/FiraSansBoldCyrExt.woff2) format('woff2');
     unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
+
 /* cyrillic */
 @font-face {
     font-family: 'Fira Sans';
@@ -56,6 +58,7 @@
     src: url(/fonts/FiraSansBlackCyrExt.woff2) format('woff2');
     unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
+
 /* cyrillic */
 @font-face {
     font-family: 'Fira Sans';
@@ -75,6 +78,7 @@
     src: url(/fonts/FiraSansBlackLatExt.woff2) format('woff2');
     unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+
 /* latin */
 @font-face {
     font-family: 'Fira Sans';
@@ -89,21 +93,32 @@
     font-family: 'Fira Sans', sans-serif;
     font-weight: bold;
 }
+
+@utility font-fira-sans {
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: bold;
+}
+
 .font-bebas-neue {
     font-family: 'Bebas Neue', sans-serif;
 }
+
 .font-black {
     font-weight: 900;
 }
+
 .rose-pseudo-button {
     @apply uppercase bg-brilliant-rose-500 rounded-md text-2xl pt-2 pb-2 text-white cursor-pointer;
     text-align: center;
+
     &.font-bebas-neue {
         @apply pb-1;
     }
 }
+
 .black-pseudo-button {
     @apply rounded-md py-2 text-white bg-black cursor-pointer px-2 flex items-center gap-2;
+
     &:hover {
         @apply bg-brilliant-rose-500;
     }

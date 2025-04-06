@@ -52,14 +52,8 @@ query ProductBySlug($slug: String!) {
             ...GalleryItem
         }
         designs {
-            bases {
-                filename
-                id
-                label
-                text_areas {
-                    ...TextArea
-                }
-            }
+            id
+            ...DesignItem
         }
     }
 }
