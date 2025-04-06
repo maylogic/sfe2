@@ -1,11 +1,14 @@
 <template>
     <div class="product-page">
         <product-page-gallery :gallery="data.getProductBySlug.gallery"/>
-        <product-info :product="data.getProductBySlug"/>
+        <div class="flex flex-col">
+            <product-info :product="data.getProductBySlug"/>
+            <add-to-cart :disabled="false" :product-id="data.getProductBySlug.id"/>
+        </div>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {useQuery} from '@urql/vue'
 import {ProductBySlugDocument} from '~/gql/graphql.js'
 
@@ -15,7 +18,7 @@ const {data, error, fetching, executeQuery} = await useQuery({
     query: ProductBySlugDocument,
     variables: {slug: productSlug},
 })
-// Проверяем ошибки или отсутствие данных
+
 if (error.value) {
     console.error('GraphQL Error:', error.value)
     throw createError({

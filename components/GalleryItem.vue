@@ -51,7 +51,6 @@ const getVideoUrl = (filename: string) => {
 .media-container {
     width: 100%;
     overflow: hidden;
-    border-radius: 0.5rem;
 }
 
 .media-image,

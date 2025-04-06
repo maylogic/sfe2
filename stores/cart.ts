@@ -5,7 +5,10 @@ import {
     SidebarCartFragmentDoc
 } from '~/gql/graphql'
 import { useQuery } from '@urql/vue'
-import { useFragment } from '~/gql'
+import {
+    type FragmentType,
+    useFragment
+} from '~/gql'
 
 export interface CartStoreData {
     cart: SidebarCartFragment
@@ -31,9 +34,11 @@ export const useCartStore = defineStore('cart', {
         error: false
     }),
     actions: {
-        setData(data: SidebarCartFragment) {
+        setData(data: undefined | FragmentType<typeof SidebarCartFragmentDoc>) {
             this.error = false
-            this.cart = data
+            if (data) {
+                this.cart = useFragment(SidebarCartFragmentDoc, data)
+            }
         },
         async hydrate() {
             this.error = false

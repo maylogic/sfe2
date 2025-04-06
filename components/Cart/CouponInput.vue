@@ -1,10 +1,11 @@
 <template>
     <form @submit.prevent="apply" class="coupon-code-form" :class="{'has-error': !!errors.length}">
         <div class="flex items-center gap-5">
-            <u-input v-model="code" size="xl" />
+            <u-input v-model="code" size="xl"/>
             <u-button variant="outline"
                       :disabled="fetching"
-                      class="font-bebas-neue pt-3 leading-[24px] text-[24px] max-h-[44px] uppercase" size="xl" type="submit">
+                      class="font-bebas-neue pt-3 leading-[24px] text-[24px] max-h-[44px] uppercase" size="xl"
+                      type="submit">
                 Применить
             </u-button>
         </div>
@@ -16,15 +17,14 @@
 <script setup lang="ts">
 import { useCartStore } from '~/stores/cart'
 import { useMutation } from '@urql/vue'
-import { ApplyCouponDocument, SidebarCartFragmentDoc } from '~/gql/graphql'
-import { useFragment } from '~/gql'
+import { ApplyCouponDocument } from '~/gql/graphql'
 import { useExceptionHandler } from '~/composables/useExceptionHandler'
 
 const cartStore = useCartStore()
-const { executeMutation, fetching } = useMutation(ApplyCouponDocument)
+const {executeMutation, fetching} = useMutation(ApplyCouponDocument)
 const code = ref('')
 
-const { errors, errorHandler } = useExceptionHandler()
+const {errors, errorHandler} = useExceptionHandler()
 watch(code, () => {
     errors.value = []
 })
@@ -34,12 +34,11 @@ const apply = async () => {
         errors.value = ['Код должен состоять из 9 символов']
         return
     }
-    const { data, error } = await executeMutation({
+    const {data, error} = await executeMutation({
         code: code.value,
     })
     if (data?.applyCoupon) {
-        const cartData = useFragment(SidebarCartFragmentDoc, data?.applyCoupon)
-        cartStore.setData(cartData)
+        cartStore.setData(data?.applyCoupon)
     }
     if (error) {
         errorHandler(error)
@@ -49,6 +48,7 @@ const apply = async () => {
 <style>
 .coupon-code-form {
     @apply pb-6;
+
     &.has-error {
         @apply pb-0;
     }

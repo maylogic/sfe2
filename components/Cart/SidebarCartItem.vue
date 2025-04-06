@@ -18,6 +18,7 @@
 
         <quantity-input
             :quantity="quantity"
+            :disabled="fetching"
             @update:quantity="quantity = $event"
         />
 
@@ -57,8 +58,8 @@ import {
 } from '~/gql'
 import {
     RemoveCartItemDocument,
-    SidebarCartFragmentDoc,
-    SidebarCartItemFragmentDoc
+    SidebarCartItemFragmentDoc,
+    UpdateCartItemQuantityDocument
 } from '~/gql/graphql'
 import ProductLink from '~/components/ProductLink.vue'
 import { useMutation } from "@urql/vue";
@@ -70,14 +71,26 @@ const props = defineProps<{
 
 const item = computed(() => useFragment(SidebarCartItemFragmentDoc, props.data))
 const quantity = ref(item.value.quantity)
-const {executeMutation, fetching} = useMutation(RemoveCartItemDocument)
+const {executeMutation: removeCartItem, fetching: removing} = useMutation(RemoveCartItemDocument)
+const {
+    executeMutation: updateCartItemQuantity,
+    fetching: updatingQuantity
+} = useMutation(UpdateCartItemQuantityDocument)
+const fetching = computed(() => removing.value || updatingQuantity.value)
 const cart = useCartStore()
 const remove = async () => {
-    const {data} = await executeMutation({cartItemId: item.value.id})
-    if (data?.removeCartItem) {
-        cart.setData(useFragment(SidebarCartFragmentDoc, data?.removeCartItem))
-    }
+    const {data} = await removeCartItem({cartItemId: item.value.id})
+    cart.setData(data?.removeCartItem)
 }
+watchDebounced(
+    quantity,
+    async () => {
+        const {data} = await updateCartItemQuantity({cartItemId: item.value.id, quantity: quantity.value})
+        cart.setData(data?.updateCartItemQuantity)
+    },
+    {debounce: 500, maxWait: 1000},
+)
+
 </script>
 
 <style scoped>

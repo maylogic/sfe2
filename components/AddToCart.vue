@@ -1,12 +1,14 @@
 <template>
-    <div class="flex items-center justify-between mt-4">
+    <div class="flex max-w-fit gap-2 items-center justify-between mt-4">
         <quantity-input
+            :disabled="disabled || fetching"
             :quantity="quantity"
             @update:quantity="quantity = $event"
         />
 
         <UButton
-            label="Add to Cart"
+            :label="fetching ? 'Добавляем...' : 'Добавить в корзину'"
+            :disabled="disabled || fetching"
             size="sm"
             @click="addToCart"
         />
@@ -14,33 +16,28 @@
 </template>
 <script setup lang="ts">
 import QuantityInput from "~/components/QuantityInput.vue";
-import { useFragment } from "~/gql";
-import {
-    AddCartItemDocument,
-    SidebarCartFragmentDoc
-} from "~/gql/graphql";
+import { AddCartItemDocument } from "~/gql/graphql";
 import { useMutation } from "@urql/vue";
 import { useCartStore } from "~/stores/cart";
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     productId: string
-}>()
+    disabled: boolean
+}>(), {disabled: false})
 // Локальное состояние для количества
 const quantity = ref(1)
 const cart = useCartStore()
 
-const {executeMutation} = useMutation(AddCartItemDocument)
+const {executeMutation, fetching} = useMutation(AddCartItemDocument)
 const addToCart = () => {
     executeMutation({
         productId: props.productId,
         quantity: quantity.value,
     }).then((result) => {
         if (result.data?.addCartItem) {
-            const cartData = useFragment(
-                SidebarCartFragmentDoc,
-                result.data?.addCartItem
-            )
-            cart.setData(cartData)
+            cart.setData(result.data?.addCartItem)
+            cart.open = true
+            quantity.value = 1
         }
     })
 }

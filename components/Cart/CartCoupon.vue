@@ -16,9 +16,11 @@
 import {
     CartCouponFragmentDoc,
     RemoveCouponDocument,
-    SidebarCartFragmentDoc,
 } from '~/gql/graphql'
-import { type FragmentType, useFragment } from '~/gql'
+import {
+    type FragmentType,
+    useFragment
+} from '~/gql'
 import { useMutation } from '@urql/vue'
 import { useCartStore } from '~/stores/cart'
 
@@ -28,14 +30,13 @@ const props = defineProps<{
 
 const coupon = useFragment(CartCouponFragmentDoc, props.data)
 
-const { executeMutation } = useMutation(RemoveCouponDocument)
+const {executeMutation} = useMutation(RemoveCouponDocument)
 const cartStore = useCartStore()
 
 const remove = async () => {
-    const { data } = await executeMutation({ code: coupon.code })
+    const {data} = await executeMutation({code: coupon.code})
     if (data?.removeCoupon) {
-        const cartData = useFragment(SidebarCartFragmentDoc, data?.removeCoupon)
-        cartStore.setData(cartData)
+        cartStore.setData(data?.removeCoupon)
     }
 }
 </script>
