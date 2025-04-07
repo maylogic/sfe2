@@ -23,8 +23,11 @@
                                :data="availableFonts" :valid="personalizeValidity.fontId"/>
                 <product-text-lines v-if="addProductData.design && data.getProductBySlug.line_definitions"
                                     :errors="textLineErrors"
+                                    :hidden="hiddenTextLines"
                                     :values="addProductData.textLines"
                                     :data="data.getProductBySlug.line_definitions" :index="4"
+                                    @hide="hideTextLine"
+                                    @show="showTextLine"
                                     @update:text-line="updateTextLine"
                                     :valid="personalizeValidity.textLines"/>
 
@@ -95,6 +98,7 @@ const addProductData = reactive<PersonalizeInputData>({
     textLines: new Map<string, string | null>()
 })
 const textLineErrors = ref(new Map<string, string>())
+const hiddenTextLines = ref(new Map<number, boolean>())
 const valid = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const validate = () => {
@@ -154,6 +158,30 @@ const updateTextLine = (lineId: string, value: string | null) => {
         personalizeValidity.textLines = true
     }
 }
+const hideTextLine = (lineId: string) => {
+    addProductData.textLines.delete(lineId)
+    textLineErrors.value.delete(lineId)
+    hiddenTextLines.value.set(parseInt(lineId), true)
+}
+const showTextLine = () => {
+    const ids = [...hiddenTextLines.value.keys()].sort()
+    if (ids.length) {
+        hiddenTextLines.value.delete(ids[0])
+    }
+}
+
+if (data.value.getProductBySlug) {
+    const textData = new Map<string, string | null>(),
+        hidden = new Map<number, boolean>()
+    data.value?.getProductBySlug?.line_definitions?.forEach(def => {
+        textData.set(def.id, null)
+        if (def.hidden) {
+            hidden.set(parseInt(def.id), true)
+        }
+    })
+    addProductData.textLines = textData
+    hiddenTextLines.value = hidden
+}
 
 useHead({
     title: data.value.getProductBySlug.meta_title,
@@ -170,13 +198,6 @@ onMounted(() => {
         executeQuery({
             requestPolicy: 'network-only',
             variables: {slug: productSlug},
-        }).then(({data}) => {
-            const textData = new Map<string, string | null>()
-            data.value?.getProductBySlug?.line_definitions?.forEach(def => {
-                textData.set(def.id, null)
-            })
-            addProductData.textLines = textData
-            console.log(addProductData.textLines)
         })
     }
 })

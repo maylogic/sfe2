@@ -1,5 +1,5 @@
 <template>
-    <personalize-item :class="{'selected': isCurrentColor()}" @click="updateColor">
+    <personalize-item :selected="currentColorId === color.id" @click="updateColor">
         <div class="color-item font-iskra" :style="`background: ${color.hex}`">
             {{ color.label }}
         </div>

@@ -1,5 +1,5 @@
 <template>
-    <personalize-item :class="{'selected': isCurrent()}" @click="updateFont">
+    <personalize-item :selected="currentFontId === font.id" @click="updateFont">
         <img :src="getStorageUrl(font.preview)" :alt="font.label" class="w-28"/>
     </personalize-item>
 </template>

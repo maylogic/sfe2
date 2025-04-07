@@ -1,5 +1,5 @@
 <template>
-    <personalize-item :class="{'selected': isCurrentDesign()}" @click="updateDesign">
+    <personalize-item :selected="currentDesign?.id === design.id" @click="updateDesign">
         <div class="design-item">
             <img :src="getStorageUrl(design.preview)" :alt="design.label" style="width: 80px"/>
             <div class="label font-fira-sans">{{ design.label }}</div>
@@ -23,12 +23,9 @@ const props = defineProps<{
 }>()
 
 const design = useFragment(DesignItemFragmentDoc, props.data)
-const isCurrentDesign = () => {
-    return props.currentDesign?.id === design.id
-}
 
 const updateDesign = () => {
-    emit("update:design", isCurrentDesign() ? null : design)
+    emit("update:design", props.currentDesign?.id === design.id ? null : design)
 }
 
 const emit = defineEmits(['update:design'])

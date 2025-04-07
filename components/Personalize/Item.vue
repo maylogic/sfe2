@@ -1,10 +1,13 @@
 <template>
-    <div class="personalize-item min-w-max w-max">
+    <div class="personalize-item min-w-max w-max" :class="{'selected': selected}">
         <div class="rounded-2xl overflow-hidden min-w-max w-max">
             <slot/>
         </div>
     </div>
 </template>
+<script lang="ts" setup>
+defineProps<{ selected: boolean }>()
+</script>
 <style lang="scss">
 .personalize-item {
     @apply cursor-pointer relative;
