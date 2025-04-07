@@ -48,6 +48,8 @@ query ProductBySlug($slug: String!) {
             label
             max_length
             required
+            default_value
+            hidden
         }
         gallery {
             ...GalleryItem

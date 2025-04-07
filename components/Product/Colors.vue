@@ -1,10 +1,12 @@
 <template>
-    <personalize-block :valid="valid" :index="index" label="Выберите цвет" :translate-step="112">
-        <personalize-color-item @update:color="updateColor"
-                                :current-color-id="colorId"
-                                :key="color.id"
-                                :color="color"
-                                v-for="color in data"/>
+    <personalize-block :valid="valid" :index="index" label="Выберите цвет">
+        <personalize-scrollable-items :translate-step="112">
+            <personalize-color-item @update:color="updateColor"
+                                    :current-color-id="colorId"
+                                    :key="color.id"
+                                    :color="color"
+                                    v-for="color in data"/>
+        </personalize-scrollable-items>
     </personalize-block>
 </template>
 <script setup lang="ts">

@@ -21,6 +21,12 @@
                                :index="3"
                                :font-id="addProductData.fontId"
                                :data="availableFonts" :valid="personalizeValidity.fontId"/>
+                <product-text-lines v-if="addProductData.design && data.getProductBySlug.line_definitions"
+                                    :errors="textLineErrors"
+                                    :values="addProductData.textLines"
+                                    :data="data.getProductBySlug.line_definitions" :index="4"
+                                    @update:text-line="updateTextLine"
+                                    :valid="personalizeValidity.textLines"/>
 
                 <price class="text-2xl" :key="data.getProductBySlug.key" :data="data.getProductBySlug.price"/>
 
@@ -55,6 +61,7 @@ import {
     validateColor,
     validateDesign,
     validateFont,
+    validatePerTextLine,
     validateTextLines
 } from "~/utils/product";
 import { getKeys } from "~/utils/type"
@@ -85,8 +92,9 @@ const addProductData = reactive<PersonalizeInputData>({
     design: null,
     colorId: null,
     fontId: null,
-    textLines: []
+    textLines: new Map<string, string | null>()
 })
+const textLineErrors = ref(new Map<string, string>())
 const valid = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const validate = () => {
@@ -101,6 +109,7 @@ const cart = useCartStore()
 const addToCart = () => {
     if (!data.value?.getProductBySlug) return
     validate()
+    textLineErrors.value = validatePerTextLine(data.value, addProductData)
     if (valid.value) {
         addToCartExec({
             productId: data.value?.getProductBySlug.id,
@@ -137,6 +146,14 @@ const updateFont = (fontId: string | null) => {
     addProductData.fontId = fontId
     personalizeValidity.fontId = fontId ? validateFont(data.value, addProductData) : null
 }
+const updateTextLine = (lineId: string, value: string | null) => {
+    addProductData.textLines.set(lineId, value)
+    const hadErrors = textLineErrors.value.size !== 0
+    textLineErrors.value.delete(lineId)
+    if (hadErrors && textLineErrors.value.size === 0) {
+        personalizeValidity.textLines = true
+    }
+}
 
 useHead({
     title: data.value.getProductBySlug.meta_title,
@@ -153,6 +170,13 @@ onMounted(() => {
         executeQuery({
             requestPolicy: 'network-only',
             variables: {slug: productSlug},
+        }).then(({data}) => {
+            const textData = new Map<string, string | null>()
+            data.value?.getProductBySlug?.line_definitions?.forEach(def => {
+                textData.set(def.id, null)
+            })
+            addProductData.textLines = textData
+            console.log(addProductData.textLines)
         })
     }
 })

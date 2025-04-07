@@ -1,10 +1,12 @@
 <template>
-    <personalize-block :valid="valid" :index="index" label="Выберите шрифт" :translate-step="122">
-        <personalize-font-item @update:font="updateFont"
-                               :current-font-id="fontId"
-                               :key="font.id"
-                               :font="font"
-                               v-for="font in data"/>
+    <personalize-block :valid="valid" :index="index" label="Выберите шрифт">
+        <personalize-scrollable-items :translate-step="122">
+            <personalize-font-item @update:font="updateFont"
+                                   :current-font-id="fontId"
+                                   :key="font.id"
+                                   :font="font"
+                                   v-for="font in data"/>
+        </personalize-scrollable-items>
     </personalize-block>
 </template>
 <script setup lang="ts">
