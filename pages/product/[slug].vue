@@ -4,10 +4,16 @@
         <div class="flex flex-col">
             <product-info :product="data.getProductBySlug"/>
             <div class="create-fields">
-                <h2 class="font-fira-sans">Создание и предпросмотр</h2>
+                <h2 class="font-iskra">Создание и предпросмотр</h2>
                 <product-designs @update:design="updateDesign"
+                                 :index="1"
                                  :current-design="addProductData.design"
                                  :data="data.getProductBySlug.designs" :valid="personalizeValidity.design"/>
+                <product-colors @update:color="updateColor"
+                                v-if="availableColors.length"
+                                :index="2"
+                                :color-id="addProductData.colorId"
+                                :data="availableColors" :valid="personalizeValidity.colorId"/>
 
                 <UButton
                     :label="addingToCart ? 'Добавляем в корзину...' : 'Создать мой адресник'"
@@ -28,6 +34,7 @@ import {
 } from '@urql/vue'
 import {
     AddCartItemDocument,
+    type Color,
     type DesignItemFragment,
     ProductBySlugDocument
 } from '~/gql/graphql.js'
@@ -103,10 +110,15 @@ const addToCart = () => {
         })
     }
 }
-
+const availableColors = ref<Array<Pick<Color, 'id' | 'label' | 'hex'>>>([])
 const updateDesign = (design: DesignItemFragment | null) => {
     addProductData.design = design
     personalizeValidity.design = design ? validateDesign(data.value, addProductData) : null
+    availableColors.value = design?.colors ? [...design?.colors] : []
+}
+const updateColor = (colorId: string | null) => {
+    addProductData.colorId = colorId
+    personalizeValidity.colorId = colorId ? validateColor(data.value, addProductData) : null
 }
 
 useHead({

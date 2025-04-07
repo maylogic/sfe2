@@ -1,6 +1,6 @@
 <template>
     <div class="personalize-block" :class="{'valid': valid === true, 'invalid': valid === false}">
-        <h3 class="font-fira-sans">{{ label }}</h3>
+        <h3 class="font-iskra">{{ index }}. {{ label }}</h3>
         <div class="personalize-items">
             <slot/>
         </div>
@@ -8,6 +8,7 @@
 </template>
 <script setup lang="ts">
 defineProps<{
+    index: number
     label: string
     valid: boolean | null
 }>()

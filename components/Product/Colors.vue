@@ -1,28 +1,26 @@
 <template>
-    <personalize-block label="1. Выберите дизайн">
-        <design-item @update:design="updateDesign"
-                     :design-id="designId"
-                     :key="design.id"
-                     :data="design"
-                     v-for="design in data"/>
+    <personalize-block :valid="valid" :index="index" label="Выберите цвет">
+        <personalize-color-item @update:color="updateColor"
+                                :current-color-id="colorId"
+                                :key="color.id"
+                                :color="color"
+                                v-for="color in data"/>
     </personalize-block>
 </template>
 <script setup lang="ts">
-import type { FragmentType } from "~/gql";
-import type {
-    Design,
-    DesignItemFragmentDoc
-} from "~/gql/graphql";
-import PersonalizeBlock from "~/components/Product/PersonalizeBlock.vue";
+import type { Color } from "~/gql/graphql";
+import PersonalizeBlock from "~/components/Personalize/Block.vue";
 
 defineProps<{
-    designId: string | null
-    data: Array<Pick<Design, 'id'> & FragmentType<typeof DesignItemFragmentDoc>>
+    valid: boolean | null
+    index: number
+    colorId: string | null
+    data: Array<Pick<Color, 'id' | 'label' | 'hex'>>
 }>()
 
-const updateDesign = (val: string) => {
-    emit("update:design", val)
+const updateColor = (val: string) => {
+    emit("update:color", val)
 }
 
-const emit = defineEmits(['update:design'])
+const emit = defineEmits(['update:color'])
 </script>

@@ -44,6 +44,7 @@ useHead({
         getFontPreloadLink('FiraSansBoldCyrExt.woff2'),
         getFontPreloadLink('FiraSansBoldLat.woff2'),
         getFontPreloadLink('FiraSansBoldLatExt.woff2'),
+        getFontPreloadLink('iskra_medium.woff2'),
         // TODO: перечислить здесь шрифты которые будут использоваться в редакторе
     ]
 })

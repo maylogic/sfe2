@@ -1,6 +1,6 @@
 <template>
-    <personalize-block :valid="valid" label="1. Выберите дизайн">
-        <design-item @update:design="updateDesign"
+    <personalize-block :index="index" :valid="valid" label="Выберите дизайн">
+        <personalize-design-item @update:design="updateDesign"
                      :current-design="currentDesign"
                      :key="design.id"
                      :data="design"
@@ -14,9 +14,9 @@ import type {
     DesignItemFragment,
     DesignItemFragmentDoc
 } from "~/gql/graphql";
-import PersonalizeBlock from "~/components/Product/PersonalizeBlock.vue";
 
 defineProps<{
+    index: number
     currentDesign: DesignItemFragment | null
     valid: boolean | null
     data: Array<Pick<Design, 'id'> & FragmentType<typeof DesignItemFragmentDoc>>

@@ -13,7 +13,6 @@ import {
     DesignItemFragmentDoc
 } from "~/gql/graphql";
 import { getStorageUrl } from "~/constants/storage";
-import PersonalizeItem from "~/components/Product/PersonalizeItem.vue";
 
 const props = defineProps<{
     currentDesign: DesignItemFragment | null

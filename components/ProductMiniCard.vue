@@ -7,7 +7,7 @@
             v-if="product.primary_image"
             :data="product.primary_image"
         />
-        <h3>{{ product.name }}</h3>
+        <h3 class="font-iskra">{{ product.name }}</h3>
         <price :data="product.price"/>
         <div class="rose-pseudo-button font-bebas-neue font-bold create-and-buy">Создать и купить</div>
     </product-link>
@@ -98,17 +98,8 @@ onUnmounted(() => {
             @apply visible;
         }
     }
-
-    h3 {
-        font-weight: bold;
-    }
-    h3, .price-container {
-        font-weight: bold;
-        font-family: "Fira Sans", sans-serif !important;
-        font-size: 18px !important;
-    }
     .price-container {
-        font-weight: 900;
+        font-size: 18px;
     }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="product-info">
-        <h1 class="font-bold font-fira-sans">{{ product.name }}</h1>
+        <h1 class="font-bold font-iskra">{{ product.name }}</h1>
         <div v-html="product.description"/>
         <price class="text-2xl" :key="product.key" :data="product.price"/>
     </div>
