@@ -161,5 +161,6 @@ fragment DesignItem on Design {
         name
         label
         filename_woff2
+        preview
     }
 }

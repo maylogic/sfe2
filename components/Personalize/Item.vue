@@ -1,6 +1,8 @@
 <template>
     <div class="personalize-item">
-        <slot/>
+        <div class="rounded-2xl overflow-hidden">
+            <slot/>
+        </div>
     </div>
 </template>
 <style lang="scss">

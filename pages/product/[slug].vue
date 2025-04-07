@@ -14,6 +14,11 @@
                                 :index="2"
                                 :color-id="addProductData.colorId"
                                 :data="availableColors" :valid="personalizeValidity.colorId"/>
+                <product-fonts @update:font="updateFont"
+                               v-if="availableFonts.length"
+                               :index="3"
+                               :font-id="addProductData.fontId"
+                               :data="availableFonts" :valid="personalizeValidity.fontId"/>
 
                 <UButton
                     :label="addingToCart ? 'Добавляем в корзину...' : 'Создать мой адресник'"
@@ -36,6 +41,7 @@ import {
     AddCartItemDocument,
     type Color,
     type DesignItemFragment,
+    type Font,
     ProductBySlugDocument
 } from '~/gql/graphql.js'
 import {
@@ -77,11 +83,6 @@ const addProductData = reactive<PersonalizeInputData>({
     fontId: null,
     textLines: []
 })
-watch(addProductData, () => {
-    if (needValidation.value) {
-        validate()
-    }
-})
 const needValidation = ref(false)
 const valid = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
@@ -111,14 +112,28 @@ const addToCart = () => {
     }
 }
 const availableColors = ref<Array<Pick<Color, 'id' | 'label' | 'hex'>>>([])
+const availableFonts = ref<Array<Pick<Font, 'id' | 'label' | 'preview'>>>([])
 const updateDesign = (design: DesignItemFragment | null) => {
     addProductData.design = design
     personalizeValidity.design = design ? validateDesign(data.value, addProductData) : null
+    if (!design?.colors?.find(color => color.id === addProductData.colorId)) {
+        addProductData.colorId = null
+        personalizeValidity.colorId = null
+    }
+    if (!design?.fonts?.find(font => font.id === addProductData.fontId)) {
+        addProductData.fontId = null
+        personalizeValidity.fontId = null
+    }
     availableColors.value = design?.colors ? [...design?.colors] : []
+    availableFonts.value = design?.fonts ? [...design?.fonts] : []
 }
 const updateColor = (colorId: string | null) => {
     addProductData.colorId = colorId
     personalizeValidity.colorId = colorId ? validateColor(data.value, addProductData) : null
+}
+const updateFont = (fontId: string | null) => {
+    addProductData.fontId = fontId
+    personalizeValidity.fontId = fontId ? validateFont(data.value, addProductData) : null
 }
 
 useHead({
