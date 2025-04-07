@@ -143,6 +143,11 @@ fragment DesignItem on Design {
     id
     preview
     label
+    colors {
+        id
+        label
+        hex
+    }
     bases {
         filename
         id
@@ -152,6 +157,7 @@ fragment DesignItem on Design {
         }
     }
     fonts {
+        id
         name
         label
         filename_woff2

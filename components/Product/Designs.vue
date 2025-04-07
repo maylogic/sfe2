@@ -1,37 +1,30 @@
 <template>
-    <div class="product-design personalize-block">
-        <h3 class="font-fira-sans">1. Выберите дизайн</h3>
-        <div class="designs">
-            <design-item @update:design="updateDesign"
-                         :design-id="designId"
-                         :key="design.id"
-                         :data="design"
-                         v-for="design in data"/>
-        </div>
-    </div>
+    <personalize-block :valid="valid" label="1. Выберите дизайн">
+        <design-item @update:design="updateDesign"
+                     :current-design="currentDesign"
+                     :key="design.id"
+                     :data="design"
+                     v-for="design in data"/>
+    </personalize-block>
 </template>
 <script setup lang="ts">
 import type { FragmentType } from "~/gql";
 import type {
     Design,
+    DesignItemFragment,
     DesignItemFragmentDoc
 } from "~/gql/graphql";
+import PersonalizeBlock from "~/components/Product/PersonalizeBlock.vue";
 
 defineProps<{
-    designId: string | null
+    currentDesign: DesignItemFragment | null
+    valid: boolean | null
     data: Array<Pick<Design, 'id'> & FragmentType<typeof DesignItemFragmentDoc>>
 }>()
 
-const updateDesign = (val: string) => {
+const updateDesign = (val: DesignItemFragment) => {
     emit("update:design", val)
 }
 
 const emit = defineEmits(['update:design'])
 </script>
-<style lang="scss">
-.product-design {
-    .designs {
-        @apply flex items-center gap-2;
-    }
-}
-</style>

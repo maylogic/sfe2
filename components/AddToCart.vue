@@ -1,16 +1,18 @@
 <template>
     <div class="flex max-w-fit gap-2 items-center justify-between mt-4">
         <quantity-input
+            v-if="withQuantity"
             :disabled="disabled || fetching"
             :quantity="quantity"
             @update:quantity="quantity = $event"
         />
 
         <UButton
-            :label="fetching ? 'Добавляем...' : 'Добавить в корзину'"
+            :label="fetching ? 'Добавляем в корзину...' : 'Создать мой адресник'"
             :disabled="disabled || fetching"
             size="sm"
-            @click="addToCart"
+            @click="addToCart ?? addToCartInternal"
+            class="uppercase font-bebas-neue pt-2 text-2xl"
         />
     </div>
 </template>
@@ -23,13 +25,15 @@ import { useCartStore } from "~/stores/cart";
 const props = withDefaults(defineProps<{
     productId: string
     disabled: boolean
-}>(), {disabled: false})
+    withQuantity?: boolean
+    addToCart?: () => void
+}>(), {disabled: false, withQuantity: true})
 // Локальное состояние для количества
 const quantity = ref(1)
 const cart = useCartStore()
 
 const {executeMutation, fetching} = useMutation(AddCartItemDocument)
-const addToCart = () => {
+const addToCartInternal = () => {
     executeMutation({
         productId: props.productId,
         quantity: quantity.value,

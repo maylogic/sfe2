@@ -44,6 +44,7 @@ query ProductBySlug($slug: String!) {
         meta_title
         meta_description
         line_definitions {
+            id
             label
             max_length
             required

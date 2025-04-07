@@ -5,25 +5,46 @@
             <product-info :product="data.getProductBySlug"/>
             <div class="create-fields">
                 <h2 class="font-fira-sans">Создание и предпросмотр</h2>
-                <product-designs @update:design="addProductData.designId = $event"
-                                 :design-id="addProductData.designId"
-                                 :data="data.getProductBySlug.designs"/>
-                <add-to-cart :disabled="false" :product-id="data.getProductBySlug.id"/>
+                <product-designs @update:design="updateDesign"
+                                 :current-design="addProductData.design"
+                                 :data="data.getProductBySlug.designs" :valid="personalizeValidity.design"/>
+
+                <UButton
+                    :label="addingToCart ? 'Добавляем в корзину...' : 'Создать мой адресник'"
+                    :disabled="fetching||addingToCart"
+                    size="sm"
+                    @click="addToCart"
+                    class="uppercase font-bebas-neue pt-2 mt-5 text-2xl"
+                />
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useQuery } from '@urql/vue'
-import { ProductBySlugDocument } from '~/gql/graphql.js'
+import {
+    useMutation,
+    useQuery
+} from '@urql/vue'
+import {
+    AddCartItemDocument,
+    type DesignItemFragment,
+    ProductBySlugDocument
+} from '~/gql/graphql.js'
+import {
+    getNullValidation,
+    type PersonalizeInputData,
+    type PersonalizeValidity,
+    validateColor,
+    validateDesign,
+    validateFont,
+    validateTextLines
+} from "~/utils/product";
+import { getKeys } from "~/utils/type"
+import { useCartStore } from "~/stores/cart";
 
 const route = useRoute()
 const productSlug = route.params.slug.toString()
-
-const addProductData = reactive({
-    designId: null
-})
 
 const {data, error, fetching, executeQuery} = await useQuery({
     query: ProductBySlugDocument,
@@ -41,6 +62,51 @@ if (error.value) {
 if (!data.value?.getProductBySlug) {
     // Если продукт не найден, выбрасываем 404 ошибку
     throw createError({statusCode: 404, statusMessage: 'Страница не найдена'})
+}
+
+const addProductData = reactive<PersonalizeInputData>({
+    design: null,
+    colorId: null,
+    fontId: null,
+    textLines: []
+})
+watch(addProductData, () => {
+    if (needValidation.value) {
+        validate()
+    }
+})
+const needValidation = ref(false)
+const valid = ref(false)
+const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
+const validate = () => {
+    personalizeValidity.design = validateDesign(data.value, addProductData)
+    personalizeValidity.colorId = validateColor(data.value, addProductData)
+    personalizeValidity.fontId = validateFont(data.value, addProductData)
+    personalizeValidity.textLines = validateTextLines(data.value, addProductData)
+    valid.value = getKeys(personalizeValidity).every(key => personalizeValidity[key])
+}
+const {executeMutation: addToCartExec, fetching: addingToCart} = useMutation(AddCartItemDocument)
+const cart = useCartStore()
+const addToCart = () => {
+    if (!data.value?.getProductBySlug) return
+    needValidation.value = true
+    validate()
+    if (valid.value) {
+        addToCartExec({
+            productId: data.value?.getProductBySlug.id,
+            quantity: 1,
+        }).then((result) => {
+            if (result.data?.addCartItem) {
+                cart.setData(result.data?.addCartItem)
+                cart.open = true
+            }
+        })
+    }
+}
+
+const updateDesign = (design: DesignItemFragment | null) => {
+    addProductData.design = design
+    personalizeValidity.design = design ? validateDesign(data.value, addProductData) : null
 }
 
 useHead({
@@ -65,17 +131,11 @@ onMounted(() => {
 
 <style lang="scss">
 .product-page {
-    @apply grid grid-cols-1 sm:grid-cols-2 gap-5;
+    @apply grid grid-cols-1 md:grid-cols-[1fr__max-content] gap-10;
     .create-fields {
-        @apply bg-storm-dust-50 p-5;
+        @apply bg-storm-dust-50 p-5 my-5;
         h2 {
-            @apply text-4xl mb-5;
-        }
-        .personalize-block {
-            @apply p-3 pt-0 bg-white border-l-storm-dust-100 border-l-[6px];
-            h3 {
-                @apply py-3;
-            }
+            @apply text-2xl mb-5;
         }
     }
 }
