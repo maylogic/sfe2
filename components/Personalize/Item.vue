@@ -1,6 +1,6 @@
 <template>
-    <div class="personalize-item">
-        <div class="rounded-2xl overflow-hidden">
+    <div class="personalize-item min-w-max w-max">
+        <div class="rounded-2xl overflow-hidden min-w-max w-max">
             <slot/>
         </div>
     </div>

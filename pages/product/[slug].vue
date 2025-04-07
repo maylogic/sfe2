@@ -10,22 +10,26 @@
                                  :current-design="addProductData.design"
                                  :data="data.getProductBySlug.designs" :valid="personalizeValidity.design"/>
                 <product-colors @update:color="updateColor"
+                                :key="addProductData.design?.id"
                                 v-if="availableColors.length"
                                 :index="2"
                                 :color-id="addProductData.colorId"
                                 :data="availableColors" :valid="personalizeValidity.colorId"/>
                 <product-fonts @update:font="updateFont"
                                v-if="availableFonts.length"
+                               :key="addProductData.design?.id"
                                :index="3"
                                :font-id="addProductData.fontId"
                                :data="availableFonts" :valid="personalizeValidity.fontId"/>
+
+                <price class="text-2xl" :key="data.getProductBySlug.key" :data="data.getProductBySlug.price"/>
 
                 <UButton
                     :label="addingToCart ? 'Добавляем в корзину...' : 'Создать мой адресник'"
                     :disabled="fetching||addingToCart"
                     size="sm"
                     @click="addToCart"
-                    class="uppercase font-bebas-neue pt-2 mt-5 text-2xl"
+                    class="uppercase font-bebas-neue pt-2 max-w-max text-2xl"
                 />
             </div>
         </div>
@@ -83,7 +87,6 @@ const addProductData = reactive<PersonalizeInputData>({
     fontId: null,
     textLines: []
 })
-const needValidation = ref(false)
 const valid = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const validate = () => {
@@ -97,7 +100,6 @@ const {executeMutation: addToCartExec, fetching: addingToCart} = useMutation(Add
 const cart = useCartStore()
 const addToCart = () => {
     if (!data.value?.getProductBySlug) return
-    needValidation.value = true
     validate()
     if (valid.value) {
         addToCartExec({
@@ -160,9 +162,9 @@ onMounted(() => {
 .product-page {
     @apply grid grid-cols-1 md:grid-cols-[1fr__max-content] gap-10;
     .create-fields {
-        @apply bg-storm-dust-50 p-5 my-5;
+        @apply bg-storm-dust-50 p-5 my-5 flex flex-col gap-3;
         h2 {
-            @apply text-2xl mb-5;
+            @apply text-2xl text-center;
         }
     }
 }

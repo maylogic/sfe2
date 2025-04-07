@@ -1,5 +1,5 @@
 <template>
-    <personalize-block :index="index" :valid="valid" label="Выберите дизайн">
+    <personalize-block :index="index" :valid="valid" label="Выберите дизайн" :translate-step="80">
         <personalize-design-item @update:design="updateDesign"
                      :current-design="currentDesign"
                      :key="design.id"

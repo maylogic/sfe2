@@ -1,5 +1,5 @@
 <template>
-    <personalize-block :valid="valid" :index="index" label="Выберите цвет">
+    <personalize-block :valid="valid" :index="index" label="Выберите цвет" :translate-step="112">
         <personalize-color-item @update:color="updateColor"
                                 :current-color-id="colorId"
                                 :key="color.id"
@@ -9,7 +9,6 @@
 </template>
 <script setup lang="ts">
 import type { Color } from "~/gql/graphql";
-import PersonalizeBlock from "~/components/Personalize/Block.vue";
 
 defineProps<{
     valid: boolean | null

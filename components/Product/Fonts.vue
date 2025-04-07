@@ -1,5 +1,5 @@
 <template>
-    <personalize-block :valid="valid" :index="index" label="Выберите шрифт">
+    <personalize-block :valid="valid" :index="index" label="Выберите шрифт" :translate-step="122">
         <personalize-font-item @update:font="updateFont"
                                :current-font-id="fontId"
                                :key="font.id"
