@@ -1,11 +1,13 @@
 import type {
+    Color,
     DesignItemFragment,
+    Font,
     ProductBySlugQuery
 } from "~/gql/graphql";
 
 export type PersonalizeInputData = {
-    colorId: string | null
-    fontId: string | null
+    color: Color | null
+    font: Font | null
     design: DesignItemFragment | null
     textLines: Map<string, string | null>
 }
@@ -41,20 +43,20 @@ export const validateDesign = (product: ProductBySlugQuery | undefined, input: P
     return !!product?.getProductBySlug?.designs.length && input.design !== null
 }
 export const validateFont = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): boolean | null => {
-    if (input.fontId !== null && input.design !== null) {
-        return !!input.design.fonts?.find(font => font.id === input.fontId)
+    if (input.font !== null && input.design !== null) {
+        return !!input.design.fonts?.find(font => font.id === input.font?.id)
     }
     return false
 }
 export const validateColor = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): boolean | null => {
-    if (input.colorId !== null && input.design !== null) {
-        return !!input.design.colors?.find(color => color.id === input.colorId)
+    if (input.color !== null && input.design !== null) {
+        return !!input.design.colors?.find(color => color.id === input.color?.id)
     }
     return false
 }
 export const getNullValidation = () => ({
-    colorId: null,
-    fontId: null,
+    color: null,
+    font: null,
     design: null,
     textLines: null
 })

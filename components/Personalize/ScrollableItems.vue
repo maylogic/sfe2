@@ -44,12 +44,12 @@ onUpdated(() => {
 .personalize-items-scrollable {
     @apply grid grid-cols-[max-content__1fr__max-content] items-center;
     .next-items, .prev-items {
-        @apply cursor-pointer font-light w-8 h-8 pointer-events-none invisible;
+        @apply cursor-pointer font-light w-1 h-1 pointer-events-none invisible;
     }
 
     &.scrollable {
         .next-items, .prev-items {
-            @apply pointer-events-auto visible;
+            @apply md:pointer-events-auto md:visible md:w-8 md:h-8;
         }
     }
 
@@ -59,7 +59,7 @@ onUpdated(() => {
     }
 
     .scrollable-content {
-        @apply overflow-hidden;
+        @apply overflow-y-hidden overflow-x-auto md:overflow-hidden;
     }
 }
 </style>

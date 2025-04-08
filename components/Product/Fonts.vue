@@ -2,7 +2,7 @@
     <personalize-block :valid="valid" :index="index" label="Выберите шрифт">
         <personalize-scrollable-items :translate-step="122">
             <personalize-font-item @update:font="updateFont"
-                                   :current-font-id="fontId"
+                                   :current-font="currentFont"
                                    :key="font.id"
                                    :font="font"
                                    v-for="font in data"/>
@@ -15,11 +15,11 @@ import type { Font } from "~/gql/graphql";
 defineProps<{
     valid: boolean | null
     index: number
-    fontId: string | null
-    data: Array<Pick<Font, 'id' | 'label' | 'preview'>>
+    currentFont: Font | null
+    data: Font[]
 }>()
 
-const updateFont = (val: string) => {
+const updateFont = (val: Font | null) => {
     emit("update:font", val)
 }
 

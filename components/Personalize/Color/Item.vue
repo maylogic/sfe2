@@ -1,5 +1,5 @@
 <template>
-    <personalize-item :selected="currentColorId === color.id" @click="updateColor">
+    <personalize-item :selected="isCurrentColor()" @click="updateColor">
         <div class="color-item font-iskra" :style="`background: ${color.hex}`">
             {{ color.label }}
         </div>
@@ -9,16 +9,16 @@
 import { type Color } from "~/gql/graphql";
 
 const props = defineProps<{
-    currentColorId: string | null
-    color: Pick<Color, 'id' | 'label' | 'hex'>
+    currentColor: Color | null
+    color: Color
 }>()
 
 const isCurrentColor = () => {
-    return props.currentColorId === props.color.id
+    return props.currentColor?.id === props.color.id
 }
 
 const updateColor = () => {
-    emit("update:color", isCurrentColor() ? null : props.color.id)
+    emit("update:color", isCurrentColor() ? null : props.color)
 }
 
 const emit = defineEmits(['update:color'])

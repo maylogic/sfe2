@@ -4,19 +4,9 @@
     </NuxtLayout>
 </template>
 <script setup lang="ts">
-import { type ResolvableLink } from "@unhead/vue/types";
+import { getLocalFontPreloads } from "~/utils/fonts";
 
 const {siteName} = useAppConfig()
-
-const getFontPreloadLink = (href: string): ResolvableLink => {
-    return ({
-        rel: 'preload',
-        href: `/fonts/${href}`,
-        as: 'font',
-        type: 'font/woff2',
-        crossorigin: ''
-    })
-}
 
 useHead({
     htmlAttrs: {
@@ -35,17 +25,7 @@ useHead({
         },
     ],
     link: [
-        getFontPreloadLink('bebasneuebold.woff2'),
-        getFontPreloadLink('FiraSansBlackCyr.woff2'),
-        getFontPreloadLink('FiraSansBlackCyrExt.woff2'),
-        getFontPreloadLink('FiraSansBlackLat.woff2'),
-        getFontPreloadLink('FiraSansBlackLatExt.woff2'),
-        getFontPreloadLink('FiraSansBoldCyr.woff2'),
-        getFontPreloadLink('FiraSansBoldCyrExt.woff2'),
-        getFontPreloadLink('FiraSansBoldLat.woff2'),
-        getFontPreloadLink('FiraSansBoldLatExt.woff2'),
-        getFontPreloadLink('iskra_medium.woff2'),
-        // TODO: перечислить здесь шрифты которые будут использоваться в редакторе
+        ...getLocalFontPreloads()
     ]
 })
 </script>

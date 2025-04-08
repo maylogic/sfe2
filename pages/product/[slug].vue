@@ -1,6 +1,11 @@
 <template>
     <div class="product-page" v-if="!!data?.getProductBySlug">
-        <product-page-gallery :gallery="data.getProductBySlug.gallery"/>
+        <product-page-gallery @toggle-editor="editor = $event"
+                              :editor="editor"
+                              :personalize-data="addProductData"
+                              :reverse-side-base="data.getProductBySlug.reverse_side_base"
+                              :product="data.getProductBySlug"
+                              :gallery="data.getProductBySlug.gallery"/>
         <div class="flex flex-col">
             <product-info :product="data.getProductBySlug"/>
             <div class="create-fields">
@@ -13,14 +18,14 @@
                                 :key="addProductData.design?.id"
                                 v-if="availableColors.length"
                                 :index="2"
-                                :color-id="addProductData.colorId"
-                                :data="availableColors" :valid="personalizeValidity.colorId"/>
+                                :current-color="addProductData.color"
+                                :data="availableColors" :valid="personalizeValidity.color"/>
                 <product-fonts @update:font="updateFont"
                                v-if="availableFonts.length"
                                :key="addProductData.design?.id"
                                :index="3"
-                               :font-id="addProductData.fontId"
-                               :data="availableFonts" :valid="personalizeValidity.fontId"/>
+                               :current-font="addProductData.font"
+                               :data="availableFonts" :valid="personalizeValidity.font"/>
                 <product-text-lines v-if="addProductData.design && data.getProductBySlug.line_definitions"
                                     :errors="textLineErrors"
                                     :hidden="hiddenTextLines"
@@ -54,6 +59,7 @@ import {
     AddCartItemDocument,
     type Color,
     type DesignItemFragment,
+    DesignItemFragmentDoc,
     type Font,
     ProductBySlugDocument
 } from '~/gql/graphql.js'
@@ -69,6 +75,8 @@ import {
 } from "~/utils/product";
 import { getKeys } from "~/utils/type"
 import { useCartStore } from "~/stores/cart";
+import { useFragment } from "~/gql";
+import { getRemoteFontPreloadLink } from "~/utils/fonts";
 
 const route = useRoute()
 const productSlug = route.params.slug.toString()
@@ -93,18 +101,19 @@ if (!data.value?.getProductBySlug) {
 
 const addProductData = reactive<PersonalizeInputData>({
     design: null,
-    colorId: null,
-    fontId: null,
+    color: null,
+    font: null,
     textLines: new Map<string, string | null>()
 })
 const textLineErrors = ref(new Map<string, string>())
 const hiddenTextLines = ref(new Map<number, boolean>())
 const valid = ref(false)
+const editor = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const validate = () => {
     personalizeValidity.design = validateDesign(data.value, addProductData)
-    personalizeValidity.colorId = validateColor(data.value, addProductData)
-    personalizeValidity.fontId = validateFont(data.value, addProductData)
+    personalizeValidity.color = validateColor(data.value, addProductData)
+    personalizeValidity.font = validateFont(data.value, addProductData)
     personalizeValidity.textLines = validateTextLines(data.value, addProductData)
     valid.value = getKeys(personalizeValidity).every(key => personalizeValidity[key])
 }
@@ -126,31 +135,35 @@ const addToCart = () => {
         })
     }
 }
-const availableColors = ref<Array<Pick<Color, 'id' | 'label' | 'hex'>>>([])
-const availableFonts = ref<Array<Pick<Font, 'id' | 'label' | 'preview'>>>([])
+const availableColors = ref<Color[]>([])
+const availableFonts = ref<Font[]>([])
 const updateDesign = (design: DesignItemFragment | null) => {
     addProductData.design = design
+    editor.value = true
     personalizeValidity.design = design ? validateDesign(data.value, addProductData) : null
-    if (!design?.colors?.find(color => color.id === addProductData.colorId)) {
-        addProductData.colorId = null
-        personalizeValidity.colorId = null
+    if (!design?.colors?.find(color => color.id === addProductData.color?.id)) {
+        addProductData.color = null
+        personalizeValidity.color = null
     }
-    if (!design?.fonts?.find(font => font.id === addProductData.fontId)) {
-        addProductData.fontId = null
-        personalizeValidity.fontId = null
+    if (!design?.fonts?.find(font => font.id === addProductData.font?.id)) {
+        addProductData.font = null
+        personalizeValidity.font = null
     }
     availableColors.value = design?.colors ? [...design?.colors] : []
     availableFonts.value = design?.fonts ? [...design?.fonts] : []
 }
-const updateColor = (colorId: string | null) => {
-    addProductData.colorId = colorId
-    personalizeValidity.colorId = colorId ? validateColor(data.value, addProductData) : null
+const updateColor = (color: Color | null) => {
+    editor.value = true
+    addProductData.color = color
+    personalizeValidity.color = color ? validateColor(data.value, addProductData) : null
 }
-const updateFont = (fontId: string | null) => {
-    addProductData.fontId = fontId
-    personalizeValidity.fontId = fontId ? validateFont(data.value, addProductData) : null
+const updateFont = (font: Font | null) => {
+    editor.value = true
+    addProductData.font = font
+    personalizeValidity.font = font ? validateFont(data.value, addProductData) : null
 }
 const updateTextLine = (lineId: string, value: string | null) => {
+    editor.value = true
     addProductData.textLines.set(lineId, value)
     const hadErrors = textLineErrors.value.size !== 0
     textLineErrors.value.delete(lineId)
@@ -183,6 +196,13 @@ if (data.value.getProductBySlug) {
     hiddenTextLines.value = hidden
 }
 
+const usedFonts = new Map<string, Font>()
+data.value.getProductBySlug.designs.forEach(designFrag => {
+    const design = useFragment(DesignItemFragmentDoc, designFrag)
+    design.fonts?.forEach(font => {
+        usedFonts.set(font.id, font)
+    })
+})
 useHead({
     title: data.value.getProductBySlug.meta_title,
     meta: [
@@ -191,15 +211,9 @@ useHead({
             content: data.value.getProductBySlug.meta_description,
         },
     ],
-})
-
-onMounted(() => {
-    if (import.meta.client) {
-        executeQuery({
-            requestPolicy: 'network-only',
-            variables: {slug: productSlug},
-        })
-    }
+    link: [
+        ...usedFonts.values().map(font => getRemoteFontPreloadLink(font.filename_woff2))
+    ]
 })
 </script>
 

@@ -2,7 +2,7 @@
     <personalize-block :valid="valid" :index="index" label="Выберите цвет">
         <personalize-scrollable-items :translate-step="112">
             <personalize-color-item @update:color="updateColor"
-                                    :current-color-id="colorId"
+                                    :current-color="currentColor"
                                     :key="color.id"
                                     :color="color"
                                     v-for="color in data"/>
@@ -15,11 +15,11 @@ import type { Color } from "~/gql/graphql";
 defineProps<{
     valid: boolean | null
     index: number
-    colorId: string | null
-    data: Array<Pick<Color, 'id' | 'label' | 'hex'>>
+    currentColor: Color | null
+    data: Array<Color>
 }>()
 
-const updateColor = (val: string) => {
+const updateColor = (val: Color) => {
     emit("update:color", val)
 }
 

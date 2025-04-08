@@ -139,6 +139,15 @@ fragment SidebarCart on Cart {
     apply_balance
     can_apply_balance
 }
+fragment BaseFragment on Base {
+    filename
+    content
+    id
+    label
+    text_areas {
+        ...TextArea
+    }
+}
 fragment DesignItem on Design {
     id
     preview
@@ -149,12 +158,7 @@ fragment DesignItem on Design {
         hex
     }
     bases {
-        filename
-        id
-        label
-        text_areas {
-            ...TextArea
-        }
+        ...BaseFragment
     }
     fonts {
         id

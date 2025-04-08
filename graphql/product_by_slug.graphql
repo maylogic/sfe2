@@ -20,12 +20,7 @@ query ProductBySlug($slug: String!) {
             height
         }
         reverse_side_base {
-            filename
-            id
-            label
-            text_areas {
-                ...TextArea
-            }
+            ...BaseFragment
         }
         price {
             ...Price
