@@ -13,7 +13,7 @@
                     <Suspense>
                         <user />
                         <template #fallback>
-                            <u-skeleton class="h-8 w-[100px] sm:w-[250px]" />
+                            <u-skeleton class="h-8 w-[60px]" />
                         </template>
                     </Suspense>
                 </ClientOnly>
