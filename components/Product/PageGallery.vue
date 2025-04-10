@@ -2,16 +2,18 @@
     <div class="product-gallery">
         <div class="current-image">
             <gallery-item v-if="!editor && gallery[currentItem]" :data="gallery[currentItem]"/>
-            <product-editor :reverse-side-base="reverseSideBase" :personalize-data="personalizeData" v-if="editor"/>
+            <product-editor :line-definitions="lineDefinitions" :reverse-side-base="reverseSideBase"
+                            :personalize-data="personalizeData" v-if="editor"/>
         </div>
         <div class="items-carousel">
             <gallery-carousel-item :class="{'selected': !editor && index === currentItem}" :data="item"
                                    @click="currentItem = index;emit('toggle-editor', false)"
                                    v-for="(item,index) in gallery"/>
             <div class="editor-item" :class="{'selected': editor}"
+                 v-if="personalizeData.design !== null"
                  @click="emit('toggle-editor', !editor)">
                 <u-icon name="i-lucide-pen-tool"/>
-                <span class="font-fira-sans">Редактор</span>
+                <span class="font-fira-sans text-xs hidden md:block">Редактор</span>
             </div>
         </div>
     </div>
@@ -19,7 +21,8 @@
 <script setup lang="ts">
 import {
     BaseFragmentFragmentDoc,
-    GalleryItemFragmentDoc
+    GalleryItemFragmentDoc,
+    type ProductLineDefinition
 } from "~/gql/graphql";
 import type { FragmentType } from "~/gql";
 import GalleryCarouselItem from "~/components/GalleryCarouselItem.vue";
@@ -28,7 +31,8 @@ defineProps<{
     gallery: FragmentType<typeof GalleryItemFragmentDoc>[],
     reverseSideBase: null | undefined | FragmentType<typeof BaseFragmentFragmentDoc>,
     personalizeData: PersonalizeInputData,
-    editor: boolean
+    editor: boolean,
+    lineDefinitions: ProductLineDefinition[]
 }>()
 const currentItem = ref(0)
 
@@ -36,9 +40,9 @@ const emit = defineEmits(['toggle-editor'])
 </script>
 <style lang="scss">
 .product-gallery {
-    @apply flex flex-col gap-2 sticky top-[20px] self-start;
+    @apply flex flex-col gap-2 sticky top-0 md:top-[20px] self-start bg-white z-10 py-2;
     .items-carousel {
-        @apply grid grid-cols-5 gap-3;
+        @apply grid grid-cols-6 gap-3;
         & > * {
             @apply cursor-pointer;
         }

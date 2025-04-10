@@ -13,7 +13,7 @@ defineProps<{ selected: boolean }>()
     @apply cursor-pointer relative;
 
     &:before {
-        @apply border-viking-500 border-[.125rem] rounded-2xl;
+        @apply border-viking-500 border-[.125rem] rounded-[1.2rem];
         content: "";
         position: absolute;
         left: -.3125rem;

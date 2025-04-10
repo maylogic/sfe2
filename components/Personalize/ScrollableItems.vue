@@ -56,6 +56,9 @@ onUpdated(() => {
     .personalize-items {
         @apply grid grid-flow-col auto-cols-max gap-2 p-2 transition-transform duration-200;
         grid-template-rows: repeat(2, min-content);
+        .selected {
+            @apply -order-1;
+        }
     }
 
     .scrollable-content {

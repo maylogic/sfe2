@@ -2,6 +2,7 @@
     <div class="product-page" v-if="!!data?.getProductBySlug">
         <product-page-gallery @toggle-editor="editor = $event"
                               :editor="editor"
+                              :line-definitions="data.getProductBySlug.line_definitions ?? []"
                               :personalize-data="addProductData"
                               :reverse-side-base="data.getProductBySlug.reverse_side_base"
                               :product="data.getProductBySlug"
@@ -38,13 +39,16 @@
 
                 <price class="text-2xl" :key="data.getProductBySlug.key" :data="data.getProductBySlug.price"/>
 
-                <UButton
-                    :label="addingToCart ? 'Добавляем в корзину...' : 'Создать мой адресник'"
-                    :disabled="fetching||addingToCart"
-                    size="sm"
-                    @click="addToCart"
-                    class="uppercase font-bebas-neue pt-2 max-w-max text-2xl"
-                />
+                <u-form-group
+                    :error="validated && !valid ? 'Пожалуйста, исправьте некоторые ошибки выше. Они помечены красным.' : false">
+                    <UButton
+                        :label="addingToCart ? 'Добавляем в корзину...' : 'Создать мой адресник'"
+                        :disabled="fetching||addingToCart"
+                        size="sm"
+                        @click="addToCart"
+                        class="uppercase font-bebas-neue pt-2 max-w-max text-2xl"
+                    />
+                </u-form-group>
             </div>
         </div>
     </div>
@@ -76,7 +80,10 @@ import {
 import { getKeys } from "~/utils/type"
 import { useCartStore } from "~/stores/cart";
 import { useFragment } from "~/gql";
-import { getRemoteFontPreloadLink } from "~/utils/fonts";
+import {
+    generateFontFace,
+    getRemoteFontPreloadLink
+} from "~/utils/fonts";
 
 const route = useRoute()
 const productSlug = route.params.slug.toString()
@@ -109,6 +116,7 @@ const textLineErrors = ref(new Map<string, string>())
 const hiddenTextLines = ref(new Map<number, boolean>())
 const valid = ref(false)
 const editor = ref(false)
+const validated = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const validate = () => {
     personalizeValidity.design = validateDesign(data.value, addProductData)
@@ -116,6 +124,7 @@ const validate = () => {
     personalizeValidity.font = validateFont(data.value, addProductData)
     personalizeValidity.textLines = validateTextLines(data.value, addProductData)
     valid.value = getKeys(personalizeValidity).every(key => personalizeValidity[key])
+    validated.value = true
 }
 const {executeMutation: addToCartExec, fetching: addingToCart} = useMutation(AddCartItemDocument)
 const cart = useCartStore()
@@ -138,8 +147,9 @@ const addToCart = () => {
 const availableColors = ref<Color[]>([])
 const availableFonts = ref<Font[]>([])
 const updateDesign = (design: DesignItemFragment | null) => {
+    validated.value = false
     addProductData.design = design
-    editor.value = true
+    editor.value = design !== null
     personalizeValidity.design = design ? validateDesign(data.value, addProductData) : null
     if (!design?.colors?.find(color => color.id === addProductData.color?.id)) {
         addProductData.color = null
@@ -153,16 +163,19 @@ const updateDesign = (design: DesignItemFragment | null) => {
     availableFonts.value = design?.fonts ? [...design?.fonts] : []
 }
 const updateColor = (color: Color | null) => {
+    validated.value = false
     editor.value = true
     addProductData.color = color
     personalizeValidity.color = color ? validateColor(data.value, addProductData) : null
 }
 const updateFont = (font: Font | null) => {
+    validated.value = false
     editor.value = true
     addProductData.font = font
     personalizeValidity.font = font ? validateFont(data.value, addProductData) : null
 }
 const updateTextLine = (lineId: string, value: string | null) => {
+    validated.value = false
     editor.value = true
     addProductData.textLines.set(lineId, value)
     const hadErrors = textLineErrors.value.size !== 0
@@ -213,13 +226,16 @@ useHead({
     ],
     link: [
         ...usedFonts.values().map(font => getRemoteFontPreloadLink(font.filename_woff2))
+    ],
+    style: [
+        {textContent: generateFontFace([...usedFonts.values()])}
     ]
 })
 </script>
 
 <style lang="scss">
 .product-page {
-    @apply grid grid-cols-1 md:grid-cols-[1fr__max-content] gap-10;
+    @apply grid grid-cols-1 md:grid-cols-[1fr__max-content] gap-x-10 gap-y-2;
     .create-fields {
         @apply bg-storm-dust-50 p-5 my-5 flex flex-col gap-3;
         h2 {

@@ -25,6 +25,6 @@ const emit = defineEmits(['update:color'])
 </script>
 <style>
 .color-item {
-    @apply text-white text-sm flex items-center justify-center text-center w-28 h-14;
+    @apply text-white text-xs md:text-sm flex items-center justify-center text-center md:w-28 w-24 h-14;
 }
 </style>

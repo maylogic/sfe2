@@ -1,5 +1,6 @@
 import type { ResolvableLink } from "@unhead/vue/types";
 import { STORAGE_URL } from "~/constants/storage";
+import type { Font } from "~/gql/graphql";
 
 export const getLocalFontPreloadLink = (href: string): ResolvableLink => {
     return ({
@@ -14,11 +15,15 @@ export const getLocalFontPreloadLink = (href: string): ResolvableLink => {
 export const getRemoteFontPreloadLink = (href: string): ResolvableLink => {
     return ({
         rel: 'preload',
-        href: `${STORAGE_URL}/${href}`,
+        href: `${getRemoteFontUrl(href)}`,
         as: 'font',
         type: 'font/woff2',
         crossorigin: ''
     })
+}
+
+export const getRemoteFontUrl = (href: string) => {
+    return `${STORAGE_URL}/${href}`
 }
 
 export const getLocalFontPreloads = () => {
@@ -34,4 +39,16 @@ export const getLocalFontPreloads = () => {
         getLocalFontPreloadLink('FiraSansBoldLatExt.woff2'),
         getLocalFontPreloadLink('iskra_medium.woff2'),
     ]
+}
+
+export const generateFontFace = (fonts: Array<Pick<Font, 'name' | 'filename_woff2'>>) => {
+    return fonts.map(font => `
+          @font-face {
+            font-family: ${font.name};
+            src: url(${getRemoteFontUrl(font.filename_woff2)}) format('woff2');
+            font-weight: normal;
+            font-style: normal;
+          }
+        `
+    ).join('\n');
 }
