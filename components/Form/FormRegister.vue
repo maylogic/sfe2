@@ -36,8 +36,8 @@
             <UButton type="submit" :disabled="fetching">
                 Зарегистрироваться
             </UButton>
-            <u-button variant="outline" to="/register">
-                Регистрация
+            <u-button variant="outline" to="/login">
+                Вход
             </u-button>
         </div>
         <UProgress v-if="fetching" size="xl"/>

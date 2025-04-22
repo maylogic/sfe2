@@ -4,3 +4,12 @@ export const createTextElement = (): SVGTextElement => {
     text.appendChild(tspan)
     return text
 }
+
+export const createAreaRectElement = (): SVGRectElement => {
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('stroke', 'red')
+    rect.setAttribute('stroke-width', '0.1')
+    rect.setAttribute('fill', 'red')
+    rect.setAttribute('fill-opacity', '0.05')
+    return rect
+}
