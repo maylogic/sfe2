@@ -1,8 +1,9 @@
-import {
-    createAreaRectElement,
-    createTextElement
-} from "~/utils/element";
+import { createTextElement } from "~/utils/element";
 import type { ProductLineDefinition } from "~/gql/graphql";
+import {
+    CANVAS_SIZE,
+    getCanvasContext
+} from "~/utils/canvas";
 
 export type TextRenderData = {
     id: string,
@@ -14,15 +15,8 @@ export type TextRenderData = {
     size: number
 }
 
-export type TextPieceArea = {
-    id: string,
-    x: number,
-    y: number,
-    width: number,
-    height: number
-}
-
-export const TEXT_CANVAS_SIZE = 32
+const AREA_PADDING_Y = 0.5,
+    AREA_PADDING_X = 0.1
 
 export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.setAttribute('data-id', data.id)
@@ -53,55 +47,23 @@ export const createOrUpdateTexts = (textData: TextRenderData[], svg: SVGSVGEleme
     })
 }
 
-export const createOrUpdateAreaRects = (areas: TextPieceArea[], svg: SVGSVGElement) => {
-    areas.forEach(data => {
-        const existingEl = findAreaById(data.id, svg)
-        if (existingEl) {
-            return
-        }
-
-        const el = createAreaRectElement()
-        el.classList.add('text-area')
-        el.setAttribute('data-id', data.id)
-        el.setAttribute('x', data.x.toFixed(4))
-        el.setAttribute('y', data.y.toFixed(4))
-        el.setAttribute('width', data.width.toFixed(4))
-        el.setAttribute('height', data.height.toFixed(4))
-        if (svg) {
-            svg.appendChild(el)
-        }
-    })
-}
-
 export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
-}
-
-export const findAreaById = (id: string, svg: SVGSVGElement) => {
-    return svg.querySelector<SVGTextElement>(`rect.text-area[data-id="${id}"]`)
-}
-
-export const removeAreas = (svg: SVGSVGElement) => {
-    svg.querySelectorAll<SVGRectElement>(`rect.text-area`).forEach(rect => rect.remove())
 }
 export const calculateTextDataSize = (data: TextRenderData, area: TextPieceArea) => {
     data.size = calculateFontSize(data, area, getCanvasContext())
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
+    const metrics = getTextMetricsReal(data)
+    const areaPadding = AREA_PADDING_Y * area.height,
+        targetHeight = getTargetHeight(area)
+    const areaCenterY = area.y + targetHeight / 2 + areaPadding / 2
+    data.y = areaCenterY - metrics.top / 2
     data.x = area.x + area.width / 2
-    data.y = area.y + (area.height) / 2
 }
 
-let canvasContext: CanvasRenderingContext2D | null = null
-const getCanvasContext = () => {
-    if (!canvasContext) {
-        const sharedCanvas = document.createElement('canvas');
-        sharedCanvas.width = TEXT_CANVAS_SIZE
-        sharedCanvas.height = TEXT_CANVAS_SIZE
-        canvasContext = sharedCanvas.getContext('2d', {willReadFrequently: true});
-    }
-    return canvasContext
-}
+const getTargetHeight = (area: TextPieceArea) => area.height - AREA_PADDING_Y * area.height,
+    getTargetWidth = (area: TextPieceArea) => area.width - AREA_PADDING_X * area.width
 
 export const calculateFontSize = (data: TextRenderData,
                                   area: TextPieceArea,
@@ -110,15 +72,16 @@ export const calculateFontSize = (data: TextRenderData,
                                   precision: number = 0.001
 ) => {
     if (!context) return initialFontSize;
-    const targetWidth = area.width - 2,
-        targetHeight = area.height - 0.5
+    const targetWidth = getTargetWidth(area),
+        targetHeight = getTargetHeight(area)
 
     const doesTextFit = (fontSize: number): boolean => {
         context.font = `${fontSize}px ${data.font}`;
-        const metrics = context.measureText(data.value);
-
+        // const metrics = context.measureText(data.value);
+        const metrics = getTextMetricsReal(data, fontSize)
         const textWidth = metrics.width;
-        const textHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+        // const textHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+        const textHeight = metrics.height
 
         return textWidth <= targetWidth && textHeight <= targetHeight;
     };
@@ -156,4 +119,67 @@ export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLi
         .forEach((id) => {
             findTextById(id, svg)?.remove() // remove text elements for unused def ids
         })
+}
+
+const getTextMetrics = (data: TextRenderData) => {
+    const context = getCanvasContext()
+    if (context) {
+        context.font = `${data.size}px ${data.font}`;
+        return context.measureText(data.value);
+    }
+    throw new Error('Cannot access canvas context')
+}
+
+const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
+    const ctx = getCanvasContext()
+    if (!ctx) throw new Error('Cannot access canvas context')
+    // Устанавливаем шрифт и текст
+    const size = fontSize ?? data.size
+    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
+    ctx.font = `${size}px ${data.font}`;
+    ctx.textBaseline = 'top';
+    ctx.fillText(data.value, 0, 0);
+
+    // Получаем пиксельные данные текста
+    const imageData = ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    const pixels = imageData.data;
+
+    // Анализируем пиксельные данные
+    let top = CANVAS_SIZE;
+    let bottom = 0;
+    let left = CANVAS_SIZE;
+    let right = 0;
+
+    for (let y = 0; y < CANVAS_SIZE; y++) {
+        for (let x = 0; x < CANVAS_SIZE; x++) {
+            const index = (y * CANVAS_SIZE + x) * 4; // Индекс пикселя
+            const alpha = pixels[index + 3]; // Альфа-канал
+
+            if (alpha > 0) {
+                // Обновляем границы текста
+                if (x < left) left = x;
+                if (x > right) right = x;
+                if (y < top) top = y;
+                if (y > bottom) bottom = y;
+            }
+        }
+    }
+
+    return {
+        top: top,
+        bottom: bottom,
+        left: left,
+        right: right,
+        width: right - left,
+        height: bottom - top,
+    }
+}
+
+type TextMetricsReal = {
+    top: number,
+    bottom: number,
+    left: number,
+    right: number,
+    width: number,
+    height: number,
 }

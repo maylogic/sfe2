@@ -15,13 +15,16 @@ import {
 import {
     calculateTextDataPos,
     calculateTextDataSize,
-    createOrUpdateAreaRects,
     createOrUpdateTexts,
-    removeAreas,
     removeTextsForUnusedDefIds,
-    type TextPieceArea,
     type TextRenderData
 } from '~/utils/text'
+import {
+    createOrUpdateAreaRects,
+    removeAreas,
+    type TextPieceArea
+} from "~/utils/text_area";
+import { type PersonalizeInputData } from "~/utils/product";
 
 const props = defineProps<{
     baseData: FragmentType<typeof BaseFragmentFragmentDoc>
@@ -103,7 +106,7 @@ const applyTexts = () => {
     createOrUpdateTexts(textData, svg)
     if (import.meta.dev) {
         removeAreas(svg)
-        // createOrUpdateAreaRects([...areas.values()], svg)
+        createOrUpdateAreaRects([...areas.values()], svg)
     }
 }
 const getTextArea = () => {
