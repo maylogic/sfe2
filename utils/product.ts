@@ -2,14 +2,17 @@ import type {
     Color,
     DesignItemFragment,
     Font,
-    ProductBySlugQuery
+    ProductBySlugQuery,
+    ProductLineDefinition
 } from "~/gql/graphql";
 
+export type PersonalizeLineDefId = string
+export type InputTextLinesMap = Map<PersonalizeLineDefId, string | null>
 export type PersonalizeInputData = {
     color: Color | null
     font: Font | null
     design: DesignItemFragment | null
-    textLines: Map<string, string | null>
+    textLines: InputTextLinesMap
 }
 export type PersonalizeValidity = {
     [K in keyof PersonalizeInputData]: boolean | null
@@ -23,8 +26,8 @@ export const validateTextLines = (product: ProductBySlugQuery | undefined, input
         return def.max_length >= line.length;
     })
 }
-export const validatePerTextLine = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): Map<string, string> => {
-    const errors = new Map<string, string>()
+export const validatePerTextLine = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): Map<PersonalizeLineDefId, string> => {
+    const errors = new Map<PersonalizeLineDefId, string>()
 
     !!product?.getProductBySlug?.line_definitions?.forEach(def => {
         const line = input.textLines.get(def.id)
@@ -60,3 +63,12 @@ export const getNullValidation = () => ({
     design: null,
     textLines: null
 })
+export const getSortedTextLines = (defs: ProductLineDefinition[], input: PersonalizeInputData): InputTextLinesMap => {
+    const sortedTextLines = new Map<PersonalizeLineDefId, string | null>();
+    for (const def of defs) {
+        const textLine = input.textLines.get(def.id)
+        if (textLine) sortedTextLines.set(def.id, textLine)
+    }
+
+    return sortedTextLines;
+}

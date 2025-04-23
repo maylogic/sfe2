@@ -45,6 +45,7 @@ query ProductBySlug($slug: String!) {
             required
             default_value
             hidden
+            sort
         }
         gallery {
             ...GalleryItem

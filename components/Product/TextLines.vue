@@ -4,7 +4,7 @@
             <personalize-text-input @update:text-line="update"
                                     @hide="emit('hide', $event)"
                                     v-for="def in data"
-                                    :class="{'hidden': !!hidden.get(parseInt(def.id))}"
+                                    :class="{'hidden': !!hidden.get(def.id)}"
                                     :value="values.get(def.id)"
                                     :error="errors.get(def.id)"
                                     :def="def" :key="def.id"/>
@@ -20,12 +20,12 @@ defineProps<{
     valid: boolean | null
     index: number
     data: Array<ProductLineDefinition>
-    errors: Map<string, string>
-    hidden: Map<number, boolean>
-    values: Map<string, string | null>
+    errors: Map<PersonalizeLineDefId, string>
+    hidden: Map<PersonalizeLineDefId, boolean>
+    values: Map<PersonalizeLineDefId, string | null>
 }>()
 
-const update = (lineId: string, val: string | null) => {
+const update = (lineId: PersonalizeLineDefId, val: string | null) => {
     emit('update:text-line', lineId, val)
 }
 

@@ -24,7 +24,10 @@ import {
     removeAreas,
     type TextPieceArea
 } from "~/utils/text_area";
-import { type PersonalizeInputData } from "~/utils/product";
+import {
+    getSortedTextLines,
+    type PersonalizeInputData
+} from "~/utils/product";
 
 const props = defineProps<{
     baseData: FragmentType<typeof BaseFragmentFragmentDoc>
@@ -57,7 +60,7 @@ const applyTexts = () => {
     if (!rect) return
     const usedDefIds: string[] = []
     let currentLineSeq = 0
-    for (const [id, value] of props.data.textLines) {
+    for (const [id, value] of getSortedTextLines(props.lineDefinitions, props.data)) {
         if (++currentLineSeq < rect.first_line) continue
         if (currentLineSeq > rect.lines) continue
         if (!value) continue

@@ -70,6 +70,7 @@ import {
 import {
     getNullValidation,
     type PersonalizeInputData,
+    type PersonalizeLineDefId,
     type PersonalizeValidity,
     validateColor,
     validateDesign,
@@ -110,10 +111,10 @@ const addProductData = reactive<PersonalizeInputData>({
     design: null,
     color: null,
     font: null,
-    textLines: new Map<string, string | null>()
+    textLines: new Map<PersonalizeLineDefId, string | null>()
 })
-const textLineErrors = ref(new Map<string, string>())
-const hiddenTextLines = ref(new Map<number, boolean>())
+const textLineErrors = ref(new Map<PersonalizeLineDefId, string>())
+const hiddenTextLines = ref(new Map<PersonalizeLineDefId, boolean>())
 const valid = ref(false)
 const editor = ref(false)
 const validated = ref(false)
@@ -187,22 +188,24 @@ const updateTextLine = (lineId: string, value: string | null) => {
 const hideTextLine = (lineId: string) => {
     addProductData.textLines.delete(lineId)
     textLineErrors.value.delete(lineId)
-    hiddenTextLines.value.set(parseInt(lineId), true)
+    hiddenTextLines.value.set(lineId, true)
 }
 const showTextLine = () => {
-    const ids = [...hiddenTextLines.value.keys()].sort()
-    if (ids.length) {
-        hiddenTextLines.value.delete(ids[0])
+    for (const def of data.value?.getProductBySlug?.line_definitions || []) {
+        if (hiddenTextLines.value.has(def.id)) {
+            hiddenTextLines.value.delete(def.id)
+            return
+        }
     }
 }
 
 if (data.value.getProductBySlug) {
-    const textData = new Map<string, string | null>(),
-        hidden = new Map<number, boolean>()
+    const textData = new Map<PersonalizeLineDefId, string | null>(),
+        hidden = new Map<PersonalizeLineDefId, boolean>()
     data.value?.getProductBySlug?.line_definitions?.forEach(def => {
         textData.set(def.id, null)
         if (def.hidden) {
-            hidden.set(parseInt(def.id), true)
+            hidden.set(def.id, true)
         }
     })
     addProductData.textLines = textData
