@@ -1,7 +1,9 @@
 <template>
     <u-form-group :error="error">
         <div class="grid grid-cols-[1fr__max-content] items-center gap-5">
-            <u-input size="xl" :placeholder="def.required ? def.label + '*' : def.label"
+            <u-input size="xl"
+                     :maxlength="def.max_length"
+                     :placeholder="def.required ? def.label + '*' : def.label"
                      @update:modelValue="update"
                      :model-value="value??''"
                      :required="def.required"/>
