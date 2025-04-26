@@ -63,10 +63,10 @@ export const getNullValidation = () => ({
     design: null,
     textLines: null
 })
-export const getSortedTextLines = (defs: ProductLineDefinition[], input: PersonalizeInputData): InputTextLinesMap => {
+export const getSortedTextLines = (defs: ProductLineDefinition[], textLines: InputTextLinesMap): InputTextLinesMap => {
     const sortedTextLines = new Map<PersonalizeLineDefId, string | null>();
     for (const def of defs) {
-        const textLine = input.textLines.get(def.id)
+        const textLine = textLines.get(def.id)
         if (textLine) sortedTextLines.set(def.id, textLine)
     }
 

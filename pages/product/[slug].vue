@@ -1,6 +1,7 @@
 <template>
     <div class="product-page" v-if="!!data?.getProductBySlug">
         <product-page-gallery @toggle-editor="editor = $event"
+                              :text-lines-render-values="textLinesRenderValues"
                               :editor="editor"
                               :line-definitions="data.getProductBySlug.line_definitions ?? []"
                               :personalize-data="addProductData"
@@ -69,6 +70,7 @@ import {
 } from '~/gql/graphql.js'
 import {
     getNullValidation,
+    type InputTextLinesMap,
     type PersonalizeInputData,
     type PersonalizeLineDefId,
     type PersonalizeValidity,
@@ -113,8 +115,10 @@ const addProductData = reactive<PersonalizeInputData>({
     font: null,
     textLines: new Map<PersonalizeLineDefId, string | null>()
 })
+const textLinesRenderValues = reactive<InputTextLinesMap>(new Map)
 const textLineErrors = ref(new Map<PersonalizeLineDefId, string>())
 const hiddenTextLines = ref(new Map<PersonalizeLineDefId, boolean>())
+const textLinesEditingStarted = ref(false)
 const valid = ref(false)
 const editor = ref(false)
 const validated = ref(false)
@@ -178,12 +182,24 @@ const updateFont = (font: Font | null) => {
 const updateTextLine = (lineId: string, value: string | null) => {
     validated.value = false
     editor.value = true
+    if (!textLinesEditingStarted.value) {
+        textLinesRenderValues.clear()
+        textLinesEditingStarted.value = true
+    }
     addProductData.textLines.set(lineId, value)
+    textLinesRenderValues.set(lineId, value)
     const hadErrors = textLineErrors.value.size !== 0
     textLineErrors.value.delete(lineId)
     if (hadErrors && textLineErrors.value.size === 0) {
         personalizeValidity.textLines = true
     }
+}
+const setTextLineDefaults = () => {
+    data.value?.getProductBySlug?.line_definitions?.forEach(def => {
+        if (def.default_value) {
+            textLinesRenderValues.set(def.id, def.default_value)
+        }
+    })
 }
 const hideTextLine = (lineId: string) => {
     addProductData.textLines.delete(lineId)
@@ -219,6 +235,7 @@ data.value.getProductBySlug.designs.forEach(designFrag => {
         usedFonts.set(font.id, font)
     })
 })
+setTextLineDefaults()
 useHead({
     title: data.value.getProductBySlug.meta_title,
     meta: [

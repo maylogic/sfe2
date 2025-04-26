@@ -2,7 +2,9 @@
     <div class="product-gallery">
         <div class="current-image">
             <gallery-item v-if="!editor && gallery[currentItem]" :data="gallery[currentItem]"/>
-            <product-editor :line-definitions="lineDefinitions" :reverse-side-base="reverseSideBase"
+            <product-editor :text-lines-render-values="textLinesRenderValues"
+                            :line-definitions="lineDefinitions"
+                            :reverse-side-base="reverseSideBase"
                             :personalize-data="personalizeData" v-if="editor"/>
         </div>
         <div class="items-carousel">
@@ -26,13 +28,15 @@ import {
 } from "~/gql/graphql";
 import type { FragmentType } from "~/gql";
 import GalleryCarouselItem from "~/components/GalleryCarouselItem.vue";
+import type { InputTextLinesMap } from "~/utils/product";
 
 defineProps<{
     gallery: FragmentType<typeof GalleryItemFragmentDoc>[],
     reverseSideBase: null | undefined | FragmentType<typeof BaseFragmentFragmentDoc>,
     personalizeData: PersonalizeInputData,
     editor: boolean,
-    lineDefinitions: ProductLineDefinition[]
+    lineDefinitions: ProductLineDefinition[],
+    textLinesRenderValues: InputTextLinesMap
 }>()
 const currentItem = ref(0)
 

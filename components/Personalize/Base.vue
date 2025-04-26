@@ -26,13 +26,15 @@ import {
 } from "~/utils/text_area";
 import {
     getSortedTextLines,
+    type InputTextLinesMap,
     type PersonalizeInputData
 } from "~/utils/product";
 
 const props = defineProps<{
     baseData: FragmentType<typeof BaseFragmentFragmentDoc>
     data: PersonalizeInputData,
-    lineDefinitions: ProductLineDefinition[]
+    lineDefinitions: ProductLineDefinition[],
+    textLinesRenderValues: InputTextLinesMap
 }>()
 const base = useFragment(BaseFragmentFragmentDoc, props.baseData)
 const block = useTemplateRef<SVGGElement>('block')
@@ -60,7 +62,7 @@ const applyTexts = () => {
     if (!rect) return
     const usedDefIds: string[] = []
     let currentLineSeq = 0
-    for (const [id, value] of getSortedTextLines(props.lineDefinitions, props.data)) {
+    for (const [id, value] of getSortedTextLines(props.lineDefinitions, props.textLinesRenderValues)) {
         if (++currentLineSeq < rect.first_line) continue
         if (currentLineSeq > rect.lines) continue
         if (!value) continue
