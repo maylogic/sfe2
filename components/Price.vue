@@ -1,5 +1,6 @@
 <template>
     <div
+        v-if="price.regular > 0 || !hideFree"
         class="price-container flex items-center font-fira-sans"
         :class="price.is_discounted ? 'discounted' : ''"
     >
@@ -20,18 +21,20 @@ import { useFragment } from '~/gql/index.js'
 import { PriceFragmentDoc } from '~/gql/graphql.js'
 import { formatPrice } from '~/utils/price'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     data: FragmentType<typeof PriceFragmentDoc>
-}>()
+    hideFree?: boolean
+}>(), {
+    hideFree: false
+})
 
 const price = useFragment(PriceFragmentDoc, props.data)
 </script>
 
 <style scoped lang="scss">
 .price-container {
-    display: flex;
-    align-items: center;
     gap: 0.5rem;
+
     &.discounted .regular-price {
         @apply text-storm-dust-500 opacity-30;
         text-decoration: line-through;

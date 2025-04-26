@@ -34,6 +34,7 @@ query ProductBySlug($slug: String!) {
                     ...Price
                 }
             }
+            required
             label
         }
         meta_title

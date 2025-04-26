@@ -13,30 +13,44 @@
             <div class="create-fields">
                 <h2 class="font-iskra">Создание и предпросмотр</h2>
                 <product-designs @update:design="updateDesign"
-                                 :index="1"
+                                 :index="getBlockIndex(1)"
                                  :current-design="addProductData.design"
                                  :data="data.getProductBySlug.designs" :valid="personalizeValidity.design"/>
                 <product-colors @update:color="updateColor"
                                 :key="addProductData.design?.id"
                                 v-if="availableColors.length"
-                                :index="2"
+                                :index="getBlockIndex(2)"
                                 :current-color="addProductData.color"
                                 :data="availableColors" :valid="personalizeValidity.color"/>
                 <product-fonts @update:font="updateFont"
                                v-if="availableFonts.length"
                                :key="addProductData.design?.id"
-                               :index="3"
+                               :index="getBlockIndex(3)"
                                :current-font="addProductData.font"
                                :data="availableFonts" :valid="personalizeValidity.font"/>
                 <product-text-lines v-if="addProductData.design && data.getProductBySlug.line_definitions"
                                     :errors="textLineErrors"
                                     :hidden="hiddenTextLines"
                                     :values="addProductData.textLines"
-                                    :data="data.getProductBySlug.line_definitions" :index="4"
+                                    :data="data.getProductBySlug.line_definitions" :index="getBlockIndex(4)"
                                     @hide="hideTextLine"
                                     @show="showTextLine"
                                     @update:text-line="updateTextLine"
                                     :valid="personalizeValidity.textLines"/>
+                <product-sizes :index="getBlockIndex(5)"
+                               :valid="personalizeValidity.size"
+                               :current-size="addProductData.size"
+                               @update:size="updateSize"
+                               v-if="addProductData.design !== null"
+                               :data="data.getProductBySlug.sizes"/>
+                <product-options v-for="(option,index) in data.getProductBySlug.options"
+                                 :errors="optionsErrors"
+                                 :index="getBlockIndex(6 + index)"
+                                 v-if="addProductData.design !== null"
+                                 :valid="personalizeValidity.options"
+                                 :values="addProductData.options"
+                                 @update:option="updateOption"
+                                 :option="option"/>
 
                 <price class="text-2xl" :key="data.getProductBySlug.key" :data="data.getProductBySlug.price"/>
 
@@ -69,6 +83,7 @@ import {
     ProductBySlugDocument
 } from '~/gql/graphql.js'
 import {
+    getBlocksVisibility,
     getNullValidation,
     type InputTextLinesMap,
     type PersonalizeInputData,
@@ -77,7 +92,10 @@ import {
     validateColor,
     validateDesign,
     validateFont,
+    validateOptions,
+    validatePerOption,
     validatePerTextLine,
+    validateSize,
     validateTextLines
 } from "~/utils/product";
 import { getKeys } from "~/utils/type"
@@ -113,21 +131,29 @@ const addProductData = reactive<PersonalizeInputData>({
     design: null,
     color: null,
     font: null,
-    textLines: new Map<PersonalizeLineDefId, string | null>()
+    textLines: new Map<PersonalizeLineDefId, string | null>(),
+    size: null,
+    options: new Map
 })
 const textLinesRenderValues = reactive<InputTextLinesMap>(new Map)
 const textLineErrors = ref(new Map<PersonalizeLineDefId, string>())
+const optionsErrors = ref(new Map<ProductOptionId, string>())
 const hiddenTextLines = ref(new Map<PersonalizeLineDefId, boolean>())
 const textLinesEditingStarted = ref(false)
 const valid = ref(false)
 const editor = ref(false)
 const validated = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
+const blocksVisibility = ref<Map<number, boolean>>(new Map)
 const validate = () => {
     personalizeValidity.design = validateDesign(data.value, addProductData)
     personalizeValidity.color = validateColor(data.value, addProductData)
     personalizeValidity.font = validateFont(data.value, addProductData)
     personalizeValidity.textLines = validateTextLines(data.value, addProductData)
+    personalizeValidity.size = validateSize(data.value, addProductData)
+    personalizeValidity.options = validateOptions(data.value, addProductData)
+    textLineErrors.value = validatePerTextLine(data.value, addProductData)
+    optionsErrors.value = validatePerOption(data.value, addProductData)
     valid.value = getKeys(personalizeValidity).every(key => personalizeValidity[key])
     validated.value = true
 }
@@ -136,7 +162,6 @@ const cart = useCartStore()
 const addToCart = () => {
     if (!data.value?.getProductBySlug) return
     validate()
-    textLineErrors.value = validatePerTextLine(data.value, addProductData)
     if (valid.value) {
         addToCartExec({
             productId: data.value?.getProductBySlug.id,
@@ -166,6 +191,7 @@ const updateDesign = (design: DesignItemFragment | null) => {
     }
     availableColors.value = design?.colors ? [...design?.colors] : []
     availableFonts.value = design?.fonts ? [...design?.fonts] : []
+    blocksVisibility.value = getBlocksVisibility(data.value, addProductData)
 }
 const updateColor = (color: Color | null) => {
     validated.value = false
@@ -194,6 +220,22 @@ const updateTextLine = (lineId: string, value: string | null) => {
         personalizeValidity.textLines = true
     }
 }
+const updateSize = (sizeId: ProductSizeId) => {
+    validated.value = false
+    editor.value = true
+    addProductData.size = sizeId
+    personalizeValidity.size = sizeId ? validateSize(data.value, addProductData) : null
+}
+const updateOption = (optionId: ProductOptionId, optionItemId: ProductOptionItemId) => {
+    validated.value = false
+    editor.value = true
+    addProductData.options.set(optionId, optionItemId)
+    const hadErrors = optionsErrors.value.size !== 0
+    optionsErrors.value.delete(optionId)
+    if (hadErrors && optionsErrors.value.size === 0) {
+        personalizeValidity.options = true
+    }
+}
 const setTextLineDefaults = () => {
     data.value?.getProductBySlug?.line_definitions?.forEach(def => {
         if (def.default_value) {
@@ -215,9 +257,19 @@ const showTextLine = () => {
     }
 }
 
+const getBlockIndex = (id: number) => {
+    let count = 0;
+    for (let i = 1; i <= id; i++) {
+        if (blocksVisibility.value.get(i)) {
+            count++;
+        }
+    }
+    return count;
+}
 if (data.value.getProductBySlug) {
     const textData = new Map<PersonalizeLineDefId, string | null>(),
         hidden = new Map<PersonalizeLineDefId, boolean>()
+    blocksVisibility.value = getBlocksVisibility(data.value, addProductData)
     data.value?.getProductBySlug?.line_definitions?.forEach(def => {
         textData.set(def.id, null)
         if (def.hidden) {
