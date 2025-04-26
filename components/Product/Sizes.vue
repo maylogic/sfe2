@@ -7,7 +7,7 @@
                            :options="items">
                 <template #label="{ option }">
                     <div class="size-label">
-                        {{ option.label }}
+                        {{ option.label }} (диаметр {{option.size}} см)
                         <price :hide-free="true" :data="option.price"/>
                     </div>
                 </template>
@@ -26,13 +26,14 @@ const props = defineProps<{
     index: number
     valid: boolean | null
     currentSize: ProductSizeId | null
-    data: Array<Pick<ProductSize, "id" | "label"> & { price: FragmentType<typeof PriceFragmentDoc> }>
+    data: Array<Pick<ProductSize, "id" | "label" | "width"> & { price: FragmentType<typeof PriceFragmentDoc> }>
 }>()
 
 const items = computed(() => props.data.map(item => ({
     value: item.id,
     label: item.label,
-    price: item.price
+    price: item.price,
+    size: (item.width / 10).toFixed(1)
 })))
 
 const updateSize = (sizeId: ProductSizeId) => {
