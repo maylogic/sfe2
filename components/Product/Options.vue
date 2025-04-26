@@ -1,8 +1,16 @@
 <template>
     <personalize-block :valid="valid" :index="index" :label="option.label">
-        <div class="flex flex-col gap-2 pr-5 pl-3 pb-3">
-            <u-radio-group>
-                <u-radio v-for="item in option.items" :label="item.label"/>
+        <div class="px-3">
+            <u-radio-group :ui="{fieldset: 'flex flex-col gap-2'}"
+                           @update:modelValue="update"
+                           :model-value="values.get(option.id)"
+                           :options="items">
+                <template #label="{ option }">
+                    <div class="size-label">
+                        {{ option.label }}
+                        <price :hide-free="true" :data="option.price"/>
+                    </div>
+                </template>
             </u-radio-group>
         </div>
     </personalize-block>
@@ -15,7 +23,7 @@ import {
 } from "~/gql/graphql";
 import type { FragmentType } from "~/gql";
 
-defineProps<{
+const props = defineProps<{
     valid: boolean | null
     index: number
     option: Pick<ProductOption, "id" | "label"> & {
@@ -27,8 +35,14 @@ defineProps<{
     values: InputOptionsMap
 }>()
 
-const update = (optionId: ProductOptionId, val: ProductOptionItemId) => {
-    emit('update:option', optionId, val)
+const items = computed(() => props.option.items.map(item => ({
+    value: item.id,
+    label: item.label,
+    price: item.price
+})))
+
+const update = (val: ProductOptionItemId) => {
+    emit('update:option', props.option.id, val)
 }
 
 const emit = defineEmits(['update:option'])
