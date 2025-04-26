@@ -40,10 +40,12 @@
                 <product-sizes :index="getBlockIndex(5)"
                                :valid="personalizeValidity.size"
                                :current-size="addProductData.size"
+                               :key="data.getProductBySlug.key"
                                @update:size="updateSize"
                                v-if="addProductData.design !== null"
                                :data="data.getProductBySlug.sizes"/>
                 <product-options v-for="(option,index) in data.getProductBySlug.options"
+                                 :key="data.getProductBySlug.key"
                                  :errors="optionsErrors"
                                  :index="getBlockIndex(6 + index)"
                                  v-if="addProductData.design !== null"
@@ -214,11 +216,8 @@ const updateTextLine = (lineId: string, value: string | null) => {
     }
     addProductData.textLines.set(lineId, value)
     textLinesRenderValues.set(lineId, value)
-    const hadErrors = textLineErrors.value.size !== 0
-    textLineErrors.value.delete(lineId)
-    if (hadErrors && textLineErrors.value.size === 0) {
-        personalizeValidity.textLines = true
-    }
+    textLineErrors.value = validatePerTextLine(data.value, addProductData)
+    personalizeValidity.textLines = textLineErrors.value.size === 0 ? true : null
 }
 const updateSize = (sizeId: ProductSizeId) => {
     validated.value = false
@@ -230,9 +229,8 @@ const updateOption = (optionId: ProductOptionId, optionItemId: ProductOptionItem
     validated.value = false
     editor.value = true
     addProductData.options.set(optionId, optionItemId)
-    const hadErrors = optionsErrors.value.size !== 0
-    optionsErrors.value.delete(optionId)
-    if (hadErrors && optionsErrors.value.size === 0) {
+    optionsErrors.value = validatePerOption(data.value, addProductData)
+    if (optionsErrors.value.size === 0) {
         personalizeValidity.options = true
     }
 }
