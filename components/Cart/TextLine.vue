@@ -1,6 +1,7 @@
 <template>
-    <div>
-        {{ line.definition.label }}: {{ line.value }}
+    <div class="text-line-value" v-if="!showOnlyRequired || line.product_line_definition.required">
+        <span class="def">{{ line.product_line_definition.label }}:</span>
+        <span class="val">{{ line.value }}</span>
     </div>
 </template>
 
@@ -9,13 +10,16 @@ import type { FragmentType } from '~/gql/index.js'
 import { useFragment } from '~/gql/index.js'
 import { CartTextLineFragmentDoc } from '~/gql/graphql.js'
 
-const props = defineProps<{
-    data: FragmentType<typeof CartTextLineFragmentDoc>
-}>()
+const props = withDefaults(defineProps<{
+    data: FragmentType<typeof CartTextLineFragmentDoc>,
+    showOnlyRequired?: boolean
+}>(), {
+    showOnlyRequired: false
+})
 
 const line = useFragment(CartTextLineFragmentDoc, props.data)
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 
 </style>

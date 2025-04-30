@@ -3,17 +3,19 @@
         <UButton
             icon="i-heroicons-minus"
             color="gray"
+            size="2xs"
             :disabled="disabled || quantity <= 1"
             @click="decrementQuantity"
         />
         <input
             :value="quantity"
             disabled
-            class="w-7 text-center p-1 quantity-input-text"
+            class="w-7 text-center p-1 font-sans font-normal text-sm quantity-input-text"
         />
         <UButton
             icon="i-heroicons-plus"
             color="gray"
+            size="2xs"
             @click="incrementQuantity"
             :disabled="disabled"
         />

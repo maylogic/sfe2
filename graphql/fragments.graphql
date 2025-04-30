@@ -31,7 +31,7 @@ fragment Price on Price {
     discounted
 }
 fragment CartTextLine on CartItemTextLine {
-    definition {
+    product_line_definition {
         label
         max_length
         required
@@ -64,6 +64,18 @@ fragment TextArea on BaseTextArea {
 fragment SidebarCartItem on CartItem {
     id
     quantity
+    price {
+        ...Price
+    }
+    design {
+        label
+    }
+    color {
+        label
+    }
+    font {
+        label
+    }
     product {
         slug
         name

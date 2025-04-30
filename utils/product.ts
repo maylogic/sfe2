@@ -2,8 +2,11 @@ import type {
     Color,
     DesignItemFragment,
     Font,
+    OptionInput,
+    PersonalizeInput,
     ProductBySlugQuery,
-    ProductLineDefinition
+    ProductLineDefinition,
+    TextLineInput
 } from "~/gql/graphql";
 
 export type PersonalizeLineDefId = string
@@ -123,4 +126,36 @@ export const getBlocksVisibility = (product: ProductBySlugQuery | undefined, inp
     }
 
     return blocks
+}
+export const getPersonalizeInputFromData = (inputData: PersonalizeInputData): PersonalizeInput => {
+    const options: OptionInput[] = [],
+        textLines: TextLineInput[] = []
+
+    for (const [optionId, optionValueId] of inputData.options) {
+        options.push({
+            optionId,
+            optionValueId
+        })
+    }
+    for (const [productLineDefinitionId, value] of inputData.textLines) {
+        if (value) {
+            textLines.push({
+                productLineDefinitionId,
+                value
+            })
+        }
+    }
+    const colorId = inputData.color?.id ?? '0',
+        fontId = inputData.font?.id ?? '0',
+        designId = inputData.design?.id ?? '0',
+        sizeId = inputData.size ?? '0'
+
+    return {
+        colorId,
+        fontId,
+        designId,
+        sizeId,
+        options,
+        textLines
+    }
 }

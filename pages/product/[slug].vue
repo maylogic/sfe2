@@ -4,7 +4,7 @@
                               :text-lines-render-values="textLinesRenderValues"
                               :editor="editor"
                               :line-definitions="data.getProductBySlug.line_definitions ?? []"
-                              :personalize-data="addProductData"
+                              :personalize-data="inputData"
                               :reverse-side-base="data.getProductBySlug.reverse_side_base"
                               :product="data.getProductBySlug"
                               :gallery="data.getProductBySlug.gallery"/>
@@ -14,24 +14,24 @@
                 <h2 class="font-iskra">Создание и предпросмотр</h2>
                 <product-designs @update:design="updateDesign"
                                  :index="getBlockIndex(1)"
-                                 :current-design="addProductData.design"
+                                 :current-design="inputData.design"
                                  :data="data.getProductBySlug.designs" :valid="personalizeValidity.design"/>
                 <product-colors @update:color="updateColor"
-                                :key="addProductData.design?.id"
+                                :key="inputData.design?.id"
                                 v-if="availableColors.length"
                                 :index="getBlockIndex(2)"
-                                :current-color="addProductData.color"
+                                :current-color="inputData.color"
                                 :data="availableColors" :valid="personalizeValidity.color"/>
                 <product-fonts @update:font="updateFont"
                                v-if="availableFonts.length"
-                               :key="addProductData.design?.id"
+                               :key="inputData.design?.id"
                                :index="getBlockIndex(3)"
-                               :current-font="addProductData.font"
+                               :current-font="inputData.font"
                                :data="availableFonts" :valid="personalizeValidity.font"/>
-                <product-text-lines v-if="addProductData.design && data.getProductBySlug.line_definitions"
+                <product-text-lines v-if="inputData.design && data.getProductBySlug.line_definitions"
                                     :errors="textLineErrors"
                                     :hidden="hiddenTextLines"
-                                    :values="addProductData.textLines"
+                                    :values="inputData.textLines"
                                     :data="data.getProductBySlug.line_definitions" :index="getBlockIndex(4)"
                                     @hide="hideTextLine"
                                     @show="showTextLine"
@@ -39,18 +39,18 @@
                                     :valid="personalizeValidity.textLines"/>
                 <product-sizes :index="getBlockIndex(5)"
                                :valid="personalizeValidity.size"
-                               :current-size="addProductData.size"
+                               :current-size="inputData.size"
                                :key="data.getProductBySlug.key"
                                @update:size="updateSize"
-                               v-if="addProductData.design !== null"
+                               v-if="inputData.design !== null"
                                :data="data.getProductBySlug.sizes"/>
                 <product-options v-for="(option,index) in data.getProductBySlug.options"
                                  :key="data.getProductBySlug.key"
                                  :errors="optionsErrors"
                                  :index="getBlockIndex(6 + index)"
-                                 v-if="addProductData.design !== null"
+                                 v-if="inputData.design !== null"
                                  :valid="personalizeValidity.options"
-                                 :values="addProductData.options"
+                                 :values="inputData.options"
                                  @update:option="updateOption"
                                  :option="option"/>
 
@@ -87,6 +87,7 @@ import {
 import {
     getBlocksVisibility,
     getNullValidation,
+    getPersonalizeInputFromData,
     type InputTextLinesMap,
     type PersonalizeInputData,
     type PersonalizeLineDefId,
@@ -129,7 +130,7 @@ if (!data.value?.getProductBySlug) {
     throw createError({statusCode: 404, statusMessage: 'Страница не найдена'})
 }
 
-const addProductData = reactive<PersonalizeInputData>({
+const inputData = reactive<PersonalizeInputData>({
     design: null,
     color: null,
     font: null,
@@ -148,14 +149,14 @@ const validated = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const blocksVisibility = ref<Map<number, boolean>>(new Map)
 const validate = () => {
-    personalizeValidity.design = validateDesign(data.value, addProductData)
-    personalizeValidity.color = validateColor(data.value, addProductData)
-    personalizeValidity.font = validateFont(data.value, addProductData)
-    personalizeValidity.textLines = validateTextLines(data.value, addProductData)
-    personalizeValidity.size = validateSize(data.value, addProductData)
-    personalizeValidity.options = validateOptions(data.value, addProductData)
-    textLineErrors.value = validatePerTextLine(data.value, addProductData)
-    optionsErrors.value = validatePerOption(data.value, addProductData)
+    personalizeValidity.design = validateDesign(data.value, inputData)
+    personalizeValidity.color = validateColor(data.value, inputData)
+    personalizeValidity.font = validateFont(data.value, inputData)
+    personalizeValidity.textLines = validateTextLines(data.value, inputData)
+    personalizeValidity.size = validateSize(data.value, inputData)
+    personalizeValidity.options = validateOptions(data.value, inputData)
+    textLineErrors.value = validatePerTextLine(data.value, inputData)
+    optionsErrors.value = validatePerOption(data.value, inputData)
     valid.value = getKeys(personalizeValidity).every(key => personalizeValidity[key])
     validated.value = true
 }
@@ -168,6 +169,7 @@ const addToCart = () => {
         addToCartExec({
             productId: data.value?.getProductBySlug.id,
             quantity: 1,
+            personalize: getPersonalizeInputFromData(inputData)
         }).then((result) => {
             if (result.data?.addCartItem) {
                 cart.setData(result.data?.addCartItem)
@@ -180,32 +182,32 @@ const availableColors = ref<Color[]>([])
 const availableFonts = ref<Font[]>([])
 const updateDesign = (design: DesignItemFragment | null) => {
     validated.value = false
-    addProductData.design = design
+    inputData.design = design
     editor.value = design !== null
-    personalizeValidity.design = design ? validateDesign(data.value, addProductData) : null
-    if (!design?.colors?.find(color => color.id === addProductData.color?.id)) {
-        addProductData.color = null
+    personalizeValidity.design = design ? validateDesign(data.value, inputData) : null
+    if (!design?.colors?.find(color => color.id === inputData.color?.id)) {
+        inputData.color = null
         personalizeValidity.color = null
     }
-    if (!design?.fonts?.find(font => font.id === addProductData.font?.id)) {
-        addProductData.font = null
+    if (!design?.fonts?.find(font => font.id === inputData.font?.id)) {
+        inputData.font = null
         personalizeValidity.font = null
     }
     availableColors.value = design?.colors ? [...design?.colors] : []
     availableFonts.value = design?.fonts ? [...design?.fonts] : []
-    blocksVisibility.value = getBlocksVisibility(data.value, addProductData)
+    blocksVisibility.value = getBlocksVisibility(data.value, inputData)
 }
 const updateColor = (color: Color | null) => {
     validated.value = false
     editor.value = true
-    addProductData.color = color
-    personalizeValidity.color = color ? validateColor(data.value, addProductData) : null
+    inputData.color = color
+    personalizeValidity.color = color ? validateColor(data.value, inputData) : null
 }
 const updateFont = (font: Font | null) => {
     validated.value = false
     editor.value = true
-    addProductData.font = font
-    personalizeValidity.font = font ? validateFont(data.value, addProductData) : null
+    inputData.font = font
+    personalizeValidity.font = font ? validateFont(data.value, inputData) : null
 }
 const updateTextLine = (lineId: string, value: string | null) => {
     validated.value = false
@@ -214,22 +216,22 @@ const updateTextLine = (lineId: string, value: string | null) => {
         textLinesRenderValues.clear()
         textLinesEditingStarted.value = true
     }
-    addProductData.textLines.set(lineId, value)
+    inputData.textLines.set(lineId, value)
     textLinesRenderValues.set(lineId, value)
-    textLineErrors.value = validatePerTextLine(data.value, addProductData)
+    textLineErrors.value = validatePerTextLine(data.value, inputData)
     personalizeValidity.textLines = textLineErrors.value.size === 0 ? true : null
 }
 const updateSize = (sizeId: ProductSizeId) => {
     validated.value = false
     editor.value = true
-    addProductData.size = sizeId
-    personalizeValidity.size = sizeId ? validateSize(data.value, addProductData) : null
+    inputData.size = sizeId
+    personalizeValidity.size = sizeId ? validateSize(data.value, inputData) : null
 }
 const updateOption = (optionId: ProductOptionId, optionItemId: ProductOptionItemId) => {
     validated.value = false
     editor.value = true
-    addProductData.options.set(optionId, optionItemId)
-    optionsErrors.value = validatePerOption(data.value, addProductData)
+    inputData.options.set(optionId, optionItemId)
+    optionsErrors.value = validatePerOption(data.value, inputData)
     if (optionsErrors.value.size === 0) {
         personalizeValidity.options = true
     }
@@ -242,7 +244,7 @@ const setTextLineDefaults = () => {
     })
 }
 const hideTextLine = (lineId: string) => {
-    addProductData.textLines.delete(lineId)
+    inputData.textLines.delete(lineId)
     textLineErrors.value.delete(lineId)
     hiddenTextLines.value.set(lineId, true)
 }
@@ -267,14 +269,14 @@ const getBlockIndex = (id: number) => {
 if (data.value.getProductBySlug) {
     const textData = new Map<PersonalizeLineDefId, string | null>(),
         hidden = new Map<PersonalizeLineDefId, boolean>()
-    blocksVisibility.value = getBlocksVisibility(data.value, addProductData)
+    blocksVisibility.value = getBlocksVisibility(data.value, inputData)
     data.value?.getProductBySlug?.line_definitions?.forEach(def => {
         textData.set(def.id, null)
         if (def.hidden) {
             hidden.set(def.id, true)
         }
     })
-    addProductData.textLines = textData
+    inputData.textLines = textData
     hiddenTextLines.value = hidden
 }
 
@@ -310,6 +312,12 @@ useHead({
         @apply bg-storm-dust-50 p-5 my-5 flex flex-col gap-3;
         h2 {
             @apply text-2xl text-center;
+        }
+    }
+
+    .product-info {
+        h1 {
+            font-size: 32px;
         }
     }
 }

@@ -5,49 +5,86 @@
             <product-link :slug="item.product.slug">
                 {{ item.product.name }}
             </product-link>
-            <u-button
-                icon="i-lucide-trash"
-                @click="remove"
+            <span class="flex items-center gap-2 text-xs font-sans cursor-pointer"
+                  @click="isRemovingModalOpen = true">
+                <u-icon name="i-lucide-trash"/>
+                Удалить
+            </span>
+            <price :data="item.price"/>
+            <quantity-input
+                :quantity="quantity"
                 :disabled="fetching"
-                color="red"
-                size="xs"
-                class="px-1.5 ml-auto"
+                @update:quantity="quantity = $event"
             />
-            <price :data="item.product.price"/>
         </div>
 
-        <quantity-input
-            :quantity="quantity"
-            :disabled="fetching"
-            @update:quantity="quantity = $event"
-        />
+        <div class="info">
+            <a href="#" class="flex items-center gap-2" @click.prevent="showInfo = !showInfo">
+                <u-icon name="i-lucide-x" v-if="showInfo"/>
+                <u-icon name="i-lucide-list-collapse" v-if="!showInfo"/>
+                <span class="-mb-0.5">{{ !showInfo ? 'Детали' : 'Скрыть' }}</span>
+            </a>
+            <div class="all-info" v-if="showInfo">
+                <!-- Дополнительные опции -->
+                <div v-if="!!item.option_items?.length" class="option-items">
+                    <div v-for="option in item.option_items" :key="option.id">
+                        <span class="def">{{ option.label }}:</span>
+                        <price :data="option.price"/>
+                    </div>
+                </div>
 
-        <!-- Дополнительные опции -->
-        <div v-if="!!item.option_items?.length" class="option-items">
-            <h4>Options</h4>
-            <ul>
-                <li v-for="option in item.option_items" :key="option.id">
-                    {{ option.label }}:
-                    <price :data="option.price"/>
-                </li>
-            </ul>
+                <!-- Размер продукта -->
+                <div v-if="item.product_size" class="size">
+                    <span class="def">Размер:</span>
+                    <span class="val">{{ item.product_size.label }}</span>
+                    <price :hide-free="true" :data="item.product_size.price"/>
+                </div>
+
+                <div v-if="item.design" class="design">
+                    <span class="def">Дизайн:</span>
+                    <span class="val">{{ item.design.label }}</span>
+                </div>
+                <div v-if="item.color" class="color">
+                    <span class="def">Цвет:</span>
+                    <span class="val">{{ item.color.label }}</span>
+                </div>
+                <div v-if="item.font" class="font">
+                    <span class="def">Шрифт:</span>
+                    <span class="val">{{ item.font.label }}</span>
+                </div>
+                <div v-if="!!item.text_lines?.length" class="text-lines">
+                    <cart-text-line :data="textLine"
+                                    v-for="textLine in item.text_lines"
+                                    :key="textLine.id"/>
+                </div>
+            </div>
         </div>
 
-        <!-- Размер продукта -->
-        <div v-if="item.product_size" class="product-size">
-            <h4>Size</h4>
-            <p>{{ item.product_size.label }}</p>
-            <p>
-                Dimensions: {{ item.product_size.width }}x{{
-                    item.product_size.height
-                }}x{{ item.product_size.thickness }}
-            </p>
-            <price :data="item.product_size.price"/>
-        </div>
+        <UModal v-model="isRemovingModalOpen">
+            <UCard>
+                <template #header>
+                    Пожалуйста, подтвердите или отмените удаление
+                </template>
 
-        <div v-if="!!item.text_lines?.length" class="text-lines">
-            <cart-text-line :data="item" v-for="item in item.text_lines" :key="item.id"/>
-        </div>
+                <template #footer>
+                    <div class="flex items-center gap-2">
+                        <u-button
+                            icon="i-lucide-trash"
+                            label="Удалить"
+                            @click="remove"
+                            :disabled="fetching"
+                            color="red"
+                        />
+                        <u-button
+                            label="Отмена"
+                            @click="isRemovingModalOpen = false"
+                            :disabled="fetching"
+                            color="gray"
+                        />
+                    </div>
+                </template>
+            </UCard>
+        </UModal>
     </div>
 </template>
 
@@ -68,6 +105,9 @@ import { useCartStore } from "~/stores/cart";
 const props = defineProps<{
     data: FragmentType<typeof SidebarCartItemFragmentDoc>
 }>()
+
+const showInfo = ref(false),
+    isRemovingModalOpen = ref(false)
 
 const item = computed(() => useFragment(SidebarCartItemFragmentDoc, props.data))
 const quantity = ref(item.value.quantity)
@@ -93,17 +133,32 @@ watchDebounced(
 
 </script>
 
-<style scoped>
+<style lang="scss">
 .sidebar-cart-item {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-}
 
-.product-info {
-    @apply grid-cols-2;
-    display: grid;
-    gap: 0.25rem;
+    .product-info {
+        @apply grid grid-cols-[1fr_min-content];
+        gap: 0.25rem;
+    }
+
+    .info {
+        @apply text-sm;
+
+        .def {
+            @apply font-sans font-normal;
+        }
+
+        .val {
+            @apply inline-block ml-1 font-bold;
+        }
+
+        .price-container {
+            @apply inline-flex ml-1;
+        }
+    }
 }
 
 .product-name {
@@ -117,11 +172,5 @@ watchDebounced(
     list-style: none;
     padding: 0;
     margin: 0;
-}
-
-.product-size {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
 }
 </style>
