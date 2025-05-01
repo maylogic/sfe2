@@ -17,7 +17,7 @@
 
             <div class="totals-item grand-total">
                 <span class="label font-black">Итог:</span>
-                <price class="text-2xl" :data="totals.grand_total"/>
+                <fragment-price class="text-2xl" :data="totals.grand_total"/>
             </div>
         </div>
     </div>

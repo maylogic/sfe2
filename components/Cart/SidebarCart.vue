@@ -35,7 +35,7 @@
                 <h3>Способ доставки</h3>
                 <p>{{ cart.shipping_method.name }}</p>
                 <p>
-                    <price :data="cart.shipping_method.price"/>
+                    <fragment-price :data="cart.shipping_method.price"/>
                 </p>
                 <p v-if="cart.shipping_method.estimated_delivery">
                     Примерная продолжительность:

@@ -10,7 +10,7 @@
                 <u-icon name="i-lucide-trash"/>
                 Удалить
             </span>
-            <price :data="item.price"/>
+            <fragment-price :data="item.price"/>
             <quantity-input
                 :quantity="quantity"
                 :disabled="fetching"
@@ -29,7 +29,7 @@
                 <div v-if="!!item.option_items?.length" class="option-items">
                     <div v-for="option in item.option_items" :key="option.id">
                         <span class="def">{{ option.label }}:</span>
-                        <price :data="option.price"/>
+                        <fragment-price :data="option.price"/>
                     </div>
                 </div>
 
@@ -37,7 +37,7 @@
                 <div v-if="item.product_size" class="size">
                     <span class="def">Размер:</span>
                     <span class="val">{{ item.product_size.label }}</span>
-                    <price :hide-free="true" :data="item.product_size.price"/>
+                    <fragment-price :hide-free="true" :data="item.product_size.price"/>
                 </div>
 
                 <div v-if="item.design" class="design">

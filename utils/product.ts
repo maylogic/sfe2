@@ -1,13 +1,17 @@
-import type {
-    Color,
-    DesignItemFragment,
-    Font,
-    OptionInput,
-    PersonalizeInput,
-    ProductBySlugQuery,
-    ProductLineDefinition,
-    TextLineInput
+import {
+    type Color,
+    type DesignItemFragment,
+    type Font,
+    type OptionInput,
+    type PersonalizeInput,
+    type Price,
+    type PriceFragment,
+    PriceFragmentDoc,
+    type ProductBySlugQuery,
+    type ProductLineDefinition,
+    type TextLineInput
 } from "~/gql/graphql";
+import { useFragment } from "~/gql";
 
 export type PersonalizeLineDefId = string
 export type ProductOptionId = string
@@ -157,5 +161,41 @@ export const getPersonalizeInputFromData = (inputData: PersonalizeInputData): Pe
         sizeId,
         options,
         textLines
+    }
+}
+export const getFullProductPrice = (productBySlug: ProductBySlugQuery | undefined, inputData: PersonalizeInputData): Price => {
+    const product = productBySlug?.getProductBySlug
+    const productPrice = useFragment(PriceFragmentDoc, product?.price),
+        sizePrice = useFragment(PriceFragmentDoc, product?.sizes.find(size => size.id === inputData.size)?.price),
+        optionPrices: PriceFragment[] = []
+    for (const [optionId, optionItemId] of inputData.options) {
+        const option = product?.options.find(option => option.id === optionId)
+        if (option) {
+            const optionItem = option.items.find(item => item.id === optionItemId)
+            if (optionItem) optionPrices.push(
+                useFragment(PriceFragmentDoc, optionItem.price)
+            )
+        }
+    }
+    let regular = 0, discounted = 0, is_discounted = false
+    if (productPrice) {
+        regular += productPrice.regular
+        discounted += productPrice.discounted
+        is_discounted = productPrice.is_discounted
+    }
+    if (sizePrice) {
+        regular += sizePrice.regular
+        discounted += sizePrice.discounted
+        is_discounted = is_discounted || sizePrice.is_discounted
+    }
+    optionPrices.forEach(price => {
+        regular += price.regular
+        discounted += price.discounted
+        is_discounted = is_discounted || price.is_discounted
+    })
+    return {
+        regular,
+        discounted,
+        is_discounted,
     }
 }

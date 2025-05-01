@@ -8,7 +8,7 @@
                 <template #label="{ option }">
                     <div class="size-label">
                         {{ option.label }}
-                        <price :hide-free="true" :data="option.price"/>
+                        <fragment-price :hide-free="true" :data="option.price"/>
                     </div>
                 </template>
             </u-radio-group>

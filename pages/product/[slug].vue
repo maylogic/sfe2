@@ -54,7 +54,10 @@
                                  @update:option="updateOption"
                                  :option="option"/>
 
-                <price class="text-2xl" :key="data.getProductBySlug.key" :data="data.getProductBySlug.price"/>
+                <labeled-price label="Итого:">
+                    <block-price class="text-2xl" :key="data.getProductBySlug.key" :regular="price.regular"
+                                 :is_discounted="price.is_discounted" :discounted="price.discounted"/>
+                </labeled-price>
 
                 <u-form-group
                     :error="validated && !valid ? 'Пожалуйста, исправьте некоторые ошибки выше. Они помечены красным.' : false">
@@ -82,10 +85,12 @@ import {
     type DesignItemFragment,
     DesignItemFragmentDoc,
     type Font,
+    PriceFragmentDoc,
     ProductBySlugDocument
 } from '~/gql/graphql.js'
 import {
     getBlocksVisibility,
+    getFullProductPrice,
     getNullValidation,
     getPersonalizeInputFromData,
     type InputTextLinesMap,
@@ -108,6 +113,8 @@ import {
     generateFontFace,
     getRemoteFontPreloadLink
 } from "~/utils/fonts";
+import BlockPrice from "~/components/BlockPrice.vue";
+import LabeledPrice from "~/components/LabeledPrice.vue";
 
 const route = useRoute()
 const productSlug = route.params.slug.toString()
@@ -148,6 +155,10 @@ const editor = ref(false)
 const validated = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const blocksVisibility = ref<Map<number, boolean>>(new Map)
+const price = ref(useFragment(PriceFragmentDoc, data.value.getProductBySlug.price))
+watch(data, () => {
+    price.value = getFullProductPrice(data.value, inputData)
+})
 const validate = () => {
     personalizeValidity.design = validateDesign(data.value, inputData)
     personalizeValidity.color = validateColor(data.value, inputData)
@@ -226,6 +237,7 @@ const updateSize = (sizeId: ProductSizeId) => {
     editor.value = true
     inputData.size = sizeId
     personalizeValidity.size = sizeId ? validateSize(data.value, inputData) : null
+    price.value = getFullProductPrice(data.value, inputData)
 }
 const updateOption = (optionId: ProductOptionId, optionItemId: ProductOptionItemId) => {
     validated.value = false
@@ -235,6 +247,7 @@ const updateOption = (optionId: ProductOptionId, optionItemId: ProductOptionItem
     if (optionsErrors.value.size === 0) {
         personalizeValidity.options = true
     }
+    price.value = getFullProductPrice(data.value, inputData)
 }
 const setTextLineDefaults = () => {
     data.value?.getProductBySlug?.line_definitions?.forEach(def => {

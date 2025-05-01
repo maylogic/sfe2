@@ -8,7 +8,9 @@
             :data="product.primary_image"
         />
         <h3 class="font-iskra">{{ product.name }}</h3>
-        <price :data="product.price"/>
+        <labeled-price label="От">
+            <fragment-price :data="product.price"/>
+        </labeled-price>
         <div class="rose-pseudo-button font-bebas-neue font-bold create-and-buy">Создать и купить</div>
     </product-link>
 </template>
@@ -18,7 +20,7 @@ import {
     useFragment
 } from '~/gql'
 import { ProductMiniFragmentDoc, } from '~/gql/graphql'
-import Price from '~/components/Price.vue'
+import FragmentPrice from '~/components/FragmentPrice.vue'
 import ProductLink from '~/components/ProductLink.vue'
 
 const props = defineProps<{
@@ -98,7 +100,8 @@ onUnmounted(() => {
             @apply visible;
         }
     }
-    .price-container {
+
+    .price-label, .price-container {
         font-size: 18px;
     }
 }
