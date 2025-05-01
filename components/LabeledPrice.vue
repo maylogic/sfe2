@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <span class="font-fira-sans text-2xl price-label inline-block mr-1">{{ label }}</span>
+        <span class="font-fira-sans text-2xl price-label inline-block mr-1.5">{{ label }}</span>
         <slot/>
     </div>
 </template>

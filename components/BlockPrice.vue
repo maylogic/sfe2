@@ -4,12 +4,11 @@
         class="price-container flex items-center font-fira-sans"
         :class="is_discounted ? 'discounted' : ''"
     >
-        <span class="regular-price">
-            {{ formatPrice(regular) }}
-        </span>
-
         <span v-if="is_discounted" class="discounted-price text-brilliant-rose-500">
             {{ formatPrice(discounted) }}
+        </span>
+        <span class="regular-price">
+            {{ formatPrice(regular) }}
         </span>
     </div>
 </template>
@@ -26,7 +25,7 @@ withDefaults(defineProps<{
 </script>
 <style lang="scss">
 .price-container {
-    @apply inline-block;
+    @apply inline-flex;
     gap: 0.5rem;
 
     &.discounted .regular-price {
