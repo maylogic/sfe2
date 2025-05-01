@@ -1,6 +1,5 @@
 <template>
     <div
-        v-if="regular > 0 || !hideFree"
         class="price-container flex items-center font-fira-sans"
         :class="is_discounted ? 'discounted' : ''"
     >
@@ -14,14 +13,11 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{
+defineProps<{
     regular: number,
     is_discounted: boolean,
-    discounted: number,
-    hideFree?: boolean
-}>(), {
-    hideFree: false
-})
+    discounted: number
+}>()
 </script>
 <style lang="scss">
 .price-container {

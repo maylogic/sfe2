@@ -1,5 +1,5 @@
 <template>
-    <block-price :hide-free="hideFree" :regular="price.regular" :is_discounted="price.is_discounted"
+    <block-price v-if="price.regular > 0 || !hideFree" :regular="price.regular" :is_discounted="price.is_discounted"
                  :discounted="price.discounted"/>
 </template>
 

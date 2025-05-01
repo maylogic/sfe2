@@ -28,8 +28,8 @@
                 <!-- Дополнительные опции -->
                 <div v-if="!!item.option_items?.length" class="option-items">
                     <div v-for="option in item.option_items" :key="option.id">
-                        <span class="def">{{ option.label }}:</span>
-                        <fragment-price :data="option.price"/>
+                        <span class="def">{{ option.label }}</span>
+                        <fragment-price :hide-free="true" :data="option.price"/>
                     </div>
                 </div>
 
