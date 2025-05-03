@@ -5,6 +5,7 @@
         :adding-to-cart="addingToCart"
         :fetching="fetching"
         :input-data="inputData"
+        :init-data="initData"
         :product-fragment="data?.cartItem.product"/>
 </template>
 
@@ -46,13 +47,22 @@ if (!data.value?.cartItem) {
     throw createError({statusCode: 404, statusMessage: 'Страница не найдена'})
 }
 const item = data.value.cartItem
-const textLines: Array<[string, string]> = item.text_lines?.map(line => [line.product_line_definition.id, line.value]) || []
-const inputData = reactive<PersonalizeInputData>({
+const textLines: Array<[PersonalizeLineDefId, string]> = item.text_lines?.map(line => [line.product_line_definition.id, line.value]) || []
+const options: Array<[ProductOptionId, ProductOptionItemId]> = item.option_items?.map(optionItem => [optionItem.product_option.id, optionItem.id]) || []
+const initData: PersonalizeInputData = {
     design: useFragment(DesignItemFragmentDoc, item.design) || null,
     color: item.color || null,
     font: item.font || null,
     textLines: new Map<PersonalizeLineDefId, string | null>(textLines),
     size: data.value.cartItem.product_size?.id || null,
+    options: new Map(options)
+}
+const inputData = reactive<PersonalizeInputData>({
+    design: null,
+    color: null,
+    font: null,
+    textLines: new Map<PersonalizeLineDefId, string | null>(),
+    size: null,
     options: new Map
 })
 const {executeMutation: addToCartExec, fetching: addingToCart} = useMutation(AddCartItemDocument)

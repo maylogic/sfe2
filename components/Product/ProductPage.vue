@@ -115,21 +115,13 @@ import {
 const props = defineProps<{
     productFragment: FragmentType<typeof ProductPageFragmentDoc>,
     inputData: PersonalizeInputData,
+    initData?: PersonalizeInputData,
     addToCart: (productId: string, personalize: PersonalizeInput) => void,
     fetching: boolean,
     addingToCart: boolean
 }>()
 const product = computed(() => useFragment(ProductPageFragmentDoc, props.productFragment))
-const emit = defineEmits(['update:input-data'])
 
-const inputData = reactive<PersonalizeInputData>({
-    design: null,
-    color: null,
-    font: null,
-    textLines: new Map<PersonalizeLineDefId, string | null>(),
-    size: null,
-    options: new Map
-})
 const textLinesRenderValues = reactive<InputTextLinesMap>(new Map)
 const textLineErrors = ref(new Map<PersonalizeLineDefId, string>())
 const optionsErrors = ref(new Map<ProductOptionId, string>())
@@ -142,17 +134,17 @@ const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const blocksVisibility = ref<Map<number, boolean>>(new Map)
 const price = ref(useFragment(PriceFragmentDoc, product.value.price))
 watch(product, () => {
-    price.value = getFullProductPrice(product.value, inputData)
+    price.value = getFullProductPrice(product.value, props.inputData)
 })
 const validate = () => {
-    personalizeValidity.design = validateDesign(product.value, inputData)
-    personalizeValidity.color = validateColor(product.value, inputData)
-    personalizeValidity.font = validateFont(product.value, inputData)
-    personalizeValidity.textLines = validateTextLines(product.value, inputData)
-    personalizeValidity.size = validateSize(product.value, inputData)
-    personalizeValidity.options = validateOptions(product.value, inputData)
-    textLineErrors.value = validatePerTextLine(product.value, inputData)
-    optionsErrors.value = validatePerOption(product.value, inputData)
+    personalizeValidity.design = validateDesign(product.value, props.inputData)
+    personalizeValidity.color = validateColor(product.value, props.inputData)
+    personalizeValidity.font = validateFont(product.value, props.inputData)
+    personalizeValidity.textLines = validateTextLines(product.value, props.inputData)
+    personalizeValidity.size = validateSize(product.value, props.inputData)
+    personalizeValidity.options = validateOptions(product.value, props.inputData)
+    textLineErrors.value = validatePerTextLine(product.value, props.inputData)
+    optionsErrors.value = validatePerOption(product.value, props.inputData)
     valid.value = getKeys(personalizeValidity).every(key => personalizeValidity[key])
     validated.value = true
 }
@@ -161,37 +153,37 @@ const availableFonts = ref<Font[]>([])
 const addToCartInternal = () => {
     validate()
     if (valid.value) {
-        props.addToCart(product.value.id, getPersonalizeInputFromData(inputData))
+        props.addToCart(product.value.id, getPersonalizeInputFromData(props.inputData))
     }
 }
 const updateDesign = (design: DesignItemFragment | null) => {
     validated.value = false
-    inputData.design = design
+    props.inputData.design = design
     editor.value = design !== null
-    personalizeValidity.design = design ? validateDesign(product.value, inputData) : null
-    if (!design?.colors?.find(color => color.id === inputData.color?.id)) {
-        inputData.color = null
+    personalizeValidity.design = design ? validateDesign(product.value, props.inputData) : null
+    if (!design?.colors?.find(color => color.id === props.inputData.color?.id)) {
+        props.inputData.color = null
         personalizeValidity.color = null
     }
-    if (!design?.fonts?.find(font => font.id === inputData.font?.id)) {
-        inputData.font = null
+    if (!design?.fonts?.find(font => font.id === props.inputData.font?.id)) {
+        props.inputData.font = null
         personalizeValidity.font = null
     }
     availableColors.value = design?.colors ? [...design?.colors] : []
     availableFonts.value = design?.fonts ? [...design?.fonts] : []
-    blocksVisibility.value = getBlocksVisibility(product.value, inputData)
+    blocksVisibility.value = getBlocksVisibility(product.value, props.inputData)
 }
 const updateColor = (color: Color | null) => {
     validated.value = false
     editor.value = true
-    inputData.color = color
-    personalizeValidity.color = color ? validateColor(product.value, inputData) : null
+    props.inputData.color = color
+    personalizeValidity.color = color ? validateColor(product.value, props.inputData) : null
 }
 const updateFont = (font: Font | null) => {
     validated.value = false
     editor.value = true
-    inputData.font = font
-    personalizeValidity.font = font ? validateFont(product.value, inputData) : null
+    props.inputData.font = font
+    personalizeValidity.font = font ? validateFont(product.value, props.inputData) : null
 }
 const updateTextLine = (lineId: string, value: string | null) => {
     validated.value = false
@@ -200,27 +192,27 @@ const updateTextLine = (lineId: string, value: string | null) => {
         textLinesRenderValues.clear()
         textLinesEditingStarted.value = true
     }
-    inputData.textLines.set(lineId, value)
+    props.inputData.textLines.set(lineId, value)
     textLinesRenderValues.set(lineId, value)
-    textLineErrors.value = validatePerTextLine(product.value, inputData)
+    textLineErrors.value = validatePerTextLine(product.value, props.inputData)
     personalizeValidity.textLines = textLineErrors.value.size === 0 ? true : null
 }
 const updateSize = (sizeId: ProductSizeId) => {
     validated.value = false
     editor.value = true
-    inputData.size = sizeId
-    personalizeValidity.size = sizeId ? validateSize(product.value, inputData) : null
-    price.value = getFullProductPrice(product.value, inputData)
+    props.inputData.size = sizeId
+    personalizeValidity.size = sizeId ? validateSize(product.value, props.inputData) : null
+    price.value = getFullProductPrice(product.value, props.inputData)
 }
 const updateOption = (optionId: ProductOptionId, optionItemId: ProductOptionItemId) => {
     validated.value = false
     editor.value = true
-    inputData.options.set(optionId, optionItemId)
-    optionsErrors.value = validatePerOption(product.value, inputData)
+    props.inputData.options.set(optionId, optionItemId)
+    optionsErrors.value = validatePerOption(product.value, props.inputData)
     if (optionsErrors.value.size === 0) {
         personalizeValidity.options = true
     }
-    price.value = getFullProductPrice(product.value, inputData)
+    price.value = getFullProductPrice(product.value, props.inputData)
 }
 const setTextLineDefaults = () => {
     product.value.line_definitions?.forEach(def => {
@@ -230,7 +222,7 @@ const setTextLineDefaults = () => {
     })
 }
 const hideTextLine = (lineId: string) => {
-    inputData.textLines.delete(lineId)
+    props.inputData.textLines.delete(lineId)
     textLineErrors.value.delete(lineId)
     hiddenTextLines.value.set(lineId, true)
 }
@@ -255,14 +247,14 @@ const getBlockIndex = (id: number) => {
 if (product) {
     const textData = new Map<PersonalizeLineDefId, string | null>(),
         hidden = new Map<PersonalizeLineDefId, boolean>()
-    blocksVisibility.value = getBlocksVisibility(product.value, inputData)
+    blocksVisibility.value = getBlocksVisibility(product.value, props.inputData)
     product.value.line_definitions?.forEach(def => {
         textData.set(def.id, null)
         if (def.hidden) {
             hidden.set(def.id, true)
         }
     })
-    inputData.textLines = textData
+    props.inputData.textLines = textData
     hiddenTextLines.value = hidden
 }
 
@@ -273,7 +265,6 @@ product.value.designs.forEach(designFrag => {
         usedFonts.set(font.id, font)
     })
 })
-setTextLineDefaults()
 useHead({
     title: product.value.meta_title,
     meta: [
@@ -288,6 +279,26 @@ useHead({
     style: [
         {textContent: generateFontFace([...usedFonts.values()])}
     ]
+})
+onMounted(() => {
+    if (props.initData) {
+        if (props.initData.design) updateDesign(props.initData.design)
+        if (props.initData.color) updateColor(props.initData.color)
+        if (props.initData.font) updateFont(props.initData.font)
+        if (props.initData.textLines) {
+            for (const [id, value] of props.initData.textLines) {
+                updateTextLine(id, value)
+            }
+        }
+        if (props.initData.options) {
+            for (const [id, value] of props.initData.options) {
+                updateOption(id, value)
+            }
+        }
+        if (props.initData.size) updateSize(props.initData.size)
+    } else {
+        setTextLineDefaults()
+    }
 })
 </script>
 

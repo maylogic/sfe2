@@ -30,7 +30,7 @@ query CartItem($id: ID!) {
         }
         option_items {
             id
-            option {
+            product_option {
                 id
             }
             price {
