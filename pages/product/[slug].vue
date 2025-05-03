@@ -320,7 +320,7 @@ useHead({
 
 <style lang="scss">
 .product-page {
-    @apply grid grid-cols-1 md:grid-cols-[1fr__max-content] gap-x-10 gap-y-2;
+    @apply grid grid-cols-1 max-w-full sm:grid-cols-[max-content__1fr] gap-x-10 gap-y-2;
     .create-fields {
         @apply bg-storm-dust-50 p-5 my-5 flex flex-col gap-3;
         h2 {

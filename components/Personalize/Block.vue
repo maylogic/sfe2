@@ -13,7 +13,7 @@ defineProps<{
 </script>
 <style lang="scss">
 .personalize-block {
-    @apply md:w-[320px] lg:w-[425px] xl:w-[640px] select-none;
+    @apply w-full select-none;
     @apply p-[6px] pr-0 bg-white border-l-storm-dust-100 border-l-[6px];
 
     h3 {
