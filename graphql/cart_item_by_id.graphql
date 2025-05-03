@@ -1,0 +1,50 @@
+query CartItem($id: ID!) {
+    cartItem(
+        id: $id
+    ) {
+        id
+        color {
+            id
+            hex
+            label
+        }
+        font {
+            filename_otf
+            filename_ttf
+            filename_woff2
+            id
+            label
+            name
+            preview
+        }
+        design {
+            ...DesignItem
+        }
+        font_id
+        text_lines {
+            id
+            product_line_definition {
+                id
+            }
+            value
+        }
+        option_items {
+            id
+            option {
+                id
+            }
+            price {
+                ...Price
+            }
+        }
+        product_size {
+            id
+        }
+        price {
+            ...Price
+        }
+        product {
+            ...ProductPage
+        }
+    }
+}

@@ -19,11 +19,17 @@
         </div>
 
         <div class="info">
-            <a href="#" class="flex items-center gap-2" @click.prevent="showInfo = !showInfo">
-                <u-icon name="i-lucide-x" v-if="showInfo"/>
-                <u-icon name="i-lucide-list-collapse" v-if="!showInfo"/>
-                <span class="-mb-0.5">{{ !showInfo ? 'Детали' : 'Скрыть' }}</span>
-            </a>
+            <div class="buttons flex items-center gap-2">
+                <a href="#" class="flex items-center gap-1" @click.prevent="showInfo = !showInfo">
+                    <u-icon name="i-lucide-x" v-if="showInfo"/>
+                    <u-icon name="i-lucide-list-collapse" v-if="!showInfo"/>
+                    <span class="-mb-0.5">{{ !showInfo ? 'Детали' : 'Скрыть' }}</span>
+                </a>
+                <nuxt-link :to="{ name: 'cart-edit-id', params: { id: item.id } }" class="flex items-center gap-1">
+                    <u-icon name="i-lucide-pencil"/>
+                    <span class="-mb-0.5">Редактировать</span>
+                </nuxt-link>
+            </div>
             <div class="all-info" v-if="showInfo">
                 <!-- Дополнительные опции -->
                 <div v-if="!!item.option_items?.length" class="option-items">
