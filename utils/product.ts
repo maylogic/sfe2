@@ -7,8 +7,8 @@ import {
     type Price,
     type PriceFragment,
     PriceFragmentDoc,
-    type ProductBySlugQuery,
     type ProductLineDefinition,
+    type ProductPageFragment,
     type TextLineInput
 } from "~/gql/graphql";
 import { useFragment } from "~/gql";
@@ -30,17 +30,17 @@ export type PersonalizeInputData = {
 export type PersonalizeValidity = {
     [K in keyof PersonalizeInputData]: boolean | null
 }
-export const validateOptions = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): boolean => {
-    return !!product?.getProductBySlug?.options?.every(option => {
+export const validateOptions = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
+    return !!product.options?.every(option => {
         const value = input.options.get(option.id)
         return !!value || !option.required
     })
 }
-export const validateSize = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): boolean => {
+export const validateSize = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
     return hasSizes(product) && input.size !== null
 }
-export const validateTextLines = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): boolean => {
-    return !!product?.getProductBySlug?.line_definitions?.every(def => {
+export const validateTextLines = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
+    return !!product.line_definitions?.every(def => {
         const line = input.textLines.get(def.id)
         if (!line) {
             return !def.required
@@ -48,10 +48,10 @@ export const validateTextLines = (product: ProductBySlugQuery | undefined, input
         return def.max_length >= line.length;
     })
 }
-export const validatePerTextLine = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): Map<PersonalizeLineDefId, string> => {
+export const validatePerTextLine = (product: ProductPageFragment, input: PersonalizeInputData): Map<PersonalizeLineDefId, string> => {
     const errors = new Map<PersonalizeLineDefId, string>()
 
-    !!product?.getProductBySlug?.line_definitions?.forEach(def => {
+    product.line_definitions?.forEach(def => {
         const line = input.textLines.get(def.id)
         if (!line && def.required) {
             errors.set(def.id, 'Обязательное поле')
@@ -64,10 +64,10 @@ export const validatePerTextLine = (product: ProductBySlugQuery | undefined, inp
 
     return errors
 }
-export const validatePerOption = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): Map<ProductOptionId, string> => {
+export const validatePerOption = (product: ProductPageFragment, input: PersonalizeInputData): Map<ProductOptionId, string> => {
     const errors = new Map<ProductOptionId, string>()
 
-    !!product?.getProductBySlug?.options?.forEach(option => {
+    product.options.forEach(option => {
         const value = input.options.get(option.id)
         if (!value && option.required) {
             errors.set(option.id, 'Обязательное поле')
@@ -77,16 +77,16 @@ export const validatePerOption = (product: ProductBySlugQuery | undefined, input
 
     return errors
 }
-export const validateDesign = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): boolean => {
+export const validateDesign = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
     return designsBlockVisible(product) && input.design !== null
 }
-export const validateFont = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): boolean => {
+export const validateFont = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
     if (input.font !== null && input.design !== null) {
         return !!input.design.fonts?.find(font => font.id === input.font?.id)
     }
     return false
 }
-export const validateColor = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): boolean => {
+export const validateColor = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
     if (input.color !== null && input.design !== null) {
         return !!input.design.colors?.find(color => color.id === input.color?.id)
     }
@@ -110,21 +110,21 @@ export const getSortedTextLines = (defs: ProductLineDefinition[], textLines: Inp
     return sortedTextLines;
 }
 
-export const designsBlockVisible = (product: ProductBySlugQuery | undefined): boolean => !!product?.getProductBySlug?.designs.length
+export const designsBlockVisible = (product: ProductPageFragment): boolean => !!product.designs.length
 export const fontsBlockVisible = (input: PersonalizeInputData): boolean => !!input.design?.fonts?.length
 export const colorsBlockVisible = (input: PersonalizeInputData): boolean => !!input.design?.colors?.length
-export const textLinesBlockVisible = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): boolean =>
-    input.design !== null && !!product?.getProductBySlug?.line_definitions?.length
-export const hasSizes = (product: ProductBySlugQuery | undefined): boolean => !!product?.getProductBySlug?.sizes?.length
+export const textLinesBlockVisible = (product: ProductPageFragment, input: PersonalizeInputData): boolean =>
+    input.design !== null && !!product.line_definitions?.length
+export const hasSizes = (product: ProductPageFragment): boolean => !!product.sizes?.length
 
-export const getBlocksVisibility = (product: ProductBySlugQuery | undefined, input: PersonalizeInputData): Map<number, boolean> => {
+export const getBlocksVisibility = (product: ProductPageFragment, input: PersonalizeInputData): Map<number, boolean> => {
     const blocks = new Map<number, boolean>()
     blocks.set(1, designsBlockVisible(product))
     blocks.set(2, colorsBlockVisible(input))
     blocks.set(3, fontsBlockVisible(input))
     blocks.set(4, textLinesBlockVisible(product, input))
     blocks.set(5, hasSizes(product))
-    const optionsCount = Number(product?.getProductBySlug?.options?.length)
+    const optionsCount = Number(product.options?.length)
     for (let i = 0; i < optionsCount; i++) {
         blocks.set(6 + i, true)
     }
@@ -163,13 +163,12 @@ export const getPersonalizeInputFromData = (inputData: PersonalizeInputData): Pe
         textLines
     }
 }
-export const getFullProductPrice = (productBySlug: ProductBySlugQuery | undefined, inputData: PersonalizeInputData): Price => {
-    const product = productBySlug?.getProductBySlug
-    const productPrice = useFragment(PriceFragmentDoc, product?.price),
-        sizePrice = useFragment(PriceFragmentDoc, product?.sizes.find(size => size.id === inputData.size)?.price),
+export const getFullProductPrice = (product: ProductPageFragment, inputData: PersonalizeInputData): Price => {
+    const productPrice = useFragment(PriceFragmentDoc, product.price),
+        sizePrice = useFragment(PriceFragmentDoc, product.sizes.find(size => size.id === inputData.size)?.price),
         optionPrices: PriceFragment[] = []
     for (const [optionId, optionItemId] of inputData.options) {
-        const option = product?.options.find(option => option.id === optionId)
+        const option = product.options.find(option => option.id === optionId)
         if (option) {
             const optionItem = option.items.find(item => item.id === optionItemId)
             if (optionItem) optionPrices.push(
