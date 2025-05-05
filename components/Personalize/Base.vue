@@ -53,7 +53,7 @@ const applyColor = () => {
     const systemPath = block.value.querySelector('g#system > path')
     systemPath?.setAttribute('fill', props.data.color?.hex ?? 'currentColor')
 }
-const applyTexts = async () => {
+const applyTexts = () => {
     if (!block.value) return
     const svg = block.value.querySelector('svg')
     if (!svg) return
@@ -98,14 +98,14 @@ const applyTexts = async () => {
             y: rect.top + pieceAreaHeight * index
         }
         areas.set(piece.id, area)
-        piece.size = await calculateFontSize(piece, area)
+        piece.size = calculateFontSize(piece, area)
     }
     const minFontSize = textData.reduce((min, current) => (current.size < min ? current.size : min), 30);
     for (const piece of textData) {
         piece.size = minFontSize
         const area = areas.get(piece.id)
         if (area) {
-            await calculateTextDataPos(piece, area)
+            calculateTextDataPos(piece, area)
         }
     }
     removeTextsForUnusedDefIds(usedDefIds, props.lineDefinitions, svg)
@@ -123,5 +123,12 @@ const getTextArea = () => {
 }
 onMounted(() => {
     applyData()
+    if (document.fonts) {
+        document.fonts.ready.then(() => {
+            setTimeout(() => applyTexts())
+        })
+    } else {
+        setTimeout(() => applyTexts(), 100)
+    }
 })
 </script>

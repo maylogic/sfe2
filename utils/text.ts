@@ -50,8 +50,8 @@ export const createOrUpdateTexts = (textData: TextRenderData[], svg: SVGSVGEleme
 export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
-export const calculateTextDataPos = async (data: TextRenderData, area: TextPieceArea) => {
-    const metrics = await getTextMetricsReal(data)
+export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
+    const metrics = getTextMetricsReal(data)
     const areaPadding = AREA_PADDING_Y * area.height,
         targetHeight = getTargetHeight(area)
     const areaCenterY = area.y + targetHeight / 2 + areaPadding / 2
@@ -62,16 +62,15 @@ export const calculateTextDataPos = async (data: TextRenderData, area: TextPiece
 const getTargetHeight = (area: TextPieceArea) => area.height - AREA_PADDING_Y * area.height,
     getTargetWidth = (area: TextPieceArea) => area.width - AREA_PADDING_X * area.width
 
-export const calculateFontSize = async (data: TextRenderData,
+export const calculateFontSize = (data: TextRenderData,
                                   area: TextPieceArea,
-                                  initialFontSize: number = 5,
                                   precision: number = 0.001
 ) => {
     const targetWidth = getTargetWidth(area),
         targetHeight = getTargetHeight(area)
 
-    const doesTextFit = async (fontSize: number): Promise<boolean> => {
-        const metrics = await getTextMetricsReal(data, fontSize)
+    const doesTextFit = (fontSize: number): boolean => {
+        const metrics = getTextMetricsReal(data, fontSize)
         const textWidth = metrics.width;
         const textHeight = metrics.height
 
@@ -79,13 +78,13 @@ export const calculateFontSize = async (data: TextRenderData,
     };
 
     // Начальные значения
-    let fontSize = initialFontSize; // Начальный размер шрифта
+    let fontSize = targetHeight; // Начальный размер шрифта
     let step = fontSize / 2;        // Начальный шаг
     let lastAdjustment = 0;         // Последнее изменение (увеличение/уменьшение)
 
     // Итеративный процесс подбора размера шрифта
     while (step >= precision) {
-        const fits = await doesTextFit(fontSize);
+        const fits = doesTextFit(fontSize);
 
         if (fits) {
             // Если текст помещается, увеличиваем размер шрифта
@@ -102,7 +101,7 @@ export const calculateFontSize = async (data: TextRenderData,
     }
 
     // Возвращаем последний подходящий размер шрифта
-    return await doesTextFit(fontSize) ? fontSize : fontSize - lastAdjustment;
+    return doesTextFit(fontSize) ? fontSize : fontSize - lastAdjustment;
 }
 
 export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLineDefinition[], svg: SVGSVGElement) => {
@@ -113,8 +112,8 @@ export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLi
         })
 }
 
-const getTextMetricsReal = async (data: TextRenderData, fontSize?: number): Promise<TextMetricsReal> => {
-    const ctx = await getCanvasContext()
+const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
+    const ctx = getCanvasContext()
     if (!ctx) throw new Error('Cannot access canvas context')
     // Устанавливаем шрифт и текст
     const size = fontSize ?? data.size

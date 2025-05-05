@@ -69,6 +69,7 @@
                         class="uppercase font-bebas-neue pt-2 max-w-max text-2xl"
                     />
                 </u-form-group>
+                <font-preload-block :font="font" v-for="font in usedFonts.values()"/>
             </div>
         </div>
     </div>
@@ -111,6 +112,7 @@ import {
     generateFontFace,
     getRemoteFontPreloadLink
 } from "~/utils/fonts";
+import FontPreloadBlock from "~/components/Product/FontPreloadBlock.vue";
 
 const props = defineProps<{
     productFragment: FragmentType<typeof ProductPageFragmentDoc>,
