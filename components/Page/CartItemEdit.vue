@@ -15,10 +15,10 @@ import {
     useQuery
 } from "@urql/vue";
 import {
-    AddCartItemDocument,
     CartItemDocument,
     DesignItemFragmentDoc,
-    type PersonalizeInput
+    type PersonalizeInput,
+    UpdateCartItemDocument
 } from "~/gql/graphql";
 import type {
     PersonalizeInputData,
@@ -66,16 +66,15 @@ const inputData = reactive<PersonalizeInputData>({
     size: null,
     options: new Map
 })
-const {executeMutation: addToCartExec, fetching: addingToCart} = useMutation(AddCartItemDocument)
+const {executeMutation: updateCartItemExec, fetching: addingToCart} = useMutation(UpdateCartItemDocument)
 const cart = useCartStore()
 const addToCart = (productId: string, personalize: PersonalizeInput) => {
-    addToCartExec({
-        productId,
-        quantity: 1,
+    updateCartItemExec({
+        cartItemId: props.id,
         personalize
     }).then((result) => {
-        if (result.data?.addCartItem) {
-            cart.setData(result.data?.addCartItem)
+        if (result.data?.updateCartItem) {
+            cart.setData(result.data?.updateCartItem)
             cart.open = true
         }
     })

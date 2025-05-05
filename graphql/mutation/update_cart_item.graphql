@@ -1,0 +1,5 @@
+mutation UpdateCartItem($cartItemId: String!, $personalize: PersonalizeInput!) {
+    updateCartItem(cartItemId:$cartItemId, personalize: $personalize) {
+        ...SidebarCart
+    }
+}

@@ -22,6 +22,7 @@ type Documents = {
     "mutation RemoveCartItem($cartItemId: String!) {\n  removeCartItem(cartItemId: $cartItemId) {\n    ...SidebarCart\n  }\n}": typeof types.RemoveCartItemDocument,
     "mutation RemoveCoupon($code: String!) {\n  removeCoupon(code: $code) {\n    ...SidebarCart\n  }\n}": typeof types.RemoveCouponDocument,
     "mutation ToggleApplyBalance {\n  toggleApplyBalance {\n    ...SidebarCart\n  }\n}": typeof types.ToggleApplyBalanceDocument,
+    "mutation UpdateCartItem($cartItemId: String!, $personalize: PersonalizeInput!) {\n  updateCartItem(cartItemId: $cartItemId, personalize: $personalize) {\n    ...SidebarCart\n  }\n}": typeof types.UpdateCartItemDocument,
     "mutation UpdateCartItemQuantity($cartItemId: String!, $quantity: Int!) {\n  updateCartItemQuantity(cartItemId: $cartItemId, quantity: $quantity) {\n    ...SidebarCart\n  }\n}": typeof types.UpdateCartItemQuantityDocument,
     "mutation RegisterCustomer($email: String!, $password: String!, $name: String!, $passwordConfirmation: String!) {\n  registerCustomer(\n    email: $email\n    password: $password\n    name: $name\n    password_confirmation: $passwordConfirmation\n  ) {\n    ...CustomerData\n  }\n}\n\nmutation LoginCustomer($email: String!, $password: String!) {\n  loginCustomer(email: $email, password: $password) {\n    ...CustomerData\n  }\n}": typeof types.RegisterCustomerDocument,
     "query ProductBySlug($slug: String!) {\n  getProductBySlug(slug: $slug) {\n    ...ProductPage\n  }\n}": typeof types.ProductBySlugDocument,
@@ -38,6 +39,7 @@ const documents: Documents = {
     "mutation RemoveCartItem($cartItemId: String!) {\n  removeCartItem(cartItemId: $cartItemId) {\n    ...SidebarCart\n  }\n}": types.RemoveCartItemDocument,
     "mutation RemoveCoupon($code: String!) {\n  removeCoupon(code: $code) {\n    ...SidebarCart\n  }\n}": types.RemoveCouponDocument,
     "mutation ToggleApplyBalance {\n  toggleApplyBalance {\n    ...SidebarCart\n  }\n}": types.ToggleApplyBalanceDocument,
+    "mutation UpdateCartItem($cartItemId: String!, $personalize: PersonalizeInput!) {\n  updateCartItem(cartItemId: $cartItemId, personalize: $personalize) {\n    ...SidebarCart\n  }\n}": types.UpdateCartItemDocument,
     "mutation UpdateCartItemQuantity($cartItemId: String!, $quantity: Int!) {\n  updateCartItemQuantity(cartItemId: $cartItemId, quantity: $quantity) {\n    ...SidebarCart\n  }\n}": types.UpdateCartItemQuantityDocument,
     "mutation RegisterCustomer($email: String!, $password: String!, $name: String!, $passwordConfirmation: String!) {\n  registerCustomer(\n    email: $email\n    password: $password\n    name: $name\n    password_confirmation: $passwordConfirmation\n  ) {\n    ...CustomerData\n  }\n}\n\nmutation LoginCustomer($email: String!, $password: String!) {\n  loginCustomer(email: $email, password: $password) {\n    ...CustomerData\n  }\n}": types.RegisterCustomerDocument,
     "query ProductBySlug($slug: String!) {\n  getProductBySlug(slug: $slug) {\n    ...ProductPage\n  }\n}": types.ProductBySlugDocument,
@@ -92,6 +94,10 @@ export function graphql(source: "mutation RemoveCoupon($code: String!) {\n  remo
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "mutation ToggleApplyBalance {\n  toggleApplyBalance {\n    ...SidebarCart\n  }\n}"): (typeof documents)["mutation ToggleApplyBalance {\n  toggleApplyBalance {\n    ...SidebarCart\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation UpdateCartItem($cartItemId: String!, $personalize: PersonalizeInput!) {\n  updateCartItem(cartItemId: $cartItemId, personalize: $personalize) {\n    ...SidebarCart\n  }\n}"): (typeof documents)["mutation UpdateCartItem($cartItemId: String!, $personalize: PersonalizeInput!) {\n  updateCartItem(cartItemId: $cartItemId, personalize: $personalize) {\n    ...SidebarCart\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
