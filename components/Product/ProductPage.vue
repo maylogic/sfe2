@@ -265,6 +265,7 @@ product.value.designs.forEach(designFrag => {
         usedFonts.set(font.id, font)
     })
 })
+setTextLineDefaults()
 useHead({
     title: product.value.meta_title,
     meta: [
@@ -296,8 +297,6 @@ onMounted(() => {
             }
         }
         if (props.initData.size) updateSize(props.initData.size)
-    } else {
-        setTextLineDefaults()
     }
 })
 </script>

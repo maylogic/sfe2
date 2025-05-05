@@ -27,7 +27,7 @@ import { useCartStore } from "~/stores/cart";
 const route = useRoute()
 const productSlug = route.params.slug.toString()
 
-const {data, error, fetching, executeQuery} = await useQuery({
+const {data, error, fetching} = await useQuery({
     query: ProductBySlugDocument,
     variables: {slug: productSlug},
 })

@@ -13,8 +13,8 @@ import {
     TextAreaFragmentDoc
 } from "~/gql/graphql";
 import {
+    calculateFontSize,
     calculateTextDataPos,
-    calculateTextDataSize,
     createOrUpdateTexts,
     removeTextsForUnusedDefIds,
     type TextRenderData
@@ -53,7 +53,7 @@ const applyColor = () => {
     const systemPath = block.value.querySelector('g#system > path')
     systemPath?.setAttribute('fill', props.data.color?.hex ?? 'currentColor')
 }
-const applyTexts = () => {
+const applyTexts = async () => {
     if (!block.value) return
     const svg = block.value.querySelector('svg')
     if (!svg) return
@@ -88,7 +88,8 @@ const applyTexts = () => {
     }
     const pieceAreaHeight = rect.height / textData.length
     const areas = new Map<string, TextPieceArea>
-    textData.forEach((piece, index) => {
+    for (const piece of textData) {
+        const index = textData.indexOf(piece);
         const area: TextPieceArea = {
             id: piece.id,
             height: pieceAreaHeight,
@@ -97,16 +98,16 @@ const applyTexts = () => {
             y: rect.top + pieceAreaHeight * index
         }
         areas.set(piece.id, area)
-        calculateTextDataSize(piece, area)
-    })
+        piece.size = await calculateFontSize(piece, area)
+    }
     const minFontSize = textData.reduce((min, current) => (current.size < min ? current.size : min), 30);
-    textData.forEach(piece => {
+    for (const piece of textData) {
         piece.size = minFontSize
         const area = areas.get(piece.id)
         if (area) {
-            calculateTextDataPos(piece, area)
+            await calculateTextDataPos(piece, area)
         }
-    })
+    }
     removeTextsForUnusedDefIds(usedDefIds, props.lineDefinitions, svg)
     createOrUpdateTexts(textData, svg)
     if (import.meta.dev) {

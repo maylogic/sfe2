@@ -104,7 +104,7 @@ export const getSortedTextLines = (defs: ProductLineDefinition[], textLines: Inp
     const sortedTextLines = new Map<PersonalizeLineDefId, string | null>();
     for (const def of defs) {
         const textLine = textLines.get(def.id)
-        if (textLine) sortedTextLines.set(def.id, textLine)
+        sortedTextLines.set(def.id, textLine ?? null)
     }
 
     return sortedTextLines;

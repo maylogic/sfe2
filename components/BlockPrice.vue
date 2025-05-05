@@ -1,6 +1,6 @@
 <template>
     <div
-        class="price-container flex items-center font-fira-sans"
+        class="price-container font-fira-sans"
         :class="is_discounted ? 'discounted' : ''"
     >
         <span v-if="is_discounted" class="discounted-price text-brilliant-rose-500">
@@ -21,7 +21,7 @@ defineProps<{
 </script>
 <style lang="scss">
 .price-container {
-    @apply inline-flex;
+    @apply inline-flex items-center;
     gap: 0.5rem;
 
     &.discounted .regular-price {
