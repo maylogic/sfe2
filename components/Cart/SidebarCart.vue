@@ -52,7 +52,7 @@
             </div>
 
             <cart-totals :data="cart.totals"/>
-            <nuxt-link to="/checkout" class="checkout-button">
+            <nuxt-link @click="cartStore.open=false" to="/checkout" class="checkout-button">
                 <div>
                     <u-icon class="text-[32px] mt-[-5px]" name="i-lucide-lock"/>
                     Оформить заказ
