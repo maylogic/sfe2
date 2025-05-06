@@ -18,6 +18,7 @@ import {
     CartItemDocument,
     DesignItemFragmentDoc,
     type PersonalizeInput,
+    ProductPageFragmentDoc,
     UpdateCartItemDocument
 } from "~/gql/graphql";
 import type {
@@ -72,10 +73,15 @@ const addToCart = (productId: string, personalize: PersonalizeInput) => {
     updateCartItemExec({
         cartItemId: props.id,
         personalize
-    }).then((result) => {
+    }).then(async (result) => {
         if (result.data?.updateCartItem) {
             cart.setData(result.data?.updateCartItem)
             cart.open = true
+            const product = useFragment(ProductPageFragmentDoc, item.product)
+            await navigateTo({
+                name: 'product-slug',
+                params: {slug: product.slug}
+            })
         }
     })
 }
