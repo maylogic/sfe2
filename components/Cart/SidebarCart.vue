@@ -19,7 +19,7 @@
 
         <div class="mt-auto flex flex-col gap-2 pt-5">
             <div class="flex flex-col gap-2">
-                <h3 class="font-fira-sans">Промокод или подарочный ваучер (необязательно)</h3>
+                <h3 class="font-fira-sans">Промокод или подарочный ваучер</h3>
                 <div v-if="!!cart.coupons?.length">
                     <cart-coupon
                         :data="coupon"

@@ -217,15 +217,24 @@ const updateOption = (optionId: ProductOptionId, optionItemId: ProductOptionItem
     price.value = getFullProductPrice(product.value, props.inputData)
 }
 const setTextLineDefaults = () => {
+    const textData = new Map<PersonalizeLineDefId, string | null>(),
+        hidden = new Map<PersonalizeLineDefId, boolean>()
     product.value.line_definitions?.forEach(def => {
         if (def.default_value) {
             textLinesRenderValues.set(def.id, def.default_value)
         }
+        textData.set(def.id, null)
+        if (def.hidden) {
+            hidden.set(def.id, true)
+        }
     })
+    props.inputData.textLines = textData
+    hiddenTextLines.value = hidden
 }
 const hideTextLine = (lineId: string) => {
     props.inputData.textLines.delete(lineId)
     textLineErrors.value.delete(lineId)
+    textLinesRenderValues.delete(lineId)
     hiddenTextLines.value.set(lineId, true)
 }
 const showTextLine = () => {
@@ -235,6 +244,10 @@ const showTextLine = () => {
             return
         }
     }
+}
+const showTextLineDefId = (id: PersonalizeLineDefId) => {
+    const def = product.value.line_definitions?.find(def => def.id === id)
+    if (def) hiddenTextLines.value.delete(def.id)
 }
 
 const getBlockIndex = (id: number) => {
@@ -246,19 +259,8 @@ const getBlockIndex = (id: number) => {
     }
     return count;
 }
-if (product) {
-    const textData = new Map<PersonalizeLineDefId, string | null>(),
-        hidden = new Map<PersonalizeLineDefId, boolean>()
-    blocksVisibility.value = getBlocksVisibility(product.value, props.inputData)
-    product.value.line_definitions?.forEach(def => {
-        textData.set(def.id, null)
-        if (def.hidden) {
-            hidden.set(def.id, true)
-        }
-    })
-    props.inputData.textLines = textData
-    hiddenTextLines.value = hidden
-}
+
+blocksVisibility.value = getBlocksVisibility(product.value, props.inputData)
 
 const usedFonts = new Map<string, Font>()
 product.value.designs.forEach(designFrag => {
@@ -291,6 +293,7 @@ onMounted(() => {
         if (props.initData.textLines) {
             for (const [id, value] of props.initData.textLines) {
                 updateTextLine(id, value)
+                if (value) showTextLineDefId(id)
             }
         }
         if (props.initData.options) {
