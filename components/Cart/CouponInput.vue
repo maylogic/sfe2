@@ -34,12 +34,11 @@ const apply = async () => {
         errors.value = ['Код должен состоять из 9 символов']
         return
     }
+    cartStore.loading = true
     const {data, error} = await executeMutation({
         code: code.value,
     })
-    if (data?.applyCoupon) {
-        cartStore.setData(data?.applyCoupon)
-    }
+    cartStore.setData(data?.applyCoupon)
     if (error) {
         errorHandler(error)
     }

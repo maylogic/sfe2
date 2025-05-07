@@ -34,9 +34,8 @@ const {executeMutation} = useMutation(RemoveCouponDocument)
 const cartStore = useCartStore()
 
 const remove = async () => {
+    cartStore.loading = true
     const {data} = await executeMutation({code: coupon.code})
-    if (data?.removeCoupon) {
-        cartStore.setData(data?.removeCoupon)
-    }
+    cartStore.setData(data?.removeCoupon)
 }
 </script>

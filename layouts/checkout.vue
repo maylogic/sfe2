@@ -9,7 +9,7 @@
                     icon="i-lucide-menu"
                     @click="menuOpen = !menuOpen"
                 />
-                <div class="ml-auto flex items-center gap-2 font-fira-sans">
+                <div class="ml-auto flex items-center gap-2 font-iskra text-xl">
                     <u-icon class="text-[32px] mt-[-5px]" name="i-lucide-lock"/>
                     Оформление заказа
                 </div>

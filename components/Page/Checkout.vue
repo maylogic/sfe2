@@ -1,19 +1,26 @@
 <template>
     <div class="checkout">
         <div class="blocks">
-
+            <checkout-block label="1. E-Mail" :valid="null">
+                <checkout-block-email/>
+            </checkout-block>
+            <checkout-block class="pt-6" :bordered="false" :valid="null">
+                <checkout-block-coupon :cart="cart"/>
+            </checkout-block>
         </div>
         <div class="cart-items-container">
-            <div class="title font-fira-sans">
-                <u-icon class="text-[20px] mt-[-5px]" name="i-lucide-shopping-cart"/>
-                {{
-                    cart.items && cart.items.length > 0
-                        ? `${cart.items.length} ${num_word(cart.items.length, ['товар', 'товара', 'товаров'])}`
-                        : 'Нет товаров'
-                }}
-            </div>
-            <div class="cart-items">
-                <cart-sidebar-cart-item v-for="item in cart.items" :key="cart.key+item.id" :data="item"/>
+            <div class="bg-white">
+                <div class="title font-fira-sans">
+                    <u-icon class="text-[20px] mt-[-5px]" name="i-lucide-shopping-cart"/>
+                    {{
+                        cart.items && cart.items.length > 0
+                            ? `${cart.items.length} ${num_word(cart.items.length, ['товар', 'товара', 'товаров'])}`
+                            : 'Нет товаров'
+                    }}
+                </div>
+                <div class="cart-items">
+                    <cart-sidebar-cart-item v-for="item in cart.items" :key="cart.key+item.id" :data="item"/>
+                </div>
             </div>
         </div>
         <loading-overlay v-if="loading">
@@ -44,16 +51,16 @@ watch(cart, async (value) => {
     max-height: 100vh;
     max-height: 100dvh;
 
-    .blocks {
-        @apply bg-white w-full;
-    }
-
     .cart-items-container {
-        @apply bg-white w-full md:w-[320px];
+        @apply w-full md:w-[320px];
         .title {
             @apply py-2 px-2 bg-picton-blue-500 text-white;
             @apply flex items-center gap-2 mb-2;
         }
+    }
+
+    .blocks {
+        @apply flex flex-col gap-3;
     }
 
     .cart-items {
