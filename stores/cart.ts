@@ -14,6 +14,7 @@ export interface CartStoreData {
     cart: SidebarCartFragment
     open: boolean
     error: boolean
+    loading: boolean
 }
 
 export const useCartStore = defineStore('cart', {
@@ -30,6 +31,7 @@ export const useCartStore = defineStore('cart', {
                 ' $fragmentRefs': undefined,
             },
         },
+        loading: false,
         open: false,
         error: false
     }),
@@ -39,21 +41,18 @@ export const useCartStore = defineStore('cart', {
             if (data) {
                 this.cart = useFragment(SidebarCartFragmentDoc, data)
             }
+            this.loading = false
         },
         async hydrate() {
             this.error = false
+            this.loading = true
             const {data, error} = await useQuery({
                 query: GetCartDocument,
                 variables: {},
                 requestPolicy: 'network-only',
             })
 
-            if (data.value?.getCart) {
-                this.cart = useFragment(
-                    SidebarCartFragmentDoc,
-                    data.value?.getCart
-                )
-            }
+            this.setData(data.value?.getCart)
 
             if (error.value) {
                 this.error = true

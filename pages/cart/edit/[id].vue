@@ -3,10 +3,7 @@
         <Suspense>
             <page-cart-item-edit :id="id"/>
             <template #fallback>
-                <div class="flex flex-col gap-2 p-5 mx-auto w-[200px] h-full">
-                    <span class="font-fira-sans">Загрузка...</span>
-                    <u-progress/>
-                </div>
+                <loading-page/>
             </template>
         </Suspense>
     </ClientOnly>

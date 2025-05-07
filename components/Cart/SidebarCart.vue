@@ -13,6 +13,9 @@
         </div>
     </div>
     <div class="sidebar-cart p-5" :key="cart.key" v-else>
+        <loading-overlay v-if="loading">
+            <loading-page/>
+        </loading-overlay>
         <div class="cart-items">
             <cart-sidebar-cart-item v-for="item in cart.items" :key="cart.key+item.id" :data="item"/>
         </div>
@@ -63,18 +66,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useCartStore } from '~/stores/cart'
 
 const cartStore = useCartStore()
 await cartStore.hydrate()
-const cart = computed(() => cartStore.cart)
+const {cart, loading} = storeToRefs(cartStore)
 </script>
 
 <style scoped lang="scss">
 
 .sidebar-cart {
-    @apply grid;
+    @apply grid relative;
     grid-template-rows: 1fr min-content;
     max-height: 100vh;
     max-height: 100dvh;

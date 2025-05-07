@@ -126,12 +126,14 @@ const {
 const fetching = computed(() => removing.value || updatingQuantity.value)
 const cart = useCartStore()
 const remove = async () => {
+    cart.loading = true
     const {data} = await removeCartItem({cartItemId: item.value.id})
     cart.setData(data?.removeCartItem)
 }
 watchDebounced(
     quantity,
     async () => {
+        cart.loading = true
         const {data} = await updateCartItemQuantity({cartItemId: item.value.id, quantity: quantity.value})
         cart.setData(data?.updateCartItemQuantity)
     },
