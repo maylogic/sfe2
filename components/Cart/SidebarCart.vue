@@ -22,7 +22,7 @@
 
         <div class="mt-auto flex flex-col gap-2 pt-5">
             <div class="flex flex-col gap-2">
-                <h3 class="font-fira-sans">Промокод или подарочный ваучер</h3>
+                <h3 class="font-iskra">Промокод или подарочный ваучер</h3>
                 <div v-if="!!cart.coupons?.length">
                     <cart-coupon
                         :data="coupon"
@@ -30,7 +30,7 @@
                         :key="coupon.id"
                     />
                 </div>
-                <cart-coupon-input/>
+                <cart-coupon-input v-if="cart.can_apply_coupon"/>
             </div>
 
             <!-- Метод доставки -->

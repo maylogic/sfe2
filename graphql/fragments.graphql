@@ -150,6 +150,7 @@ fragment SidebarCart on Cart {
     }
     apply_balance
     can_apply_balance
+    can_apply_coupon
 }
 fragment BaseFragment on Base {
     filename

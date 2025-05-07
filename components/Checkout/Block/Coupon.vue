@@ -1,5 +1,8 @@
 <template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2" :class="{
+        'pt-6': cart.can_apply_coupon,
+        'pb-3': !cart.can_apply_coupon
+    }">
         <div v-if="!!cart.coupons?.length">
             <cart-coupon
                 :data="coupon"
@@ -7,7 +10,7 @@
                 :key="coupon.id"
             />
         </div>
-        <cart-coupon-input/>
+        <cart-coupon-input v-if="cart.can_apply_coupon"/>
     </div>
 </template>
 <script setup lang="ts">

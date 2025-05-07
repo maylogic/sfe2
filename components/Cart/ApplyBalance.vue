@@ -22,9 +22,8 @@ const {fetching, executeMutation} = useMutation(ToggleApplyBalanceDocument)
 const applyBalance = ref(props.data)
 
 const toggle = async () => {
+    cartStore.loading = true
     const {data} = await executeMutation({})
-    if (data?.toggleApplyBalance) {
-        cartStore.setData(data?.toggleApplyBalance)
-    }
+    cartStore.setData(data?.toggleApplyBalance)
 }
 </script>

@@ -1,10 +1,10 @@
 <template>
-    <div class="totals-container font-fira-sans">
+    <div class="totals-container font-iskra">
         <!-- Список итоговых сумм -->
         <div class="totals-list">
             <div class="totals-item">
-                <span class="label font-bold">Подытог:</span>
-                <span class="value">{{ formatPrice(totals.subtotal) }}</span>
+                <span class="label font-normal">Подытог:</span>
+                <span class="value font-fira-sans">{{ formatPrice(totals.subtotal) }}</span>
             </div>
 
             <div v-if="totals.points_used" class="flex flex-col w-full">
@@ -15,9 +15,9 @@
                 <span class="points-description">(1 балл = 1 ₽, применяются до других скидок)</span>
             </div>
 
-            <div class="totals-item grand-total">
+            <div class="totals-item">
                 <span class="label font-black">Итог:</span>
-                <fragment-price class="text-2xl" :data="totals.grand_total"/>
+                <fragment-price :data="totals.grand_total"/>
             </div>
         </div>
     </div>
@@ -38,37 +38,31 @@ const totals = computed(() => useFragment(TotalsFragmentDoc, props.data))
 
 <style lang="scss">
 .totals-container {
-    border: 1px solid rgba(0, 0, 26, 0.1);
-    padding: 1rem;
-    background-color: #f5f5f5;
-}
+    border-top: 1px solid rgba(0, 0, 26, 0.1);
+    @apply py-2 px-0;
 
-.totals-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    text-align: center;
-}
+    .totals-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
 
-.totals-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
+    .totals-list {
+        @apply flex flex-col gap-1;
+    }
 
-.totals-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .totals-item {
+        @apply flex items-center justify-between;
 
-.points-description {
-    font-size: 12px;
-}
+        .label {
+            @apply text-base;
+        }
+    }
 
-.label {
-    font-size: 1rem;
-    color: #333;
+    .points-description {
+        font-size: 12px;
+    }
 }
 
 </style>

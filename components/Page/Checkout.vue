@@ -4,8 +4,11 @@
             <checkout-block label="1. E-Mail" :valid="null">
                 <checkout-block-email/>
             </checkout-block>
-            <checkout-block class="pt-6" :bordered="false" :valid="null">
+            <checkout-block :bordered="false" :valid="null">
                 <checkout-block-coupon :cart="cart"/>
+                <div v-if="!cart.can_apply_balance" class="mb-2">
+                    <cart-apply-balance :data="cart?.apply_balance"/>
+                </div>
             </checkout-block>
         </div>
         <div class="cart-items-container">
@@ -18,8 +21,11 @@
                             : 'Нет товаров'
                     }}
                 </div>
-                <div class="cart-items">
-                    <cart-sidebar-cart-item v-for="item in cart.items" :key="cart.key+item.id" :data="item"/>
+                <div class="px-2">
+                    <div class="cart-items">
+                        <cart-sidebar-cart-item v-for="item in cart.items" :key="cart.key+item.id" :data="item"/>
+                    </div>
+                    <cart-totals :key="cart.key" :data="cart.totals"/>
                 </div>
             </div>
         </div>
@@ -64,10 +70,7 @@ watch(cart, async (value) => {
     }
 
     .cart-items {
-        @apply px-2 pb-2;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+        @apply pb-2 flex flex-col gap-4;
     }
 }
 </style>
