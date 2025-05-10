@@ -55,7 +55,7 @@ export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) 
         metrics = getTextMetrics(data)
     const areaCenterY = area.y + area.height / 2
     const textHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
-    data.y = areaCenterY + textHeight / 2 - metricsReal.bottom / data.size + metrics.actualBoundingBoxAscent
+    data.y = areaCenterY + metrics.fontBoundingBoxAscent
     data.x = area.x + area.width / 2
 }
 
