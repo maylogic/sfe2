@@ -19,10 +19,9 @@ const AREA_PADDING_Y = 0.5,
     AREA_PADDING_X = 0.1
 
 export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
-    const dpr = window.devicePixelRatio || 1
     el.setAttribute('data-id', data.id)
     el.setAttribute('font-family', data.font)
-    el.setAttribute('font-size', (data.size * dpr).toFixed(4))
+    el.setAttribute('font-size', data.size.toFixed(4))
     el.setAttribute('fill', data.fill)
     // el.setAttribute('dominant-baseline', 'middle')
     el.setAttribute('text-anchor', 'middle')
@@ -52,10 +51,8 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
-    const metricsReal = getTextMetricsReal(data),
-        metrics = getTextMetrics(data)
     const areaCenterY = area.y + area.height / 2
-    data.y = areaCenterY - metrics.alphabeticBaseline / data.size + metrics.actualBoundingBoxDescent / data.size
+    data.y = areaCenterY
     data.x = area.x + area.width / 2
 }
 
