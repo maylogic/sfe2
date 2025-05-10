@@ -2,6 +2,7 @@ import { createTextElement } from "~/utils/element";
 import type { ProductLineDefinition } from "~/gql/graphql";
 import {
     CANVAS_SIZE,
+    createCanvasContext,
     getCanvasContext
 } from "~/utils/canvas";
 
@@ -15,7 +16,7 @@ export type TextRenderData = {
     size: number
 }
 
-const AREA_PADDING_Y = 0.2,
+const AREA_PADDING_Y = 0.5,
     AREA_PADDING_X = 0.1
 
 export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
@@ -23,7 +24,6 @@ export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.setAttribute('font-family', data.font)
     el.setAttribute('font-size', data.size.toFixed(4))
     el.setAttribute('fill', data.fill)
-    // el.setAttribute('dominant-baseline', 'central')
     el.setAttribute('text-anchor', 'middle')
     el.setAttribute('x', data.x.toFixed(4))
     el.setAttribute('y', data.y.toFixed(4))
@@ -51,11 +51,11 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
-    const metrics = getTextMetrics(data)
-    const { actualBoundingBoxAscent, actualBoundingBoxDescent } = metrics;
-    const textHeight = actualBoundingBoxAscent + actualBoundingBoxDescent;
+    const metrics = getTextMetrics(data, createCanvasContext(area.width, area.height))
+    const {actualBoundingBoxAscent, actualBoundingBoxDescent,fontBoundingBoxDescent,fontBoundingBoxAscent} = metrics;
+    const textHeight = fontBoundingBoxAscent + fontBoundingBoxDescent;
     const centerY = area.y + area.height / 2
-    const baselineY = centerY + (textHeight / 2 - actualBoundingBoxDescent);
+    const baselineY = centerY + (textHeight / 2 - fontBoundingBoxDescent);
     data.y = baselineY
     data.x = area.x + area.width / 2
 }
@@ -70,8 +70,10 @@ export const calculateFontSize = (data: TextRenderData,
     const targetWidth = getTargetWidth(area),
         targetHeight = getTargetHeight(area)
 
+    const context = createCanvasContext(area.width, area.height)
+
     const doesTextFit = (fontSize: number): boolean => {
-        const metrics = getTextMetricsReal(data, fontSize)
+        const metrics = getTextMetricsReal(data, fontSize, context)
         const textWidth = metrics.width;
         const textHeight = metrics.height
 
@@ -113,19 +115,19 @@ export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLi
         })
 }
 
-const getTextMetrics = (data: TextRenderData, fontSize?: number) => {
-    const context = getCanvasContext()
-    if (context) {
-        const size = fontSize ?? data.size
-        context.textBaseline = 'alphabetic'
-        context.font = `${size}px ${data.font}`;
-        return context.measureText(data.value);
+const getTextMetrics = (data: TextRenderData, context?: CanvasRenderingContext2D | null) => {
+    const ctx = context ?? getCanvasContext()
+    if (ctx) {
+        const size = data.size
+        ctx.textBaseline = 'alphabetic'
+        ctx.font = `${size}px ${data.font}`;
+        return ctx.measureText(data.value);
     }
     throw new Error('Cannot access canvas context')
 }
 
-const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
-    const ctx = getCanvasContext()
+const getTextMetricsReal = (data: TextRenderData, fontSize?: number, context?: CanvasRenderingContext2D | null): TextMetricsReal => {
+    const ctx = context ?? getCanvasContext()
     if (!ctx) throw new Error('Cannot access canvas context')
     // Устанавливаем шрифт и текст
     const size = fontSize ?? data.size

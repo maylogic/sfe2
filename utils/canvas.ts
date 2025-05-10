@@ -9,3 +9,10 @@ export const getCanvasContext = (): CanvasRenderingContext2D | null => {
     }
     return canvasContext
 }
+
+export const createCanvasContext = (width: number, height: number) => {
+    const sharedCanvas = document.createElement('canvas');
+    sharedCanvas.width = width
+    sharedCanvas.height = height
+    return sharedCanvas.getContext('2d', {willReadFrequently: true});
+}
