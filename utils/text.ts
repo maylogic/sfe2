@@ -15,7 +15,7 @@ export type TextRenderData = {
     size: number
 }
 
-const AREA_PADDING_Y = 0.5,
+const AREA_PADDING_Y = 0.2,
     AREA_PADDING_X = 0.1
 
 export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
@@ -51,8 +51,11 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
+    const metricsReal = getTextMetricsReal(data),
+        metrics = getTextMetrics(data)
     const areaCenterY = area.y + area.height / 2
-    data.y = areaCenterY
+    const textHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
+    data.y = areaCenterY + textHeight / 2 - metricsReal.bottom / data.size + metrics.actualBoundingBoxAscent
     data.x = area.x + area.width / 2
 }
 
@@ -67,9 +70,9 @@ export const calculateFontSize = (data: TextRenderData,
         targetHeight = getTargetHeight(area)
 
     const doesTextFit = (fontSize: number): boolean => {
-        const metrics = getTextMetricsReal(data, fontSize)
+        const metrics = getTextMetrics(data, fontSize)//getTextMetricsReal(data, fontSize)
         const textWidth = metrics.width;
-        const textHeight = metrics.height
+        const textHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
 
         return textWidth <= targetWidth && textHeight <= targetHeight;
     };
@@ -109,10 +112,11 @@ export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLi
         })
 }
 
-const getTextMetrics = (data: TextRenderData) => {
+const getTextMetrics = (data: TextRenderData, fontSize?: number) => {
     const context = getCanvasContext()
     if (context) {
-        context.font = `${data.size}px ${data.font}`;
+        const size = fontSize ?? data.size
+        context.font = `${size}px ${data.font}`;
         return context.measureText(data.value);
     }
     throw new Error('Cannot access canvas context')
