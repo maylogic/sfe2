@@ -1,4 +1,4 @@
-export const CANVAS_SIZE = 200
+export const CANVAS_SIZE = 3200
 let canvasContext: CanvasRenderingContext2D | null = null
 export const getCanvasContext = (): CanvasRenderingContext2D | null => {
     if (!canvasContext) {
