@@ -6,7 +6,7 @@
             </checkout-block>
             <checkout-block :bordered="false" :valid="null">
                 <checkout-block-coupon :cart="cart"/>
-                <div v-if="!cart.can_apply_balance" class="mb-2">
+                <div v-if="cart.can_apply_balance" class="mb-2">
                     <cart-apply-balance :data="cart?.apply_balance"/>
                 </div>
             </checkout-block>
