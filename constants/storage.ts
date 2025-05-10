@@ -1,5 +1,6 @@
-export const STORAGE_URL = useRuntimeConfig().public.storageUrl as string|undefined ?? 'http://localhost/storage'
+import { getEnvOrPubVal } from "~/utils/env";
 
 export const getStorageUrl = (filename: string): string => {
-    return `${STORAGE_URL}/${filename}`
+    const url = getEnvOrPubVal('STORAGE_URL')
+    return `${url}/${filename}`
 }

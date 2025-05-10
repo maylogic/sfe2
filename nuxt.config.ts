@@ -35,6 +35,12 @@ export default defineNuxtConfig({
             sizeLimitKb: 256,
         },
     },
+    runtimeConfig: {
+        public: {
+            graphqlUrl: 'http://localhost/graphql',
+            storageUrl: 'http://localhost/storage'
+        }
+    },
     css: [
         '~/css/main.css'
     ],

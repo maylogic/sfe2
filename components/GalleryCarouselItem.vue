@@ -13,7 +13,7 @@ import {
     useFragment
 } from '~/gql'
 import { GalleryItemFragmentDoc } from '~/gql/graphql'
-import { STORAGE_URL } from "~/constants/storage";
+import { getStorageUrl } from "~/constants/storage";
 
 const props = defineProps<{
     data: FragmentType<typeof GalleryItemFragmentDoc>
@@ -21,9 +21,8 @@ const props = defineProps<{
 
 const item = useFragment(GalleryItemFragmentDoc, props.data)
 
-const getImageUrl = (filename: string) => {
-    return `${STORAGE_URL}/${filename}`
-}
+const getImageUrl = (filename: string) => getStorageUrl(filename)
+
 
 </script>
 

@@ -1,6 +1,10 @@
 import type { SSRExchange } from '@urql/vue'
 import { cacheExchange } from '@urql/vue'
-import { createClient, fetchExchange } from '@urql/core'
+import {
+    createClient,
+    fetchExchange
+} from '@urql/core'
+import { getEnvOrPubVal } from "~/utils/env";
 
 export const createGraphqlClient = (
     ssr?: undefined | SSRExchange,
@@ -14,7 +18,7 @@ export const createGraphqlClient = (
     }
     exchanges.push(fetchExchange)
 
-    const url = useRuntimeConfig().public.graphqlUrl as string|undefined ?? 'http://localhost/graphql'
+    const url = getEnvOrPubVal('GRAPHQL_URL')
     return createClient({
         url: xdebug ? url + '?XDEBUG_SESSION_START=' + xdebug : url,
         fetchOptions: () => ({

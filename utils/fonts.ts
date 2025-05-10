@@ -1,5 +1,5 @@
 import type { ResolvableLink } from "@unhead/vue/types";
-import { STORAGE_URL } from "~/constants/storage";
+import { getStorageUrl } from "~/constants/storage";
 import type { Font } from "~/gql/graphql";
 
 export const getLocalFontPreloadLink = (href: string): ResolvableLink => {
@@ -22,9 +22,7 @@ export const getRemoteFontPreloadLink = (href: string): ResolvableLink => {
     })
 }
 
-export const getRemoteFontUrl = (href: string) => {
-    return `${STORAGE_URL}/${href}`
-}
+export const getRemoteFontUrl = (href: string) => getStorageUrl(href)
 
 export const getLocalFontPreloads = () => {
     return [
