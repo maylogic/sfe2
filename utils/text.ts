@@ -23,7 +23,7 @@ export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.setAttribute('font-family', data.font)
     el.setAttribute('font-size', data.size.toFixed(4))
     el.setAttribute('fill', data.fill)
-    el.setAttribute('dominant-baseline', 'middle')
+    el.setAttribute('dominant-baseline', 'central')
     el.setAttribute('text-anchor', 'middle')
     el.setAttribute('x', data.x.toFixed(4))
     el.setAttribute('y', data.y.toFixed(4))
@@ -51,27 +51,9 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
-    const metricsReal = getTextMetricsReal(data),
-        {
-            actualBoundingBoxDescent,
-            actualBoundingBoxAscent,
-            fontBoundingBoxAscent,
-            fontBoundingBoxDescent,
-            alphabeticBaseline
-        } = getTextMetrics(data)
     const areaCenterY = area.y + area.height / 2
-    const textHeight = fontBoundingBoxAscent + fontBoundingBoxDescent
     data.y = areaCenterY
     data.x = area.x + area.width / 2
-    alert(JSON.stringify({
-        data, area, metrics: {
-            actualBoundingBoxDescent,
-            actualBoundingBoxAscent,
-            fontBoundingBoxAscent,
-            fontBoundingBoxDescent,
-            alphabeticBaseline
-        }, metricsReal, areaCenterY, textHeight
-    }))
 }
 
 const getTargetHeight = (area: TextPieceArea) => area.height - AREA_PADDING_Y * area.height,
