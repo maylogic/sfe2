@@ -1,7 +1,9 @@
 <template>
     <personalize-item :selected="isCurrentColor()" @click="updateColor">
         <div class="color-item font-iskra" :style="`background: ${color.hex}`">
-            {{ color.label }}
+            <span class="inline-block max-w-[90%]">
+                {{ color.label }}
+            </span>
         </div>
     </personalize-item>
 </template>
