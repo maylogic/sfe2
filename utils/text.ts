@@ -19,9 +19,10 @@ const AREA_PADDING_Y = 0.5,
     AREA_PADDING_X = 0.1
 
 export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
+    const dpr = window.devicePixelRatio || 1
     el.setAttribute('data-id', data.id)
     el.setAttribute('font-family', data.font)
-    el.setAttribute('font-size', data.size.toFixed(4))
+    el.setAttribute('font-size', (data.size * dpr).toFixed(4))
     el.setAttribute('fill', data.fill)
     // el.setAttribute('dominant-baseline', 'middle')
     el.setAttribute('text-anchor', 'middle')
@@ -123,13 +124,11 @@ const getTextMetrics = (data: TextRenderData) => {
 const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
     const ctx = getCanvasContext()
     if (!ctx) throw new Error('Cannot access canvas context')
-    const dpr = window.devicePixelRatio || 1
     // Устанавливаем шрифт и текст
     const size = fontSize ?? data.size
     ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
     ctx.font = `${size}px ${data.font}`;
     ctx.textBaseline = 'top';
-    ctx.fillStyle = 'black'
     ctx.fillText(data.value, 0, 0);
 
     // Получаем пиксельные данные текста
@@ -158,13 +157,13 @@ const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetric
     }
 
     return {
-        top: top / dpr,
-        bottom: bottom / dpr,
-        left: left / dpr,
-        right: right / dpr,
-        width: (right - left) / dpr,
-        height: (bottom - top) / dpr,
-    };
+        top: top,
+        bottom: bottom,
+        left: left,
+        right: right,
+        width: right - left,
+        height: bottom - top,
+    }
 }
 
 type TextMetricsReal = {
