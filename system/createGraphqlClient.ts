@@ -14,7 +14,7 @@ export const createGraphqlClient = (
     }
     exchanges.push(fetchExchange)
 
-    const url = process.env.GRAPHQL_URL ?? 'http://localhost/graphql'
+    const url = useRuntimeConfig().public.graphqlUrl as string|undefined ?? 'http://localhost/graphql'
     return createClient({
         url: xdebug ? url + '?XDEBUG_SESSION_START=' + xdebug : url,
         fetchOptions: () => ({
