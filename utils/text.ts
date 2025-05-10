@@ -123,11 +123,13 @@ const getTextMetrics = (data: TextRenderData) => {
 const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
     const ctx = getCanvasContext()
     if (!ctx) throw new Error('Cannot access canvas context')
+    const dpr = window.devicePixelRatio || 1
     // Устанавливаем шрифт и текст
     const size = fontSize ?? data.size
     ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
     ctx.font = `${size}px ${data.font}`;
     ctx.textBaseline = 'top';
+    ctx.fillStyle = 'black'
     ctx.fillText(data.value, 0, 0);
 
     // Получаем пиксельные данные текста
@@ -156,13 +158,13 @@ const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetric
     }
 
     return {
-        top: top,
-        bottom: bottom,
-        left: left,
-        right: right,
-        width: right - left,
-        height: bottom - top,
-    }
+        top: top / dpr,
+        bottom: bottom / dpr,
+        left: left / dpr,
+        right: right / dpr,
+        width: (right - left) / dpr,
+        height: (bottom - top) / dpr,
+    };
 }
 
 type TextMetricsReal = {
