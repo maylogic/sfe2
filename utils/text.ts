@@ -52,13 +52,25 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
     const metricsReal = getTextMetricsReal(data),
-        metrics = getTextMetrics(data)
+        {
+            actualBoundingBoxDescent,
+            actualBoundingBoxAscent,
+            fontBoundingBoxAscent,
+            fontBoundingBoxDescent,
+            alphabeticBaseline
+        } = getTextMetrics(data)
     const areaCenterY = area.y + area.height / 2
-    const textHeight = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent
+    const textHeight = fontBoundingBoxAscent + fontBoundingBoxDescent
     data.y = areaCenterY
     data.x = area.x + area.width / 2
     alert(JSON.stringify({
-        data, area, metrics, areaCenterY, textHeight
+        data, area, metrics: {
+            actualBoundingBoxDescent,
+            actualBoundingBoxAscent,
+            fontBoundingBoxAscent,
+            fontBoundingBoxDescent,
+            alphabeticBaseline
+        }, metricsReal, areaCenterY, textHeight
     }))
 }
 
@@ -73,9 +85,9 @@ export const calculateFontSize = (data: TextRenderData,
         targetHeight = getTargetHeight(area)
 
     const doesTextFit = (fontSize: number): boolean => {
-        const metrics = getTextMetrics(data, fontSize)//getTextMetricsReal(data, fontSize)
+        const metrics = getTextMetricsReal(data, fontSize)
         const textWidth = metrics.width;
-        const textHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+        const textHeight = metrics.height
 
         return textWidth <= targetWidth && textHeight <= targetHeight;
     };
