@@ -1,8 +1,8 @@
 export const CANVAS_SIZE = 32
 let canvasContext: CanvasRenderingContext2D | null = null
-const dpr = window.devicePixelRatio || 1;
 export const getCanvasContext = (): CanvasRenderingContext2D | null => {
     if (!canvasContext) {
+        const dpr = window ? window.devicePixelRatio || 1 : 1;
         const sharedCanvas = document.createElement('canvas');
         sharedCanvas.width = CANVAS_SIZE * dpr
         sharedCanvas.height = CANVAS_SIZE * dpr
