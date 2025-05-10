@@ -23,7 +23,7 @@ export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.setAttribute('font-family', data.font)
     el.setAttribute('font-size', data.size.toFixed(4))
     el.setAttribute('fill', data.fill)
-    el.setAttribute('dominant-baseline', 'central')
+    // el.setAttribute('dominant-baseline', 'middle')
     el.setAttribute('text-anchor', 'middle')
     el.setAttribute('x', data.x.toFixed(4))
     el.setAttribute('y', data.y.toFixed(4))
@@ -51,11 +51,10 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
-    const metrics = getTextMetricsReal(data)
-    const areaPadding = AREA_PADDING_Y * area.height,
-        targetHeight = getTargetHeight(area)
-    const areaCenterY = area.y + targetHeight / 2 + areaPadding / 2
-    data.y = areaCenterY - metrics.top / 2
+    const metricsReal = getTextMetricsReal(data),
+        metrics = getTextMetrics(data)
+    const areaCenterY = area.y + area.height / 2
+    data.y = areaCenterY - metrics.alphabeticBaseline / data.size + metrics.actualBoundingBoxDescent / data.size
     data.x = area.x + area.width / 2
 }
 
@@ -110,6 +109,15 @@ export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLi
         .forEach((id) => {
             findTextById(id, svg)?.remove() // remove text elements for unused def ids
         })
+}
+
+const getTextMetrics = (data: TextRenderData) => {
+    const context = getCanvasContext()
+    if (context) {
+        context.font = `${data.size}px ${data.font}`;
+        return context.measureText(data.value);
+    }
+    throw new Error('Cannot access canvas context')
 }
 
 const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {

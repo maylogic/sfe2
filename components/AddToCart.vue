@@ -8,7 +8,7 @@
         />
 
         <UButton
-            :label="fetching ? 'Добавляем в корзину...' : 'Создать мой адресник'"
+            :label="fetching ? 'Добавляем в корзину...' : 'Добавить в корзину'"
             :disabled="disabled || fetching"
             size="sm"
             @click="addToCart ?? addToCartInternal"

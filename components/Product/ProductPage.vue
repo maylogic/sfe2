@@ -62,7 +62,7 @@
                 <u-form-group
                     :error="validated && !valid ? 'Пожалуйста, исправьте некоторые ошибки выше. Они помечены красным.' : false">
                     <UButton
-                        :label="addingToCart ? 'Добавляем в корзину...' : 'Создать мой адресник'"
+                        :label="addingToCart ? 'Добавляем в корзину...' : 'Добавить в корзину'"
                         :disabled="fetching||addingToCart"
                         size="sm"
                         @click="addToCartInternal"

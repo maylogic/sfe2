@@ -64,7 +64,7 @@ const applyTexts = () => {
     let currentLineSeq = 0
     for (const [id, value] of getSortedTextLines(props.lineDefinitions, props.textLinesRenderValues)) {
         if (++currentLineSeq < rect.first_line) continue
-        if (currentLineSeq > rect.lines) continue
+        if (currentLineSeq - rect.first_line >= rect.lines) continue
         if (!value) continue
 
         let fill = rect.text_color ?? '#fff'
