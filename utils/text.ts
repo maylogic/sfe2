@@ -23,7 +23,7 @@ export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.setAttribute('font-family', data.font)
     el.setAttribute('font-size', data.size.toFixed(4))
     el.setAttribute('fill', data.fill)
-    el.setAttribute('dominant-baseline', 'central')
+    // el.setAttribute('dominant-baseline', 'central')
     el.setAttribute('text-anchor', 'middle')
     el.setAttribute('x', data.x.toFixed(4))
     el.setAttribute('y', data.y.toFixed(4))
@@ -51,7 +51,12 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
-    data.y = area.y + area.height / 2
+    const metrics = getTextMetrics(data)
+    const { actualBoundingBoxAscent, actualBoundingBoxDescent } = metrics;
+    const textHeight = actualBoundingBoxAscent + actualBoundingBoxDescent;
+    const centerY = area.y + area.height / 2
+    const baselineY = centerY + (textHeight / 2 - actualBoundingBoxDescent);
+    data.y = baselineY
     data.x = area.x + area.width / 2
 }
 
@@ -112,6 +117,7 @@ const getTextMetrics = (data: TextRenderData, fontSize?: number) => {
     const context = getCanvasContext()
     if (context) {
         const size = fontSize ?? data.size
+        context.textBaseline = 'alphabetic'
         context.font = `${size}px ${data.font}`;
         return context.measureText(data.value);
     }
