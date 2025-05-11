@@ -1,5 +1,5 @@
 <template>
-    <div class="product-gallery">
+    <div class="product-gallery" :class="{editor}">
         <div class="current-image">
             <gallery-item v-if="!editor && gallery[currentItem]" :data="gallery[currentItem]"/>
             <product-editor :text-lines-render-values="textLinesRenderValues"
@@ -44,8 +44,12 @@ const emit = defineEmits(['toggle-editor'])
 </script>
 <style lang="scss">
 .product-gallery {
-    @apply flex flex-col gap-2 sticky top-0 md:top-[20px] self-start bg-white z-10 py-2;
+    @apply flex flex-col gap-2 top-0 md:top-[20px] self-start bg-white z-10 py-2;
     @apply w-full sm:w-[320px] lg:w-[480px] xl:w-[550px];
+    &.editor {
+        @apply sticky;
+    }
+
     .items-carousel {
         @apply grid grid-cols-6 gap-3;
         & > * {

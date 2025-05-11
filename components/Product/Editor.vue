@@ -1,5 +1,5 @@
 <template>
-    <div class="editor">
+    <div class="product-editor">
         <svg viewBox="0 0 300 200">
             <personalize-base :data="personalizeData" :line-definitions="lineDefinitions" transform="translate(20, 40)"
                               v-if="reverseSideBase"
@@ -30,7 +30,7 @@ defineProps<{
 
 </script>
 <style lang="scss">
-.editor {
+.product-editor {
     svg {
         @apply w-full;
     }
