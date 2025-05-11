@@ -67,7 +67,7 @@
             </div>
         </div>
 
-        <UModal v-model="isRemovingModalOpen">
+        <UModal v-model="isRemovingModalOpen" :overlay="false">
             <UCard>
                 <template #header>
                     Пожалуйста, подтвердите или отмените удаление
@@ -126,9 +126,15 @@ const {
 const fetching = computed(() => removing.value || updatingQuantity.value)
 const cart = useCartStore()
 const remove = async () => {
+    isRemovingModalOpen.value = false
     cart.loading = true
-    const {data} = await removeCartItem({cartItemId: item.value.id})
-    cart.setData(data?.removeCartItem)
+    return new Promise<void>(resolve => {
+        setTimeout(async () => {
+            const {data} = await removeCartItem({cartItemId: item.value.id})
+            cart.setData(data?.removeCartItem)
+            resolve()
+        }, 100)
+    })
 }
 watchDebounced(
     quantity,
