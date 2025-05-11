@@ -5,7 +5,7 @@
             color="gray"
             size="2xs"
             :disabled="disabled || quantity <= 1"
-            @click="decrementQuantity"
+            @click.prevent="decrementQuantity"
         />
         <input
             :value="quantity"
@@ -16,7 +16,7 @@
             icon="i-heroicons-plus"
             color="gray"
             size="2xs"
-            @click="incrementQuantity"
+            @click.prevent="incrementQuantity"
             :disabled="disabled"
         />
     </div>
@@ -39,9 +39,9 @@ const decrementQuantity = () => {
 </script>
 <style>
 .quantity-input {
-    &.disabled {
-        .quantity-input-text {
-            @apply text-storm-dust-300;
+    .quantity-input-text {
+        &:disabled {
+            @apply bg-transparent border-none outline-none;
         }
     }
 }

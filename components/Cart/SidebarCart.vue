@@ -1,6 +1,8 @@
 <template>
     <div v-if="cartStore.error" class="p-5">
-        <span class="font-fira-sans text-red-500">Произошла ошибка. Пожалуйста, сообщите об этом администратору и получите извинительный промокод.</span>
+        <span autofocus class="font-fira-sans text-red-500">
+            Произошла ошибка. Пожалуйста, сообщите об этом администратору и получите извинительный промокод.
+        </span>
     </div>
     <div class="empty-cart p-5" v-else-if="!cartStore.isEmpty">
         <span class="font-fira-sans text-[18px]">Ваша корзина пуста</span>
@@ -55,7 +57,7 @@
             </div>
 
             <cart-totals :data="cart.totals"/>
-            <nuxt-link @click="cartStore.open=false" to="/checkout" class="checkout-button">
+            <nuxt-link autofocus @click="cartStore.open=false" to="/checkout" class="checkout-button">
                 <div>
                     <u-icon class="text-[32px] mt-[-5px]" name="i-lucide-lock"/>
                     Оформить заказ

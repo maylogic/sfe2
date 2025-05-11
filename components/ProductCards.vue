@@ -50,9 +50,7 @@ onMounted(() => {
 
 <style scoped>
 .product-grid-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+    @apply flex flex-col gap-8;
 }
 
 .product-grid {

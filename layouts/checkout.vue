@@ -4,6 +4,7 @@
             <div class="flex items-center max-w-[960px] px-2.5 mx-auto">
                 <horizontal-nav v-if="!!menuItems.length" :items="menuItems"/>
                 <u-button
+                    color="black"
                     v-if="!!menuItems.length"
                     class="sm:hidden"
                     icon="i-lucide-menu"
@@ -21,15 +22,14 @@
         <main class="main-content">
             <slot/>
         </main>
-        <footer>
-            <span class="font-sans">&copy; 2025. Размещенная информация является публичной офертой.</span>
+        <footer class="bg-white">
+            <u-container class="mx-auto">
+                <footer-content/>
+            </u-container>
         </footer>
     </div>
 </template>
 <script setup lang="ts">
-import { useCartStore } from '~/stores/cart'
-import ClosableSlideover from '~/components/ClosableSlideover.vue'
-import HorizontalNav from "~/components/HorizontalNav.vue";
 
 const menuOpen = ref(false)
 const menuItems = [
@@ -38,7 +38,6 @@ const menuItems = [
         to: '/',
     },
 ]
-const cartStore = useCartStore()
 </script>
 <style lang="scss">
 .checkout-page-layout {

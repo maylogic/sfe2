@@ -3,6 +3,7 @@
         <div class="flex items-center py-5">
             <horizontal-nav v-if="!!menuItems.length" :items="menuItems"/>
             <u-button
+                color="black"
                 v-if="!!menuItems.length"
                 class="sm:hidden"
                 icon="i-lucide-menu"
@@ -34,7 +35,7 @@
             <slot/>
         </main>
         <footer>
-            <span class="font-sans">&copy; 2025. Размещенная информация является публичной офертой.</span>
+            <footer-content/>
         </footer>
     </UContainer>
 </template>
@@ -54,8 +55,9 @@ const cartStore = useCartStore()
 </script>
 <style lang="scss">
 main.main-content {
-    @apply min-h-screen;
+    @apply min-h-screen mt-2;
 }
+
 footer {
     @apply text-sm py-2;
 }
