@@ -1,18 +1,11 @@
 export const CANVAS_SIZE = 32
 let canvasContext: CanvasRenderingContext2D | null = null
-export const getCanvasContext = (): CanvasRenderingContext2D | null => {
+export const getCanvasContext = (dpi: number): CanvasRenderingContext2D | null => {
     if (!canvasContext) {
         const sharedCanvas = document.createElement('canvas');
-        sharedCanvas.width = CANVAS_SIZE
-        sharedCanvas.height = CANVAS_SIZE
+        sharedCanvas.width = CANVAS_SIZE * dpi
+        sharedCanvas.height = CANVAS_SIZE * dpi
         canvasContext = sharedCanvas.getContext('2d', {willReadFrequently: true});
     }
     return canvasContext
-}
-
-export const createCanvasContext = (width: number, height: number) => {
-    const sharedCanvas = document.createElement('canvas');
-    sharedCanvas.width = width
-    sharedCanvas.height = height
-    return sharedCanvas.getContext('2d', {willReadFrequently: true});
 }

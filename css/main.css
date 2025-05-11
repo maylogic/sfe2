@@ -133,6 +133,6 @@
     }
 }
 
-html,body {
-    @apply overscroll-none;
+html, body {
+    @apply overscroll-x-none;
 }

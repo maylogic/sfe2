@@ -2,7 +2,6 @@ import { createTextElement } from "~/utils/element";
 import type { ProductLineDefinition } from "~/gql/graphql";
 import {
     CANVAS_SIZE,
-    createCanvasContext,
     getCanvasContext
 } from "~/utils/canvas";
 
@@ -51,8 +50,8 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
-    const metrics = getTextMetrics(data, createCanvasContext(area.width, area.height))
-    const {actualBoundingBoxAscent, actualBoundingBoxDescent,fontBoundingBoxDescent,fontBoundingBoxAscent} = metrics;
+    const metrics = getTextMetrics(data)
+    const {actualBoundingBoxAscent, actualBoundingBoxDescent, fontBoundingBoxDescent, fontBoundingBoxAscent} = metrics;
     const textHeight = fontBoundingBoxAscent + fontBoundingBoxDescent;
     const centerY = area.y + area.height / 2
     const baselineY = centerY + (textHeight / 2 - fontBoundingBoxDescent);
@@ -70,10 +69,8 @@ export const calculateFontSize = (data: TextRenderData,
     const targetWidth = getTargetWidth(area),
         targetHeight = getTargetHeight(area)
 
-    const context = createCanvasContext(area.width, area.height)
-
     const doesTextFit = (fontSize: number): boolean => {
-        const metrics = getTextMetricsReal(data, fontSize, context)
+        const metrics = getTextMetricsReal(data, fontSize)
         const textWidth = metrics.width;
         const textHeight = metrics.height
 
@@ -115,8 +112,9 @@ export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLi
         })
 }
 
-const getTextMetrics = (data: TextRenderData, context?: CanvasRenderingContext2D | null) => {
-    const ctx = context ?? getCanvasContext()
+const getTextMetrics = (data: TextRenderData) => {
+    const dpi = window.devicePixelRatio || 1
+    const ctx = getCanvasContext(dpi)
     if (ctx) {
         const size = data.size
         ctx.textBaseline = 'alphabetic'
@@ -126,29 +124,32 @@ const getTextMetrics = (data: TextRenderData, context?: CanvasRenderingContext2D
     throw new Error('Cannot access canvas context')
 }
 
-const getTextMetricsReal = (data: TextRenderData, fontSize?: number, context?: CanvasRenderingContext2D | null): TextMetricsReal => {
-    const ctx = context ?? getCanvasContext()
+const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
+    const dpi = window.devicePixelRatio || 1,
+        width = CANVAS_SIZE * dpi,
+        height = CANVAS_SIZE * dpi
+    const ctx = getCanvasContext(dpi)
     if (!ctx) throw new Error('Cannot access canvas context')
     // Устанавливаем шрифт и текст
     const size = fontSize ?? data.size
-    ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
+    ctx.clearRect(0, 0, width, height)
     ctx.font = `${size}px ${data.font}`;
     ctx.textBaseline = 'top';
     ctx.fillText(data.value, 0, 0);
 
     // Получаем пиксельные данные текста
-    const imageData = ctx.getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    const imageData = ctx.getImageData(0, 0, width, height);
     const pixels = imageData.data;
 
     // Анализируем пиксельные данные
-    let top = CANVAS_SIZE;
+    let top = height;
     let bottom = 0;
-    let left = CANVAS_SIZE;
+    let left = width;
     let right = 0;
 
-    for (let y = 0; y < CANVAS_SIZE; y++) {
-        for (let x = 0; x < CANVAS_SIZE; x++) {
-            const index = (y * CANVAS_SIZE + x) * 4; // Индекс пикселя
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const index = (y * width + x) * 4; // Индекс пикселя
             const alpha = pixels[index + 3]; // Альфа-канал
 
             if (alpha > 0) {
@@ -162,12 +163,12 @@ const getTextMetricsReal = (data: TextRenderData, fontSize?: number, context?: C
     }
 
     return {
-        top: top,
-        bottom: bottom,
-        left: left,
-        right: right,
-        width: right - left,
-        height: bottom - top,
+        top: top / dpi,
+        bottom: bottom / dpi,
+        left: left / dpi,
+        right: right / dpi,
+        width: (right - left) / dpi,
+        height: (bottom - top) / dpi,
     }
 }
 
