@@ -132,3 +132,7 @@
         @apply bg-brilliant-rose-500;
     }
 }
+
+html,body {
+    @apply overscroll-none;
+}
