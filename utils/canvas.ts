@@ -10,3 +10,6 @@ export const getCanvasContext = (dpi: number): CanvasRenderingContext2D | null =
     }
     return canvasContext
 }
+export const getDpi = () => {
+    return 4
+}

@@ -2,7 +2,8 @@ import { createTextElement } from "~/utils/element";
 import type { ProductLineDefinition } from "~/gql/graphql";
 import {
     CANVAS_SIZE,
-    getCanvasContext
+    getCanvasContext,
+    getDpi
 } from "~/utils/canvas";
 
 export type TextRenderData = {
@@ -114,7 +115,7 @@ export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLi
 
 const getTextMetrics = (data: TextRenderData) => {
     const dpi = window.devicePixelRatio || 1
-    const ctx = getCanvasContext(dpi)
+    const ctx = getCanvasContext(getDpi())
     if (ctx) {
         const size = data.size
         ctx.textBaseline = 'alphabetic'
@@ -125,7 +126,7 @@ const getTextMetrics = (data: TextRenderData) => {
 }
 
 const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
-    const dpi = window.devicePixelRatio || 1,
+    const dpi = getDpi(),
         width = CANVAS_SIZE * dpi,
         height = CANVAS_SIZE * dpi
     const ctx = getCanvasContext(dpi)
@@ -152,7 +153,7 @@ const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetric
             const index = (y * width + x) * 4; // Индекс пикселя
             const alpha = pixels[index + 3]; // Альфа-канал
 
-            if (alpha > 0) {
+            if (alpha > 200) {
                 // Обновляем границы текста
                 if (x < left) left = x;
                 if (x > right) right = x;
