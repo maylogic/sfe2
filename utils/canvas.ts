@@ -6,6 +6,7 @@ export const getCanvasContext = (dpi: number): CanvasRenderingContext2D | null =
         sharedCanvas.width = CANVAS_SIZE * dpi
         sharedCanvas.height = CANVAS_SIZE * dpi
         canvasContext = sharedCanvas.getContext('2d', {willReadFrequently: true});
+        if (canvasContext) canvasContext.scale(dpi, dpi)
     }
     return canvasContext
 }
