@@ -51,11 +51,9 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
-    const metrics = getTextMetrics(data)
-    const {actualBoundingBoxAscent, actualBoundingBoxDescent, fontBoundingBoxDescent, fontBoundingBoxAscent} = metrics;
-    const textHeight = fontBoundingBoxAscent + fontBoundingBoxDescent;
+    const realMetrics = getTextMetricsReal(data)
     const centerY = area.y + area.height / 2
-    const baselineY = centerY + (textHeight / 2 - fontBoundingBoxDescent);
+    const baselineY = centerY + realMetrics.height/2;
     data.y = baselineY
     data.x = area.x + area.width / 2
 }
@@ -153,7 +151,7 @@ const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetric
             const index = (y * width + x) * 4; // Индекс пикселя
             const alpha = pixels[index + 3]; // Альфа-канал
 
-            if (alpha > 200) {
+            if (alpha > 254) {
                 // Обновляем границы текста
                 if (x < left) left = x;
                 if (x > right) right = x;
