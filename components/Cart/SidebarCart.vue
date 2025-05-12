@@ -57,9 +57,9 @@
             </div>
 
             <cart-totals :data="cart.totals"/>
-            <nuxt-link autofocus @click="cartStore.open=false" to="/checkout" class="checkout-button">
+            <nuxt-link autofocus @click="cartStore.open=false" to="/checkout" class="font-bebas-neue checkout-button">
                 <div>
-                    <u-icon class="text-[32px] mt-[-5px]" name="i-lucide-lock"/>
+                    <u-icon class="text-[28px] mt-[-5px]" name="i-heroicons-solid-lock-closed"/>
                     Оформить заказ
                 </div>
             </nuxt-link>
@@ -81,42 +81,40 @@ const {cart, loading} = storeToRefs(cartStore)
     @apply grid relative;
     grid-template-rows: 1fr min-content;
     overflow: hidden;
-}
 
-.checkout-button {
-    @apply bg-robins-egg-blue-500 flex items-center justify-center pt-1 outline-none;
+    .checkout-button {
+        @apply bg-robins-egg-blue-500 flex items-center justify-center pt-1 outline-none;
 
-    div {
-        @apply flex items-center gap-2 text-white;
-        letter-spacing: 1px;
-        font-family: "Bebas Neue", sans-serif;
-        font-size: 32px;
+        div {
+            @apply flex items-center gap-2 h-12 justify-center text-white;
+            font-size: 24px;
+        }
     }
-}
 
-.cart-items {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    overflow-y: auto;
-}
+    .cart-items {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        overflow-y: auto;
+    }
 
-.empty-cart {
-    text-align: center;
-    color: #666;
-}
+    .empty-cart {
+        text-align: center;
+        color: #666;
+    }
 
-.cart-coupons ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+    .cart-coupons ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
 
-.shipping-method p {
-    margin: 0.25rem 0;
-}
+    .shipping-method p {
+        margin: 0.25rem 0;
+    }
 
-.apply-balance {
-    @apply mb-2;
+    .apply-balance {
+        @apply mb-2;
+    }
 }
 </style>

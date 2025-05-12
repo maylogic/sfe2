@@ -1,0 +1,79 @@
+fragment OrderItem on OrderItem {
+    id
+    quantity
+    price {
+        ...Price
+    }
+    design {
+        label
+    }
+    color {
+        label
+    }
+    font {
+        label
+    }
+    product {
+        slug
+        name
+        sku
+        price {
+            ...Price
+        }
+    }
+    option_items {
+        id
+        label
+        price {
+            ...Price
+        }
+    }
+    product_size {
+        height
+        id
+        label
+        price {
+            ...Price
+        }
+        product_id
+        thickness
+        width
+    }
+    text_lines {
+        id
+        ...OrderTextLine
+    }
+    quantity
+}
+fragment OrderTextLine on OrderItemTextLine {
+    product_line_definition {
+        label
+        max_length
+        required
+    }
+    id
+    value
+}
+fragment OrderData on Order {
+    id
+    items {
+        id
+        ...OrderItem
+    }
+    coupons {
+        id
+        ...CartCoupon
+    }
+    shipping_method {
+        name
+        price {
+            ...Price
+        }
+        estimated_delivery
+        description
+    }
+    totals {
+        ...Totals
+    }
+    apply_balance
+}

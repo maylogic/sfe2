@@ -3,18 +3,6 @@ fragment CustomerData on User {
     email
     name
 }
-fragment ProductMini on Product {
-    id
-    key
-    name
-    slug
-    price {
-        ...Price
-    }
-    primary_image {
-        ...GalleryItem
-    }
-}
 fragment Pagination on PaginatorInfo {
     count
     currentPage
@@ -29,15 +17,6 @@ fragment Price on Price {
     regular
     is_discounted
     discounted
-}
-fragment CartTextLine on CartItemTextLine {
-    product_line_definition {
-        label
-        max_length
-        required
-    }
-    id
-    value
 }
 fragment TextLineDefinition on ProductLineDefinition {
     label
@@ -61,96 +40,12 @@ fragment TextArea on BaseTextArea {
     width
     top
 }
-fragment SidebarCartItem on CartItem {
-    id
-    quantity
-    price {
-        ...Price
-    }
-    design {
-        label
-    }
-    color {
-        label
-    }
-    font {
-        label
-    }
-    product {
-        slug
-        name
-        sku
-        price {
-            ...Price
-        }
-    }
-    option_items {
-        id
-        label
-        price {
-            ...Price
-        }
-    }
-    product_size {
-        height
-        id
-        label
-        price {
-            ...Price
-        }
-        product_id
-        thickness
-        width
-    }
-    text_lines {
-        id
-        ...CartTextLine
-    }
-    quantity
-}
 fragment Customer on User {
     id
     email
     email_verified_at
     name
     role
-}
-fragment Totals on Totals {
-    subtotal
-    grand_total {
-        ...Price
-    }
-    points_used
-}
-fragment CartCoupon on Coupon {
-    code
-    discount_percentage
-}
-fragment SidebarCart on Cart {
-    id
-    key
-    items {
-        id
-        ...SidebarCartItem
-    }
-    coupons {
-        id
-        ...CartCoupon
-    }
-    shipping_method {
-        name
-        price {
-            ...Price
-        }
-        estimated_delivery
-        description
-    }
-    totals {
-        ...Totals
-    }
-    apply_balance
-    can_apply_balance
-    can_apply_coupon
 }
 fragment BaseFragment on Base {
     filename
@@ -179,60 +74,5 @@ fragment DesignItem on Design {
         label
         filename_woff2
         preview
-    }
-}
-fragment ProductPage on Product {
-    key
-    description
-    name
-    id
-    slug
-    sku
-    sizes {
-        id
-        label
-        price {
-            ...Price
-        }
-        product_id
-        thickness
-        width
-        height
-    }
-    reverse_side_base {
-        ...BaseFragment
-    }
-    price {
-        ...Price
-    }
-    options {
-        id
-        items {
-            id
-            label
-            price {
-                ...Price
-            }
-        }
-        required
-        label
-    }
-    meta_title
-    meta_description
-    line_definitions {
-        id
-        label
-        max_length
-        required
-        default_value
-        hidden
-        sort
-    }
-    gallery {
-        ...GalleryItem
-    }
-    designs {
-        id
-        ...DesignItem
     }
 }

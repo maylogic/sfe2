@@ -1,0 +1,94 @@
+fragment CartTextLine on CartItemTextLine {
+    product_line_definition {
+        label
+        max_length
+        required
+    }
+    id
+    value
+}
+fragment SidebarCartItem on CartItem {
+    id
+    quantity
+    price {
+        ...Price
+    }
+    design {
+        label
+    }
+    color {
+        label
+    }
+    font {
+        label
+    }
+    product {
+        slug
+        name
+        sku
+        price {
+            ...Price
+        }
+    }
+    option_items {
+        id
+        label
+        price {
+            ...Price
+        }
+    }
+    product_size {
+        height
+        id
+        label
+        price {
+            ...Price
+        }
+        product_id
+        thickness
+        width
+    }
+    text_lines {
+        id
+        ...CartTextLine
+    }
+    quantity
+}
+fragment SidebarCart on Cart {
+    id
+    key
+    items {
+        id
+        ...SidebarCartItem
+    }
+    coupons {
+        id
+        ...CartCoupon
+    }
+    shipping_method {
+        name
+        price {
+            ...Price
+        }
+        estimated_delivery
+        description
+    }
+    totals {
+        ...Totals
+    }
+    apply_balance
+    can_apply_balance
+    can_apply_coupon
+    can_place_order
+}
+fragment Totals on Totals {
+    subtotal
+    grand_total {
+        ...Price
+    }
+    points_used
+}
+fragment CartCoupon on Coupon {
+    code
+    discount_percentage
+}

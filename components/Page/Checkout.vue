@@ -10,6 +10,13 @@
                     <cart-apply-balance :data="cart?.apply_balance"/>
                 </div>
             </checkout-block>
+            <div class="checkout-button font-bebas-neue" :class="{'disabled': !cart.can_place_order}"
+                 @click="placeOrder">
+                <div>
+                    <u-icon class="text-[28px] mt-[-5px]" name="i-bxs-lock"/>
+                    Оформить заказ
+                </div>
+            </div>
         </div>
         <div class="order-summary-container">
             <order-summary :key="cart.key" :data="cart.totals">
@@ -39,6 +46,9 @@
         <loading-overlay v-if="loading">
             <loading-page/>
         </loading-overlay>
+        <loading-overlay v-if="fetching">
+            <loading-page label="Оформление заказа..."/>
+        </loading-overlay>
         <loading-overlay v-if="!cart.items?.length">
             <loading-page label="Нет товаров, возвращаем на главную страницу..."/>
         </loading-overlay>
@@ -47,11 +57,20 @@
 <script setup lang="ts">
 import { useCartStore } from "~/stores/cart";
 import { num_word } from "~/utils/misc";
+import { useMutation } from "@urql/vue";
+import { PlaceOrderDocument } from "~/gql/graphql";
 
 const showItemsOnMobile = ref(false)
 const cartStore = useCartStore()
 await cartStore.hydrate()
 const {cart, loading} = storeToRefs(cartStore)
+const {executeMutation, fetching} = useMutation(PlaceOrderDocument)
+
+async function placeOrder() {
+    const {data} = await executeMutation({})
+    console.log(data)
+}
+
 watch(cart, async (value) => {
     if (value.items && value.items.length === 0) {
         await navigateTo('/')
@@ -92,6 +111,21 @@ watch(cart, async (value) => {
 
     .order-summary {
         @apply md:hidden px-2 bg-white py-2;
+    }
+
+    .checkout-button {
+        @apply bg-robins-egg-blue-500 rounded-md flex items-center pt-1 justify-center outline-none;
+        @apply text-white;
+        @apply cursor-pointer;
+        div {
+            @apply flex items-center gap-2 h-12 justify-center;
+            letter-spacing: 1px;
+            font-size: 24px;
+        }
+
+        &.disabled {
+            @apply bg-storm-dust-200 text-storm-dust-100 cursor-not-allowed;
+        }
     }
 }
 </style>

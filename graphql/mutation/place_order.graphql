@@ -1,0 +1,5 @@
+mutation PlaceOrder {
+    placeOrder {
+        ...OrderData
+    }
+}

@@ -10,10 +10,11 @@ withDefaults(defineProps<{
     bordered?: boolean
     label?: string | undefined
     inactive?: boolean
-    valid: boolean | null
+    valid?: boolean | null
 }>(), {
     inactive: false,
     bordered: true,
+    valid: null
 })
 </script>
 <style lang="scss">

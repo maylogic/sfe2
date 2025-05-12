@@ -1,0 +1,67 @@
+fragment ProductPage on Product {
+    key
+    description
+    name
+    id
+    slug
+    sku
+    sizes {
+        id
+        label
+        price {
+            ...Price
+        }
+        product_id
+        thickness
+        width
+        height
+    }
+    reverse_side_base {
+        ...BaseFragment
+    }
+    price {
+        ...Price
+    }
+    options {
+        id
+        items {
+            id
+            label
+            price {
+                ...Price
+            }
+        }
+        required
+        label
+    }
+    meta_title
+    meta_description
+    line_definitions {
+        id
+        label
+        max_length
+        required
+        default_value
+        hidden
+        sort
+    }
+    gallery {
+        ...GalleryItem
+    }
+    designs {
+        id
+        ...DesignItem
+    }
+}
+fragment ProductMini on Product {
+    id
+    key
+    name
+    slug
+    price {
+        ...Price
+    }
+    primary_image {
+        ...GalleryItem
+    }
+}
