@@ -1,6 +1,6 @@
 <template>
     <div class="order-summary font-iskra">
-        <span class="mt-[-5px] flex items-center gap-2">
+        <span class="mt-[-0.2rem] flex items-center gap-2">
             <u-icon class="text-[20px]" name="i-lucide-shopping-cart"/>
             <span>Итог: </span>
         </span>

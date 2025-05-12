@@ -80,8 +80,6 @@ const {cart, loading} = storeToRefs(cartStore)
 .sidebar-cart {
     @apply grid relative;
     grid-template-rows: 1fr min-content;
-    max-height: 100vh;
-    max-height: 100dvh;
     overflow: hidden;
 }
 

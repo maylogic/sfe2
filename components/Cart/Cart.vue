@@ -33,5 +33,7 @@ const cartStore = useCartStore()
 <style>
 .slideover-content {
     grid-template-rows: min-content 1fr;
+    max-height: 100vh;
+    max-height: 100dvh;
 }
 </style>
