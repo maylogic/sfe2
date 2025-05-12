@@ -1,10 +1,10 @@
 <template>
     <div class="checkout-page-layout">
         <div class="py-5 px-0 mb-5 w-full bg-white">
-            <div class="flex items-center max-w-[960px] px-2.5 mx-auto">
+            <div class="flex items-center max-w-[960px] px-5 mx-auto">
                 <horizontal-nav v-if="!!menuItems.length" :items="menuItems"/>
                 <u-button
-                    color="black"
+                    color="white"
                     v-if="!!menuItems.length"
                     class="sm:hidden"
                     icon="i-lucide-menu"

@@ -86,7 +86,7 @@ const {cart, loading} = storeToRefs(cartStore)
 }
 
 .checkout-button {
-    @apply bg-robins-egg-blue-500 flex items-center justify-center pt-1;
+    @apply bg-robins-egg-blue-500 flex items-center justify-center pt-1 outline-none;
 
     div {
         @apply flex items-center gap-2 text-white;

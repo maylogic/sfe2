@@ -11,8 +11,15 @@
                 </div>
             </checkout-block>
         </div>
-        <div class="cart-items-container">
-            <div class="bg-white">
+        <div class="order-summary-container">
+            <order-summary :key="cart.key" :data="cart.totals">
+                <u-button variant="outline"
+                          @click.prevent="showItemsOnMobile=!showItemsOnMobile"
+                          :trailing-icon="`i-lucide-chevron-${showItemsOnMobile ? 'up' : 'down'}`">
+                    {{ showItemsOnMobile ? 'Скрыть' : 'Детали' }}
+                </u-button>
+            </order-summary>
+            <div class="cart-items-container" :class="{'mob-show':showItemsOnMobile}">
                 <div class="title font-fira-sans">
                     <u-icon class="text-[20px] mt-[-5px]" name="i-lucide-shopping-cart"/>
                     {{
@@ -41,6 +48,7 @@
 import { useCartStore } from "~/stores/cart";
 import { num_word } from "~/utils/misc";
 
+const showItemsOnMobile = ref(false)
 const cartStore = useCartStore()
 await cartStore.hydrate()
 const {cart, loading} = storeToRefs(cartStore)
@@ -52,16 +60,25 @@ watch(cart, async (value) => {
 </script>
 <style lang="scss">
 .checkout {
-    @apply grid px-2 max-w-[960px] mx-auto gap-5 md:grid-cols-[1fr__min-content];
+    @apply flex flex-col-reverse gap-3;
+    @apply h-full;
+    @apply md:grid md:grid-cols-[1fr__min-content] md:gap-5;
+    @apply px-2 max-w-[960px] mx-auto;
     @apply relative;
-    max-height: 100vh;
-    max-height: 100dvh;
 
-    .cart-items-container {
-        @apply w-full md:w-[320px];
-        .title {
-            @apply py-2 px-2 bg-picton-blue-500 text-white;
-            @apply flex items-center gap-2 mb-2;
+    .order-summary-container {
+        .cart-items-container {
+            @apply hidden md:block;
+            @apply bg-white;
+            &.mob-show {
+                @apply block;
+            }
+
+            @apply w-full md:w-[320px];
+            .title {
+                @apply py-2 px-2 bg-picton-blue-500 text-white;
+                @apply flex items-center gap-2 mb-2;
+            }
         }
     }
 
@@ -71,6 +88,10 @@ watch(cart, async (value) => {
 
     .cart-items {
         @apply pb-2 flex flex-col gap-4;
+    }
+
+    .order-summary {
+        @apply md:hidden px-2 bg-white py-2;
     }
 }
 </style>

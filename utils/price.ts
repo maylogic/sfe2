@@ -1,3 +1,3 @@
-export const formatPrice = (value: number) => {
-    return `${value.toFixed(0)} ₽`
+export const formatPrice = (value: number, fractionDigits: number = 0) => {
+    return `${value.toFixed(fractionDigits)} ₽`
 }

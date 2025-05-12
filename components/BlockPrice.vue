@@ -4,7 +4,7 @@
         :class="is_discounted ? 'discounted' : ''"
     >
         <span v-if="is_discounted" class="discounted-price text-brilliant-rose-500">
-            {{ formatPrice(discounted) }}
+            {{ formatPrice(discounted, 2) }}
         </span>
         <span class="regular-price">
             {{ formatPrice(regular) }}

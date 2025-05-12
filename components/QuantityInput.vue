@@ -40,9 +40,7 @@ const decrementQuantity = () => {
 <style>
 .quantity-input {
     .quantity-input-text {
-        &:disabled {
-            @apply bg-transparent border-none outline-none;
-        }
+        @apply bg-transparent border-none outline-none;
     }
 }
 </style>

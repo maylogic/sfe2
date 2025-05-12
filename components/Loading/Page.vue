@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-2 p-5 mx-auto w-[200px] h-full">
+    <div class="flex flex-col gap-2 p-5 mx-auto w-[200px] h-full justify-center">
         <span class="font-fira-sans">{{ label }}</span>
         <u-progress/>
     </div>

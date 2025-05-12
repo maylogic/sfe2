@@ -3,7 +3,9 @@
         <suspense>
             <page-checkout/>
             <template #fallback>
-                <loading-page/>
+                <loading-overlay>
+                    <loading-page/>
+                </loading-overlay>
             </template>
         </suspense>
     </client-only>

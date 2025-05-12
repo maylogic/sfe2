@@ -143,6 +143,7 @@ export type Mutation = {
   registerCustomer?: Maybe<User>;
   removeCartItem: Cart;
   removeCoupon: Cart;
+  setCartEmail: Cart;
   toggleApplyBalance: Cart;
   updateCartItem: Cart;
   updateCartItemQuantity: Cart;
@@ -182,6 +183,11 @@ export type MutationRemoveCartItemArgs = {
 
 export type MutationRemoveCouponArgs = {
   code: Scalars['String']['input'];
+};
+
+
+export type MutationSetCartEmailArgs = {
+  email: Scalars['String']['input'];
 };
 
 
@@ -261,7 +267,7 @@ export type PersonalizeInput = {
 
 export type Price = {
   __typename?: 'Price';
-  discounted: Scalars['Int']['output'];
+  discounted: Scalars['Float']['output'];
   is_discounted: Scalars['Boolean']['output'];
   regular: Scalars['Int']['output'];
 };
