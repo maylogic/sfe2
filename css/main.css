@@ -123,7 +123,7 @@ html, body {
 }
 
 .continue-button {
-    @apply bg-robins-egg-blue-500 rounded-md flex items-center justify-center outline-none w-full;
+    @apply bg-robins-egg-blue-500 rounded-md flex items-center justify-center outline-none outline-0 w-full;
 
     span {
         @apply text-white;
@@ -136,7 +136,7 @@ html, body {
 }
 
 .checkout-button {
-    @apply bg-robins-egg-blue-500 rounded-md flex items-center justify-center outline-transparent;
+    @apply bg-robins-egg-blue-500 rounded-md flex items-center justify-center outline-none outline-0;
     @apply text-white;
     @apply cursor-pointer;
 
