@@ -1,0 +1,5 @@
+mutation SetCartEmail($email: String!) {
+    setCartEmail(email: $email) {
+        ...SidebarCart
+    }
+}

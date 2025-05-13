@@ -11,7 +11,7 @@
         <labeled-price label="От">
             <fragment-price :data="product.price"/>
         </labeled-price>
-        <div class="rose-pseudo-button font-bebas-neue font-bold create-and-buy">Создать и купить</div>
+        <div class="rose-pseudo-button font-fira-sans create-and-buy">Создать и купить</div>
     </product-link>
 </template>
 <script setup lang="ts">

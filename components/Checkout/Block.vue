@@ -1,8 +1,13 @@
 <template>
     <div class="checkout-block py-2"
          :class="{ bordered, inactive, valid, invalid: !valid }">
-        <div class="title font-iskra" v-if="label">{{ label }}</div>
-        <slot/>
+        <div class="title font-iskra" v-if="label">
+            <span>{{ label }}</span>
+            <span v-if="valid" @click.prevent="emit('update:valid', null)" class="edit">изменить</span>
+        </div>
+        <div class="block-content">
+            <slot/>
+        </div>
     </div>
 </template>
 <script lang="ts" setup>
@@ -16,6 +21,7 @@ withDefaults(defineProps<{
     bordered: true,
     valid: null
 })
+const emit = defineEmits(['update:valid'])
 </script>
 <style lang="scss">
 .checkout-block {
@@ -25,8 +31,21 @@ withDefaults(defineProps<{
         @apply opacity-80;
     }
 
+    &.valid {
+        &.bordered {
+            @apply border-l-robins-egg-blue-500;
+        }
+
+        .block-content {
+            @apply hidden;
+        }
+    }
+
     .title {
-        @apply text-xl;
+        @apply text-xl flex items-center gap-5;
+        .edit {
+            @apply ml-auto uppercase text-xs text-storm-dust-800/50 cursor-pointer;
+        }
     }
 
     &.bordered {

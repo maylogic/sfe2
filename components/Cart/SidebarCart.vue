@@ -5,11 +5,11 @@
         </span>
     </div>
     <div class="empty-cart p-5" v-else-if="!cartStore.isEmpty">
-        <span class="font-fira-sans text-[18px]">Ваша корзина пуста</span>
+        <span class="font-fira-sans text-lg">Ваша корзина пуста</span>
         <div autofocus @click="cartStore.open = false"
-             class="rose-pseudo-button font-bebas-neue flex justify-center items-center mt-5">
+             class="rose-pseudo-button font-fira-sans flex justify-center items-center mt-5">
             <div class="flex items-center gap-2">
-                <u-icon class="text-[24px] mt-[-5px]" name="i-lucide-shopping-cart"/>
+                <u-icon class="text-xl" name="i-lucide-shopping-cart"/>
                 Продолжить шоппинг
             </div>
         </div>
@@ -57,9 +57,9 @@
             </div>
 
             <cart-totals :data="cart.totals"/>
-            <nuxt-link autofocus @click="cartStore.open=false" to="/checkout" class="font-bebas-neue checkout-button">
+            <nuxt-link autofocus @click="cartStore.open=false" to="/checkout" class="checkout-button">
                 <div>
-                    <u-icon class="text-[28px] mt-[-5px]" name="i-heroicons-solid-lock-closed"/>
+                    <u-icon class="text-xl" name="i-heroicons-solid-lock-closed"/>
                     Оформить заказ
                 </div>
             </nuxt-link>
@@ -81,15 +81,6 @@ const {cart, loading} = storeToRefs(cartStore)
     @apply grid relative;
     grid-template-rows: 1fr min-content;
     overflow: hidden;
-
-    .checkout-button {
-        @apply bg-robins-egg-blue-500 flex items-center justify-center pt-1 outline-none;
-
-        div {
-            @apply flex items-center gap-2 h-12 justify-center text-white;
-            font-size: 24px;
-        }
-    }
 
     .cart-items {
         display: flex;

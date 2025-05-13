@@ -80,6 +80,8 @@ fragment SidebarCart on Cart {
     can_apply_balance
     can_apply_coupon
     can_place_order
+    email
+    can_login
 }
 fragment Totals on Totals {
     subtotal

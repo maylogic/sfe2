@@ -66,7 +66,7 @@
                         :disabled="fetching||addingToCart"
                         size="sm"
                         @click="addToCartInternal"
-                        class="uppercase font-bebas-neue pt-2 max-w-max text-2xl"
+                        class="uppercase font-fira-sans w-full flex items-center justify-center tracking-wide font-bold text-xl h-14"
                     />
                 </u-form-group>
                 <font-preload-block :font="font" v-for="font in usedFonts.values()"/>

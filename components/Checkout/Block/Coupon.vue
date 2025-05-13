@@ -1,8 +1,9 @@
 <template>
     <div class="flex flex-col gap-2" :class="{
-        'pt-6': cart.can_apply_coupon,
-        'pb-3': !cart.can_apply_coupon
+        'pt-0': cart.can_apply_coupon,
+        'py-3': !cart.can_apply_coupon
     }">
+        <h3 class="font-iskra">Промокод или подарочный ваучер</h3>
         <div v-if="!!cart.coupons?.length">
             <cart-coupon
                 :data="coupon"

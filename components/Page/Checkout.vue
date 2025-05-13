@@ -1,8 +1,8 @@
 <template>
     <div class="checkout">
         <div class="blocks">
-            <checkout-block label="1. E-Mail" :valid="null">
-                <checkout-block-email/>
+            <checkout-block label="1. E-Mail" :valid="valid.email" @update:valid="valid.email=$event">
+                <checkout-block-email @update:valid="valid.email=$event" :valid="valid.email"/>
             </checkout-block>
             <checkout-block :bordered="false" :valid="null">
                 <checkout-block-coupon :cart="cart"/>
@@ -10,10 +10,10 @@
                     <cart-apply-balance :data="cart?.apply_balance"/>
                 </div>
             </checkout-block>
-            <div class="checkout-button font-bebas-neue" :class="{'disabled': !cart.can_place_order}"
+            <div class="checkout-button" :class="{'disabled': !cart.can_place_order}"
                  @click="placeOrder">
                 <div>
-                    <u-icon class="text-[28px] mt-[-5px]" name="i-bxs-lock"/>
+                    <u-icon class="text-xl" name="i-bxs-lock"/>
                     Оформить заказ
                 </div>
             </div>
@@ -60,6 +60,12 @@ import { num_word } from "~/utils/misc";
 import { useMutation } from "@urql/vue";
 import { PlaceOrderDocument } from "~/gql/graphql";
 
+const valid = reactive<{
+    email: null | boolean
+}>({
+    email: null // TODO: process already authorized user here
+})
+console.log(valid)
 const showItemsOnMobile = ref(false)
 const cartStore = useCartStore()
 await cartStore.hydrate()
@@ -111,21 +117,6 @@ watch(cart, async (value) => {
 
     .order-summary {
         @apply md:hidden px-2 bg-white py-2;
-    }
-
-    .checkout-button {
-        @apply bg-robins-egg-blue-500 rounded-md flex items-center pt-1 justify-center outline-none;
-        @apply text-white;
-        @apply cursor-pointer;
-        div {
-            @apply flex items-center gap-2 h-12 justify-center;
-            letter-spacing: 1px;
-            font-size: 24px;
-        }
-
-        &.disabled {
-            @apply bg-storm-dust-200 text-storm-dust-100 cursor-not-allowed;
-        }
     }
 }
 </style>

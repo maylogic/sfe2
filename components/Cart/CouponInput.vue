@@ -4,7 +4,7 @@
             <u-input placeholder="Промокод или ваучер" v-model="code" size="xl"/>
             <u-button variant="outline"
                       :disabled="fetching"
-                      class="font-bebas-neue pt-3 leading-[24px] text-[24px] max-h-[44px] uppercase" size="xl"
+                      class="font-fira-sans text-xl tracking-wide font-normal max-h-[42px] uppercase" size="xl"
                       type="submit">
                 Добавить
             </u-button>

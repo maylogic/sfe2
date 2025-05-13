@@ -26,7 +26,6 @@ export const getRemoteFontUrl = (href: string) => getStorageUrl(href)
 
 export const getLocalFontPreloads = () => {
     return [
-        getLocalFontPreloadLink('bebasneuebold.woff2'),
         getLocalFontPreloadLink('FiraSansBlackCyr.woff2'),
         getLocalFontPreloadLink('FiraSansBlackCyrExt.woff2'),
         getLocalFontPreloadLink('FiraSansBlackLat.woff2'),

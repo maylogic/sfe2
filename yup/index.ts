@@ -1,4 +1,8 @@
-import { ref as YupRef, string } from 'yup'
+import {
+    ref as YupRef,
+    string,
+    StringSchema
+} from 'yup'
 
 const requiredFieldMessage = 'Обязательное поле'
 export const usernameValidation = string().required(requiredFieldMessage)
@@ -8,6 +12,8 @@ export const emailValidation = string()
     .required(requiredFieldMessage)
 export const passwordValidation = string()
     .min(8, 'Минимум 8 символов')
+    .required(requiredFieldMessage)
+export const passwordValidationFn = (schema: StringSchema) => schema.min(8, 'Минимум 8 символов')
     .required(requiredFieldMessage)
 export const getConfirmPasswordValidation = (
     passwordFieldName: string = 'password'
