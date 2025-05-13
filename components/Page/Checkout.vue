@@ -65,7 +65,6 @@ const valid = reactive<{
 }>({
     email: null // TODO: process already authorized user here
 })
-console.log(valid)
 const showItemsOnMobile = ref(false)
 const cartStore = useCartStore()
 await cartStore.hydrate()

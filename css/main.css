@@ -136,7 +136,7 @@ html, body {
 }
 
 .checkout-button {
-    @apply bg-robins-egg-blue-500 rounded-md flex items-center justify-center outline-none;
+    @apply bg-robins-egg-blue-500 rounded-md flex items-center justify-center outline-transparent;
     @apply text-white;
     @apply cursor-pointer;
 

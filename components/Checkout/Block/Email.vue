@@ -18,7 +18,7 @@
             />
         </u-form-group>
         <button type="submit" class="continue-button"
-                v-if="emailChanged || state.register">
+                v-if="!willBeGuest && !willBeGuest || state.register">
             <span>Продолжить</span>
         </button>
         <button type="button" @click.prevent="continueAsGuest" class="continue-button"
@@ -74,8 +74,8 @@ watch(() => state.email, () => {
 })
 
 const emailChanged = computed(() => state.email != cart.value.email),
-    willLogin = computed(() => emailChanged.value && cart.value.can_login && state.login),
-    willBeGuest = computed(() => !emailChanged.value && !willLogin.value && !state.register)
+    willLogin = computed(() => !emailChanged.value && cart.value.can_login && state.login),
+    willBeGuest = computed(() => cart.value.email && !emailChanged.value && !willLogin.value && !state.register)
 
 const schema = computed(() => object({
     email: emailValidation,
