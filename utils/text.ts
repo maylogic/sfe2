@@ -1,7 +1,6 @@
 import { createTextElement } from "~/utils/element";
 import type { ProductLineDefinition } from "~/gql/graphql";
 import {
-    CANVAS_SIZE,
     getCanvasContext,
     getDpi
 } from "~/utils/canvas";
@@ -53,7 +52,7 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
     const realMetrics = getTextMetricsReal(data)
     const centerY = area.y + area.height / 2
-    const baselineY = centerY + realMetrics.height/2;
+    const baselineY = centerY + realMetrics.height / 2;
     data.y = baselineY
     data.x = area.x + area.width / 2
 }
@@ -63,7 +62,7 @@ const getTargetHeight = (area: TextPieceArea) => area.height - AREA_PADDING_Y * 
 
 export const calculateFontSize = (data: TextRenderData,
                                   area: TextPieceArea,
-                                  precision: number = 0.001
+                                  precision: number = 0.01
 ) => {
     const targetWidth = getTargetWidth(area),
         targetHeight = getTargetHeight(area)
@@ -76,27 +75,32 @@ export const calculateFontSize = (data: TextRenderData,
         return textWidth <= targetWidth && textHeight <= targetHeight;
     };
 
-    // Начальные значения
     let fontSize = targetHeight; // Начальный размер шрифта
-    let step = fontSize / 2;        // Начальный шаг
-    let lastAdjustment = 0;         // Последнее изменение (увеличение/уменьшение)
+    let step = fontSize / 2;     // Начальный шаг
+    let lastAdjustment = 0;      // Последнее изменение (±)
 
-    // Итеративный процесс подбора размера шрифта
     while (step >= precision) {
         const fits = doesTextFit(fontSize);
 
+        let currentAdjustment = 0;
+
         if (fits) {
-            // Если текст помещается, увеличиваем размер шрифта
-            lastAdjustment = step;
+            currentAdjustment = step;
             fontSize += step;
         } else {
-            // Если текст не помещается, уменьшаем размер шрифта
-            lastAdjustment = -step;
+            currentAdjustment = -step;
             fontSize -= step;
         }
 
-        // Уменьшаем шаг вдвое
-        step /= 2;
+        // Проверяем, было ли изменение направления
+        if (
+            (lastAdjustment > 0 && currentAdjustment < 0) ||
+            (lastAdjustment < 0 && currentAdjustment > 0)
+        ) {
+            step /= 2; // Меняем направление → уменьшаем шаг
+        }
+
+        lastAdjustment = currentAdjustment;
     }
 
     // Возвращаем последний подходящий размер шрифта
@@ -111,17 +115,17 @@ export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLi
         })
 }
 
-const getTextMetrics = (data: TextRenderData) => {
-    const dpi = window.devicePixelRatio || 1
-    const ctx = getCanvasContext(getDpi())
-    if (ctx) {
-        const size = data.size
-        ctx.textBaseline = 'alphabetic'
-        ctx.font = `${size}px ${data.font}`;
-        return ctx.measureText(data.value);
-    }
-    throw new Error('Cannot access canvas context')
-}
+// const getTextMetrics = (data: TextRenderData) => {
+//     const dpi = window.devicePixelRatio || 1
+//     const ctx = getCanvasContext(getDpi())
+//     if (ctx) {
+//         const size = data.size
+//         ctx.textBaseline = 'alphabetic'
+//         ctx.font = `${size}px ${data.font}`;
+//         return ctx.measureText(data.value);
+//     }
+//     throw new Error('Cannot access canvas context')
+// }
 
 const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
     const dpi = getDpi(),
@@ -134,7 +138,7 @@ const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetric
     ctx.clearRect(0, 0, width, height)
     ctx.font = `${size}px ${data.font}`;
     ctx.textBaseline = 'top';
-    ctx.fillText(data.value, 0, 0);
+    ctx.fillText(data.value, 1, 1);
 
     // Получаем пиксельные данные текста
     const imageData = ctx.getImageData(0, 0, width, height);
@@ -162,20 +166,12 @@ const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetric
     }
 
     return {
-        top: top / dpi,
-        bottom: bottom / dpi,
-        left: left / dpi,
-        right: right / dpi,
         width: (right - left) / dpi,
         height: (bottom - top) / dpi,
     }
 }
 
 type TextMetricsReal = {
-    top: number,
-    bottom: number,
-    left: number,
-    right: number,
     width: number,
     height: number,
 }

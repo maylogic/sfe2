@@ -2,11 +2,11 @@
     <u-slideover v-model="cartStore.open">
         <div class="h-full grid slideover-content">
             <div
-                class="justify-between flex w-full items-center text-xl font-bold p-5 bg-picton-blue-500 text-white"
+                class="justify-between flex w-full items-center text-xl font-bold p-5 py-2 bg-picton-blue-500 text-white"
             >
-                <div class="flex items-center gap-2 font-fira-sans">
-                    <u-icon name="i-lucide-shopping-cart"/>
+                <div class="font-fira-sans">
                     Моя корзина
+                    <span v-if="!!cart.items?.length">&nbsp;({{ cart.items.length }})</span>
                 </div>
                 <u-icon
                     class="cursor-pointer"
@@ -29,11 +29,13 @@
 import { useCartStore } from "~/stores/cart";
 
 const cartStore = useCartStore()
+const {cart} = storeToRefs(cartStore)
 </script>
 <style>
 .slideover-content {
     grid-template-rows: min-content 1fr;
     max-height: 100vh;
     max-height: 100dvh;
+    max-height: 100svh;
 }
 </style>

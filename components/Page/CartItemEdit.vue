@@ -73,14 +73,16 @@ const addToCart = (productId: string, personalize: PersonalizeInput) => {
     updateCartItemExec({
         cartItemId: props.id,
         personalize
-    }).then(async (result) => {
+    }).then((result) => {
         if (result.data?.updateCartItem) {
             cart.setData(result.data?.updateCartItem)
             cart.open = true
             const product = useFragment(ProductPageFragmentDoc, item.product)
-            await navigateTo({
-                name: 'product-slug',
-                params: {slug: product.slug}
+            setTimeout(() => {
+                navigateTo({
+                    name: 'product-slug',
+                    params: {slug: product.slug}
+                })
             })
         }
     })

@@ -21,7 +21,10 @@
                 <div class="black-pseudo-button font-fira-sans max-h-[32px]"
                      @click="cartStore.open = true">
                     <u-icon class="text-[18px]" name="i-lucide-shopping-bag"/>
-                    Корзина
+                    <span>
+                        Корзина
+                        <span v-if="!!cart.items?.length">&nbsp;({{ cart.items.length }})</span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -29,7 +32,7 @@
             <u-vertical-navigation @click="menuOpen = false" :links="menuItems"/>
         </closable-slideover>
         <ClientOnly>
-            <cart/>
+            <cart-slideover/>
         </ClientOnly>
         <main class="main-content">
             <slot/>
@@ -52,6 +55,7 @@ const menuItems = [
     },
 ]
 const cartStore = useCartStore()
+const {cart} = storeToRefs(cartStore)
 </script>
 <style lang="scss">
 main.main-content {
