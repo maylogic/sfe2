@@ -41,8 +41,11 @@ const decrementQuantity = () => {
 .quantity-input {
     .quantity-input-text {
         @apply bg-transparent border-none outline-none outline-0;
+        opacity: 100 !important;
+        color: #000 !important;
+
         &:disabled {
-            @apply text-black;
+            @apply text-black opacity-100;
         }
     }
 }
