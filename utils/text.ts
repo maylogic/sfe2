@@ -50,9 +50,14 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
 export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
-    const realMetrics = getTextMetricsReal(data)
-    const centerY = area.y + area.height / 2
-    const baselineY = centerY + realMetrics.height / 2;
+    const realMetrics = getTextMetricsReal(data),
+        metrics = getTextMetrics(data),
+        hasDescentSymbols = metrics.actualBoundingBoxDescent > 0,
+        fakeDescent = realMetrics.height * 0.15
+    const leftovers = area.height - realMetrics.height,
+        zoneTop = area.y + leftovers / 2,
+        zoneBottom = zoneTop + realMetrics.height
+    const baselineY = zoneBottom - (hasDescentSymbols ? fakeDescent : 0);
     data.y = baselineY
     data.x = area.x + area.width / 2
 }
@@ -115,17 +120,16 @@ export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLi
         })
 }
 
-// const getTextMetrics = (data: TextRenderData) => {
-//     const dpi = window.devicePixelRatio || 1
-//     const ctx = getCanvasContext(getDpi())
-//     if (ctx) {
-//         const size = data.size
-//         ctx.textBaseline = 'alphabetic'
-//         ctx.font = `${size}px ${data.font}`;
-//         return ctx.measureText(data.value);
-//     }
-//     throw new Error('Cannot access canvas context')
-// }
+const getTextMetrics = (data: TextRenderData) => {
+    const ctx = getCanvasContext(getDpi())
+    if (ctx) {
+        const size = data.size
+        ctx.textBaseline = 'alphabetic'
+        ctx.font = `${size}px ${data.font}`;
+        return ctx.measureText(data.value);
+    }
+    throw new Error('Cannot access canvas context')
+}
 
 const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
     const dpi = getDpi(),

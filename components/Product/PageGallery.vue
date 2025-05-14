@@ -15,7 +15,7 @@
                  v-if="personalizeData.design !== null"
                  @click="emit('toggle-editor', !editor)">
                 <u-icon name="i-lucide-pen-tool"/>
-                <span class="font-fira-sans text-xs hidden md:block">Редактор</span>
+                <span class="font-fira-sans text-xs hidden lg:block">Редактор</span>
             </div>
         </div>
     </div>
