@@ -1,5 +1,6 @@
 <template>
     <product-page
+        add-to-cart-label="Добавить в корзину"
         v-if="!!data?.getProductBySlug"
         :add-to-cart="addToCart"
         :adding-to-cart="addingToCart"

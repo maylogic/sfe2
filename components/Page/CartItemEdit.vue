@@ -1,6 +1,7 @@
 <template>
     <product-page
         v-if="!!cartItemQuery?.cartItem"
+        add-to-cart-label="Сохранить"
         :add-to-cart="addToCart"
         :adding-to-cart="addingToCart"
         :fetching="fetching"

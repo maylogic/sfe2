@@ -62,7 +62,7 @@
                 <u-form-group
                     :error="validated && !valid ? 'Пожалуйста, исправьте некоторые ошибки выше. Они помечены красным.' : false">
                     <UButton
-                        :label="addingToCart ? 'Добавляем в корзину...' : 'Добавить в корзину'"
+                        :label="addingToCart ? 'Добавляем в корзину...' : addToCartLabel"
                         :disabled="fetching||addingToCart"
                         size="sm"
                         @click="addToCartInternal"
@@ -120,7 +120,8 @@ const props = defineProps<{
     initData?: PersonalizeInputData,
     addToCart: (productId: string, personalize: PersonalizeInput) => void,
     fetching: boolean,
-    addingToCart: boolean
+    addingToCart: boolean,
+    addToCartLabel: string
 }>()
 const product = computed(() => useFragment(ProductPageFragmentDoc, props.productFragment))
 
