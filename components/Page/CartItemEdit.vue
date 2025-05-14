@@ -1,12 +1,12 @@
 <template>
     <product-page
-        v-if="!!data?.cartItem"
+        v-if="!!cartItemQuery?.cartItem"
         :add-to-cart="addToCart"
         :adding-to-cart="addingToCart"
         :fetching="fetching"
         :input-data="inputData"
         :init-data="initData"
-        :product-fragment="data?.cartItem.product"/>
+        :product-fragment="cartItemQuery?.cartItem.product"/>
 </template>
 <script setup lang="ts">
 
@@ -16,6 +16,7 @@ import {
 } from "@urql/vue";
 import {
     CartItemDocument,
+    type CartItemQuery,
     DesignItemFragmentDoc,
     type PersonalizeInput,
     ProductPageFragmentDoc,
@@ -32,7 +33,7 @@ const props = defineProps<{
     id: string
 }>()
 
-const {data, error, fetching} = await useQuery({
+const {data: cartItemQuery, error, fetching} = await useQuery({
     query: CartItemDocument,
     variables: {id: props.id},
 })
@@ -45,10 +46,29 @@ if (error.value) {
     })
 }
 
-if (!data.value?.cartItem) {
+if (!cartItemQuery.value?.cartItem) {
     throw createError({statusCode: 404, statusMessage: 'Страница не найдена'})
 }
-const item = data.value.cartItem
+
+const navigateToProduct = (query: CartItemQuery | undefined) => {
+    if (query?.cartItem) {
+        const product = useFragment(ProductPageFragmentDoc, query.cartItem.product)
+        setTimeout(() => {
+            navigateTo({
+                name: 'product-slug',
+                params: {slug: product.slug}
+            })
+        })
+    } else {
+        navigateTo('/')
+    }
+}
+watch(cartItemQuery, (newItem, prevItem) => {
+    if (!newItem?.cartItem) {
+        navigateToProduct(prevItem)
+    }
+})
+const item = cartItemQuery.value.cartItem
 const textLines: Array<[PersonalizeLineDefId, string]> = item.text_lines?.map(line => [line.product_line_definition.id, line.value]) || []
 const options: Array<[ProductOptionId, ProductOptionItemId]> = item.option_items?.map(optionItem => [optionItem.product_option.id, optionItem.id]) || []
 const initData: PersonalizeInputData = {
@@ -56,7 +76,7 @@ const initData: PersonalizeInputData = {
     color: item.color || null,
     font: item.font || null,
     textLines: new Map<PersonalizeLineDefId, string | null>(textLines),
-    size: data.value.cartItem.product_size?.id || null,
+    size: cartItemQuery.value.cartItem.product_size?.id || null,
     options: new Map(options)
 }
 const inputData = reactive<PersonalizeInputData>({
@@ -77,13 +97,7 @@ const addToCart = (productId: string, personalize: PersonalizeInput) => {
         if (result.data?.updateCartItem) {
             cart.setData(result.data?.updateCartItem)
             cart.open = true
-            const product = useFragment(ProductPageFragmentDoc, item.product)
-            setTimeout(() => {
-                navigateTo({
-                    name: 'product-slug',
-                    params: {slug: product.slug}
-                })
-            })
+            navigateToProduct(cartItemQuery.value)
         }
     })
 }

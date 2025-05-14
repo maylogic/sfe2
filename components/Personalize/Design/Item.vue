@@ -39,7 +39,7 @@ const emit = defineEmits(['update:design'])
 
     &:hover {
         .label {
-            @apply flex items-center justify-center text-center;
+            @apply flex items-center justify-center text-center px-3;
         }
     }
 }
