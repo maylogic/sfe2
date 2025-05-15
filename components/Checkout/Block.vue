@@ -54,6 +54,7 @@ const emit = defineEmits(['update:valid'])
         .edit, .valid-action-label {
             @apply ml-auto uppercase text-xs text-storm-dust-800/50 cursor-pointer;
         }
+
         .valid-action-label {
             @apply cursor-default;
         }
