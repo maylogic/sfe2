@@ -50,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <loading-overlay v-if="true">
+        <loading-overlay v-if="loading">
             <loading-page/>
         </loading-overlay>
         <loading-overlay v-if="fetching">
