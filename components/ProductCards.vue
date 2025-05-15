@@ -1,6 +1,5 @@
 <template>
     <div class="product-grid-container">
-        <!-- Сетка карточек -->
         <div class="product-grid">
             <ProductMiniCard
                 v-for="product in data?.products.data"
@@ -16,12 +15,9 @@
     </div>
 </template>
 <script setup lang="ts">
-// Импортируем необходимые утилиты
-
 import { useQuery } from '@urql/vue'
 import { ProductCardsDocument } from '~/gql/graphql'
 
-// Обработчик изменения страницы
 const handlePageChange = (newPage: number) => {
     currentPage.value = newPage
 }
