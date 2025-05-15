@@ -111,6 +111,8 @@ watch(cart, async (value) => {
     if (value.items && value.items.length === 0) {
         await navigateTo('/')
     }
+}, {
+    immediate: true
 })
 </script>
 <style lang="scss">

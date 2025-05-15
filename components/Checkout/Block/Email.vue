@@ -41,6 +41,7 @@ import {
 import { useMutation } from "@urql/vue";
 import {
     LoginCustomerDocument,
+    RegisterCustomerDocument,
     SetCartEmailDocument
 } from "~/gql/graphql";
 import type { FormSubmitEvent } from "#ui/types";
@@ -56,6 +57,7 @@ const showPassword = ref(false)
 
 const {executeMutation: setCartEmail} = useMutation(SetCartEmailDocument)
 const {executeMutation: login} = useMutation(LoginCustomerDocument)
+const {executeMutation: register} = useMutation(RegisterCustomerDocument)
 
 const state = reactive({
     email: cartStore.cart.email ?? undefined,
@@ -70,6 +72,7 @@ watch(() => state.email, () => {
 
 const emailChanged = computed(() => state.email != cart.value.email),
     willLogin = computed(() => !emailChanged.value && cart.value.can_login && state.login),
+    willRegister = computed(() => !emailChanged.value && !cart.value.can_login && state.register),
     willBeGuest = computed(() => cart.value.email && !emailChanged.value && !willLogin.value && !state.register)
 
 const schema = computed(() => object({
@@ -97,6 +100,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             password: event.data.password ?? ''
         })
         authStore.setData(data?.loginCustomer)
+    } else if (willRegister.value) {
+        const {data} = await register({
+            email: event.data.email,
+            name: event.data.email,
+            password: event.data.password ?? '',
+            passwordConfirmation: event.data.password ?? ''
+        })
+        authStore.setData(data?.registerCustomer)
     }
     emit('loading:update', false)
 }
