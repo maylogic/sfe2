@@ -389,7 +389,7 @@ export type ProductSize = {
 /** Indicates what fields are available at the top level of a query operation. */
 export type Query = {
   __typename?: 'Query';
-  cartItem: CartItem;
+  cartItem?: Maybe<CartItem>;
   currentUser?: Maybe<User>;
   getCart: Cart;
   getProductBySlug?: Maybe<Product>;
@@ -485,7 +485,7 @@ export type CartItemQueryVariables = Exact<{
 }>;
 
 
-export type CartItemQuery = { __typename?: 'Query', cartItem: { __typename?: 'CartItem', id: string, font_id?: number | null, color?: { __typename?: 'Color', id: string, hex: string, label: string } | null, font?: { __typename?: 'Font', filename_otf?: string | null, filename_ttf?: string | null, filename_woff2: string, id: string, label: string, name: string, preview: string } | null, design?: (
+export type CartItemQuery = { __typename?: 'Query', cartItem?: { __typename?: 'CartItem', id: string, font_id?: number | null, color?: { __typename?: 'Color', id: string, hex: string, label: string } | null, font?: { __typename?: 'Font', filename_otf?: string | null, filename_ttf?: string | null, filename_woff2: string, id: string, label: string, name: string, preview: string } | null, design?: (
       { __typename?: 'Design' }
       & { ' $fragmentRefs'?: { 'DesignItemFragment': DesignItemFragment } }
     ) | null, text_lines?: Array<{ __typename?: 'CartItemTextLine', id: string, value: string, product_line_definition: { __typename?: 'ProductLineDefinition', id: string } }> | null, option_items?: Array<{ __typename?: 'ProductOptionItem', id: string, product_option: { __typename?: 'ProductOption', id: string }, price: (
@@ -497,7 +497,7 @@ export type CartItemQuery = { __typename?: 'Query', cartItem: { __typename?: 'Ca
     ), product: (
       { __typename?: 'Product' }
       & { ' $fragmentRefs'?: { 'ProductPageFragment': ProductPageFragment } }
-    ) } };
+    ) } | null };
 
 export type CustomerDataFragment = { __typename?: 'User', id: string, email: string, name: string } & { ' $fragmentName'?: 'CustomerDataFragment' };
 

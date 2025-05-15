@@ -1,8 +1,15 @@
 <template>
     <div class="checkout">
         <div class="blocks">
-            <checkout-block label="1. E-Mail" :valid="valid.email" @update:valid="valid.email=$event">
-                <checkout-block-email @update:valid="valid.email=$event" :valid="valid.email"/>
+            <checkout-block label="1. E-Mail"
+                            :loading="blockLoading.email"
+                            :editable="editable.email"
+                            :valid="valid.email"
+                            valid-action-label="Авторизован"
+                            @update:valid="valid.email=$event">
+                <checkout-block-email @update:valid="valid.email=$event"
+                                      @loading:update="blockLoading.email=$event"
+                                      :valid="valid.email"/>
             </checkout-block>
             <checkout-block :bordered="false" :valid="null">
                 <checkout-block-coupon :cart="cart"/>
@@ -60,10 +67,30 @@ import { num_word } from "~/utils/misc";
 import { useMutation } from "@urql/vue";
 import { PlaceOrderDocument } from "~/gql/graphql";
 
+const authStore = useAuthStore()
+const {user} = storeToRefs(authStore)
+watch(user, (newUser, prevUser) => {
+    if (newUser?.id) {
+        valid.email = true
+        editable.email = false
+    } else {
+        editable.email = true
+    }
+})
 const valid = reactive<{
     email: null | boolean
 }>({
-    email: null // TODO: process already authorized user here
+    email: !!user
+})
+const editable = reactive<{
+    email: boolean
+}>({
+    email: !user
+})
+const blockLoading = reactive<{
+    email: boolean
+}>({
+    email: false
 })
 const showItemsOnMobile = ref(false)
 const cartStore = useCartStore()

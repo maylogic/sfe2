@@ -26,6 +26,7 @@ export const useCartStore = defineStore('cart', {
             shipping_method: null,
             can_apply_balance: false,
             can_apply_coupon: false,
+            can_place_order: false,
             apply_balance: false,
             key: 'default',
             totals: {

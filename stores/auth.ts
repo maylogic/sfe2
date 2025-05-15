@@ -4,7 +4,10 @@ import {
     type CustomerDataFragment,
     CustomerDataFragmentDoc,
 } from '~/gql/graphql'
-import { useFragment } from '~/gql'
+import {
+    type FragmentType,
+    useFragment
+} from '~/gql'
 import { useQuery } from '@urql/vue'
 
 export type AuthStoreState = {
@@ -16,8 +19,12 @@ export const useAuthStore = defineStore('auth', {
         user: null,
     }),
     actions: {
-        setAuthData(user: CustomerDataFragment) {
-            this.user = user
+        setAuthData(user: FragmentType<typeof CustomerDataFragmentDoc>) {
+            this.user = useFragment(
+                CustomerDataFragmentDoc,
+                user
+            )
+            localStorage.setItem('user', JSON.stringify(this.user))
         },
         clearAuthData() {
             this.user = null
@@ -29,20 +36,19 @@ export const useAuthStore = defineStore('auth', {
                 this.user = JSON.parse(userData)
             }
         },
+        setData(user?: FragmentType<typeof CustomerDataFragmentDoc> | null) {
+            if (user) {
+                this.setAuthData(user)
+            } else {
+                this.clearAuthData()
+            }
+        },
         async hydrate() {
             const {data, error} = await useQuery({
                 query: CurrentUserDocument,
                 variables: {},
             })
-            if (data.value?.currentUser) {
-                this.user = useFragment(
-                    CustomerDataFragmentDoc,
-                    data.value?.currentUser
-                )
-                localStorage.setItem('user', JSON.stringify(this.user))
-            } else {
-                this.clearAuthData()
-            }
+            this.setData(data.value?.currentUser)
         },
     },
     getters: {

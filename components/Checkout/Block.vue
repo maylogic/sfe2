@@ -3,11 +3,14 @@
          :class="{ bordered, inactive, valid, invalid: !valid }">
         <div class="title font-iskra" v-if="label">
             <span>{{ label }}</span>
-            <span v-if="valid" @click.prevent="emit('update:valid', null)" class="edit">изменить</span>
+            <span v-if="valid && editable" @click.prevent="emit('update:valid', null)" class="edit">изменить</span>
+            <span v-if="valid && !editable && validActionLabel"
+                  class="valid-action-label">{{ validActionLabel }}</span>
         </div>
         <div class="block-content">
             <slot/>
         </div>
+        <loading-block v-if="loading"/>
     </div>
 </template>
 <script lang="ts" setup>
@@ -16,16 +19,21 @@ withDefaults(defineProps<{
     label?: string | undefined
     inactive?: boolean
     valid?: boolean | null
+    editable?: boolean
+    loading?: boolean
+    validActionLabel?: string
 }>(), {
     inactive: false,
     bordered: true,
-    valid: null
+    valid: null,
+    editable: true,
+    loading: false
 })
 const emit = defineEmits(['update:valid'])
 </script>
 <style lang="scss">
 .checkout-block {
-    @apply px-[20px];
+    @apply px-[20px] relative;
     @apply bg-white w-full;
     &.invalid {
         @apply opacity-80;
@@ -43,8 +51,11 @@ const emit = defineEmits(['update:valid'])
 
     .title {
         @apply text-xl flex items-center gap-5;
-        .edit {
+        .edit, .valid-action-label {
             @apply ml-auto uppercase text-xs text-storm-dust-800/50 cursor-pointer;
+        }
+        .valid-action-label {
+            @apply cursor-default;
         }
     }
 

@@ -45,12 +45,8 @@ import {
 import FormInputUsername from '~/components/Form/Input/FormInputUsername.vue'
 import type { FormSubmitEvent } from '#ui/types'
 import { useMutation } from '@urql/vue'
-import {
-    CustomerDataFragmentDoc,
-    LoginCustomerDocument
-} from '~/gql/graphql'
+import { LoginCustomerDocument } from '~/gql/graphql'
 import { useAuthStore } from '~/stores/auth'
-import { useFragment } from "~/gql";
 
 const show = ref(false),
     invalidCredentials = ref(false)
@@ -81,7 +77,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     }
     const {data, error} = await executeMutation(event.data)
     if (data?.loginCustomer) {
-        auth.setAuthData(useFragment(CustomerDataFragmentDoc, data.loginCustomer))
+        auth.setData(data.loginCustomer)
         await router.push('/profile')
         return
     }

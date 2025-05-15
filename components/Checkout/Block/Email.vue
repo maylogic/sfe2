@@ -1,5 +1,5 @@
 <template>
-    <u-form class="relative flex flex-col gap-3 mt-3" :schema="schema" :state="state" @submit="onSubmit">
+    <u-form class="flex flex-col gap-3 mt-3" :schema="schema" :state="state" @submit="onSubmit">
         <u-form-group name="email">
             <form-input-username v-model="state.email"/>
         </u-form-group>
@@ -7,7 +7,7 @@
             <u-checkbox v-model="state.register" label="Зарегистрироваться и получить 200 баллов"/>
         </u-form-group>
         <u-form-group name="signup" v-if="!emailChanged && cart.can_login">
-            <u-checkbox v-model="state.register" label="Войти и получить бонус за заказ"/>
+            <u-checkbox v-model="state.login" label="Войти и получить бонус за заказ"/>
         </u-form-group>
         <u-form-group label="Пароль" name="password"
                       v-if="state.register || willLogin">
@@ -18,18 +18,13 @@
             />
         </u-form-group>
         <button type="submit" class="continue-button"
-                v-if="!willBeGuest && !willBeGuest || state.register">
+                v-if="!willBeGuest">
             <span>Продолжить</span>
         </button>
         <button type="button" @click.prevent="continueAsGuest" class="continue-button"
                 v-if="willBeGuest">
             <span>Продолжить как гость</span>
         </button>
-        <button type="submit" class="continue-button"
-                v-if="willLogin">
-            <span>Войти</span>
-        </button>
-        <loading-block v-if="loading"/>
     </u-form>
 </template>
 <script setup lang="ts">
@@ -52,12 +47,12 @@ import type { FormSubmitEvent } from "#ui/types";
 
 defineProps<{ valid: boolean | null }>()
 
-const emit = defineEmits(['update:valid'])
+const emit = defineEmits(['update:valid', 'loading:update'])
+const authStore = useAuthStore()
 
 const cartStore = useCartStore()
 const {cart} = storeToRefs(cartStore)
-const loading = ref(false),
-    showPassword = ref(false)
+const showPassword = ref(false)
 
 const {executeMutation: setCartEmail} = useMutation(SetCartEmailDocument)
 const {executeMutation: login} = useMutation(LoginCustomerDocument)
@@ -93,13 +88,17 @@ function continueAsGuest() {
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-    loading.value = true
+    emit('loading:update', true)
     if (cart.value.email !== event.data.email) {
         await setEmail(event.data.email)
     } else if (willLogin.value) {
-        // TODO: process login here
+        const {data} = await login({
+            email: event.data.email,
+            password: event.data.password ?? ''
+        })
+        authStore.setData(data?.loginCustomer)
     }
-    loading.value = false
+    emit('loading:update', false)
 }
 
 async function setEmail(email: string) {
