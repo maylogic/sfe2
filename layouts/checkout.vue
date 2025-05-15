@@ -1,6 +1,6 @@
 <template>
     <div class="checkout-page-layout">
-        <div class="py-5 px-0 mb-5 w-full bg-white">
+        <div class="py-5 px-0 w-full bg-white">
             <div class="flex items-center max-w-[960px] px-5 mx-auto">
                 <horizontal-nav v-if="!!menuItems.length" :items="menuItems"/>
                 <u-button
@@ -19,7 +19,7 @@
         <closable-slideover title="Меню" v-model="menuOpen">
             <u-vertical-navigation @click="menuOpen = false" :links="menuItems"/>
         </closable-slideover>
-        <main class="main-content">
+        <main class="main-content-checkout">
             <slot/>
         </main>
         <footer class="bg-white">
@@ -44,7 +44,7 @@ const menuItems = [
     @apply bg-storm-dust-50;
 }
 
-main.main-content {
+.main-content-checkout {
     @apply min-h-screen;
 }
 

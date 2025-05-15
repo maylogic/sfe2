@@ -50,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <loading-overlay v-if="loading">
+        <loading-overlay v-if="true">
             <loading-page/>
         </loading-overlay>
         <loading-overlay v-if="fetching">
@@ -117,7 +117,7 @@ watch(cart, async (value) => {
 </script>
 <style lang="scss">
 .checkout {
-    @apply flex flex-col-reverse gap-3;
+    @apply flex flex-col-reverse gap-3 pt-4;
     @apply h-full;
     @apply md:grid md:grid-cols-[1fr__min-content] md:gap-5;
     @apply px-2 max-w-[960px] mx-auto;
