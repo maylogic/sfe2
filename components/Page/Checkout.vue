@@ -68,19 +68,21 @@ import { useMutation } from "@urql/vue";
 import { PlaceOrderDocument } from "~/gql/graphql";
 
 const authStore = useAuthStore()
+await authStore.hydrate()
 const {user} = storeToRefs(authStore)
 watch(user, (newUser, prevUser) => {
-    if (newUser?.id) {
+    if (newUser) {
         valid.email = true
         editable.email = false
     } else {
+        valid.email = null
         editable.email = true
     }
 })
 const valid = reactive<{
     email: null | boolean
 }>({
-    email: !!user
+    email: user ? true : null
 })
 const editable = reactive<{
     email: boolean
