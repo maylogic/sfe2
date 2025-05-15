@@ -70,6 +70,7 @@ import { PlaceOrderDocument } from "~/gql/graphql";
 const authStore = useAuthStore()
 await authStore.hydrate()
 const {user} = storeToRefs(authStore)
+
 watch(user, (newUser, prevUser) => {
     if (newUser) {
         valid.email = true
@@ -79,15 +80,16 @@ watch(user, (newUser, prevUser) => {
         editable.email = true
     }
 })
+
 const valid = reactive<{
     email: null | boolean
 }>({
-    email: user ? true : null
+    email: user.value ? true : null
 })
 const editable = reactive<{
     email: boolean
 }>({
-    email: !user
+    email: !user.value
 })
 const blockLoading = reactive<{
     email: boolean
