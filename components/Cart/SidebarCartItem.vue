@@ -23,12 +23,12 @@
                 <a href="#" class="flex items-center gap-1" @click.prevent="showInfo = !showInfo">
                     <u-icon name="i-lucide-x" v-if="showInfo"/>
                     <u-icon name="i-lucide-list-collapse" v-if="!showInfo"/>
-                    <span class="-mb-0.5">{{ !showInfo ? 'Детали' : 'Скрыть' }}</span>
+                    <span>{{ !showInfo ? 'Детали' : 'Скрыть' }}</span>
                 </a>
                 <nuxt-link @click="cart.open=false" :to="{ name: 'cart-edit-id', params: { id: item.id } }"
                            class="flex items-center gap-1">
                     <u-icon name="i-lucide-pencil"/>
-                    <span class="-mb-0.5">Редактировать</span>
+                    <span>Редактировать</span>
                 </nuxt-link>
             </div>
             <div class="all-info" v-if="showInfo">
