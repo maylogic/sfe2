@@ -81,7 +81,6 @@ fragment SidebarCart on Cart {
     can_apply_coupon
     can_place_order
     email
-    comment
     can_login
     customer_addresses {
         ...CustomerAddress
