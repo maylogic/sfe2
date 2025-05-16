@@ -1,7 +1,7 @@
 <template>
     <div class="checkout">
         <div class="blocks">
-            <checkout-block label="1. E-Mail"
+            <checkout-block class="px-5" label="1. E-Mail"
                             :loading="blockLoading.email"
                             :editable="editable.email"
                             :valid="valid.email"
@@ -11,7 +11,7 @@
                                       @loading:update="blockLoading.email=$event"
                                       :valid="valid.email"/>
             </checkout-block>
-            <checkout-block label="2. Адрес доставки"
+            <checkout-block class="px-5" label="2. Адрес доставки"
                             :inactive="!valid.email"
                             :loading="blockLoading.shippingAddress"
                             :valid="valid.shippingAddress"
@@ -21,9 +21,23 @@
                                         :valid="valid.shippingAddress"/>
             </checkout-block>
             <checkout-block :bordered="false" :valid="null">
-                <checkout-block-coupon :cart="cart"/>
-                <div v-if="cart.can_apply_balance" class="mb-2">
+                <checkout-block-coupon class="px-5" :cart="cart"/>
+                <div v-if="cart.can_apply_balance" class="mb-2 px-5">
                     <cart-apply-balance :data="cart?.apply_balance"/>
+                </div>
+                <checkout-block-comment
+                    @update:addComment="addComment=$event"
+                    @update:comment="comment=$event"
+                    :add-comment="addComment" :comment="comment" class="px-5"/>
+                <div class="flex flex-col gap-2 px-5 mt-2">
+                    <u-checkbox class="checkbox-thin"
+                        v-model="subscribe"
+                        label="Получать эксклюзивные предложения и скидки"
+                    />
+                    <u-checkbox class="checkbox-thin"
+                        v-model="agree"
+                        label="Подтверждаю, что введенные мною данные на 100% корректны и соглашаюсь с условиями обслуживания"
+                    />
                 </div>
             </checkout-block>
             <div class="checkout-button" :class="{'disabled': !cart.can_place_order}"
@@ -127,10 +141,15 @@ watch(cart, async (value) => {
 }, {
     immediate: true
 })
+
+const addComment = ref(false),
+    subscribe = ref(true),
+    agree = ref(true),
+    comment = ref('')
 </script>
 <style lang="scss">
 .checkout {
-    @apply flex flex-col-reverse gap-3 pt-4;
+    @apply flex flex-col-reverse gap-3 py-4;
     @apply h-full;
     @apply md:grid md:grid-cols-[1fr__min-content] md:gap-5;
     @apply px-2 max-w-[960px] mx-auto;
@@ -162,6 +181,12 @@ watch(cart, async (value) => {
 
     .order-summary {
         @apply md:hidden px-2 bg-white py-2;
+    }
+
+    .checkbox-thin {
+        label {
+            @apply font-normal;
+        }
     }
 }
 </style>

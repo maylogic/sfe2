@@ -33,7 +33,7 @@ const emit = defineEmits(['update:valid'])
 </script>
 <style lang="scss">
 .checkout-block {
-    @apply px-[20px] relative;
+    @apply relative;
     @apply bg-white w-full;
     &.invalid {
         @apply opacity-80;
@@ -45,7 +45,7 @@ const emit = defineEmits(['update:valid'])
 
     &.valid {
         &.bordered {
-            @apply border-l-robins-egg-blue-500;
+            @apply border-l-picton-blue-500;
         }
 
         .block-content {
@@ -65,7 +65,7 @@ const emit = defineEmits(['update:valid'])
     }
 
     &.bordered {
-        @apply border-l-storm-dust-100 border-l-[6px] pl-[14px];
+        @apply border-l-storm-dust-100 border-l-[5px] pl-[15px];
     }
 }
 </style>
