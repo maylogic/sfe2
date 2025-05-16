@@ -11,28 +11,33 @@
     </u-form>
     <div v-else class="flex flex-col gap-3 mt-3">
         <div class="flex flex-col gap-2" v-if="shippingAddress">
-            <div class="font-fira-sans text-base">Доставим сюда</div>
             <div class="flex flex-col gap-2">
-                <div class="grid grid-cols-2 items-start gap-2">
+                <div class="flex items-start gap-1">
                     <div>{{ shippingAddress.first_name }}</div>
                     <div>{{ shippingAddress.last_name }}</div>
                 </div>
                 <div>{{ shippingAddress.phone_number }}</div>
-                <div class="grid grid-cols-2 items-start gap-2">
-                    <div>{{ shippingAddress.country }}</div>
+                <div class="flex items-start gap-1 flex-wrap">
+                    <div>{{ shippingAddress.country }},</div>
+                    <div>{{ shippingAddress.state }},</div>
                     <div>{{ shippingAddress.city }}</div>
                 </div>
-                <div></div>
                 <div>{{ shippingAddress.address1 }}</div>
-                <div>{{ shippingAddress.address2 }}</div>
+                <div v-if="shippingAddress.address2">{{ shippingAddress.address2 }}</div>
                 <div>{{ shippingAddress.postal_code }}</div>
             </div>
         </div>
-        <button v-if="shippingAddress" type="button" class="continue-button" @click.prevent="isEditingAddress=true">
-            <span>Редактировать адрес</span>
-        </button>
-        <button type="button" class="continue-button" @click.prevent="isCreatingAddress=true">
-            <span>Добавить новый адрес</span>
+        <div class="flex items-center gap-2 mx-auto">
+            <smallest-button v-if="shippingAddress" @click.prevent="isEditingAddress=true">
+                <u-icon name="i-lucide-pencil"/>
+                Редактировать
+            </smallest-button>
+            <u-button variant="outline" size="xs" type="button" @click.prevent="isCreatingAddress=true">
+                <span>Новый адрес</span>
+            </u-button>
+        </div>
+        <button type="submit" @click="emit('update:valid', true)" class="continue-button">
+            <span>Продолжить</span>
         </button>
     </div>
 
@@ -177,6 +182,7 @@ import {
     type FragmentType,
     useFragment
 } from "~/gql";
+import SmallestButton from "~/components/SmallestButton.vue";
 
 defineProps<{ valid: boolean | null }>()
 

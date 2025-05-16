@@ -5,11 +5,11 @@
             <product-link :slug="item.product.slug">
                 {{ item.product.name }}
             </product-link>
-            <span class="flex items-center gap-2 text-xs font-sans cursor-pointer"
-                  @click="isRemovingModalOpen = true">
+            <smallest-button
+                @click="isRemovingModalOpen = true">
                 <u-icon name="i-lucide-trash"/>
                 Удалить
-            </span>
+            </smallest-button>
             <fragment-price :data="item.price"/>
             <quantity-input
                 :quantity="quantity"
@@ -108,6 +108,7 @@ import {
 import ProductLink from '~/components/ProductLink.vue'
 import { useMutation } from "@urql/vue";
 import { useCartStore } from "~/stores/cart";
+import SmallestButton from "~/components/SmallestButton.vue";
 
 const props = defineProps<{
     data: FragmentType<typeof SidebarCartItemFragmentDoc>

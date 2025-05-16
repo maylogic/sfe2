@@ -11,7 +11,7 @@
                                       @loading:update="blockLoading.email=$event"
                                       :valid="valid.email"/>
             </checkout-block>
-            <checkout-block label="1. Адрес доставки"
+            <checkout-block label="2. Адрес доставки"
                             :inactive="!valid.email"
                             :loading="blockLoading.shippingAddress"
                             :valid="valid.shippingAddress"
