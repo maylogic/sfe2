@@ -264,7 +264,6 @@ const schema = customerAddressSchema
 type Schema = InferType<typeof schema>
 
 async function setAddress(customerAddressId: string) {
-    console.log('set', customerAddressId)
     emit('loading:update', true)
     const {data} = await setAddressExecute({
         customerAddressId
