@@ -1,15 +1,11 @@
 <template>
-    <u-form class="flex flex-col gap-3 mt-3"
-            v-if="!!cart.customer_addresses?.length"
-            :schema="setSchema" :state="setState" @submit="onSubmitSetAddress">
+    <div class="flex flex-col gap-3 mt-3"
+         v-if="!!cart.customer_addresses?.length">
         <u-form-group name="customerAddressId">
-            <u-select v-model="setState.customerAddressId" :options="options"/>
+            <u-select @change="setAddress" v-model="setState.customerAddressId" :options="options"/>
         </u-form-group>
-        <button type="submit" class="continue-button">
-            <span>Продолжить</span>
-        </button>
-    </u-form>
-    <div v-else class="flex flex-col gap-3 mt-3">
+    </div>
+    <div class="flex flex-col gap-3 mt-3">
         <div class="flex flex-col gap-2" v-if="shippingAddress">
             <div class="flex flex-col gap-2">
                 <div class="flex items-start gap-1">
@@ -36,7 +32,9 @@
                 <span>Новый адрес</span>
             </u-button>
         </div>
-        <button type="submit" @click="emit('update:valid', true)" class="continue-button">
+        <button type="submit"
+                v-if="shippingAddress"
+                @click="emit('update:valid', true)" class="continue-button">
             <span>Продолжить</span>
         </button>
     </div>
@@ -165,10 +163,7 @@
 </template>
 <script setup lang="ts">
 import { type InferType } from "yup";
-import {
-    customerAddressSchema,
-    setShippingAddressSchema
-} from "~/yup";
+import { customerAddressSchema, } from "~/yup";
 import { useMutation } from "@urql/vue";
 import {
     CreateShippingAddressDocument,
@@ -222,16 +217,16 @@ const editState = reactive({
     state: shippingAddress.value?.state ?? undefined,
 })
 watch(shippingAddress, (newAd, oldAd) => {
-    editState.address1 = shippingAddress.value?.address1 ?? undefined
-    editState.address2 = shippingAddress.value?.address2 ?? undefined
-    editState.city = shippingAddress.value?.city ?? undefined
-    editState.country = shippingAddress.value?.country ?? undefined
-    editState.first_name = shippingAddress.value?.first_name ?? undefined
-    editState.last_name = shippingAddress.value?.last_name ?? undefined
-    editState.phone_number = shippingAddress.value?.phone_number ?? undefined
-    editState.postal_code = shippingAddress.value?.postal_code ?? undefined
-    editState.state = shippingAddress.value?.state ?? undefined
-    setState.customerAddressId = newAd?.id
+    editState.address1 = newAd?.address1 ?? undefined
+    editState.address2 = newAd?.address2 ?? undefined
+    editState.city = newAd?.city ?? undefined
+    editState.country = newAd?.country ?? undefined
+    editState.first_name = newAd?.first_name ?? undefined
+    editState.last_name = newAd?.last_name ?? undefined
+    editState.phone_number = newAd?.phone_number ?? undefined
+    editState.postal_code = newAd?.postal_code ?? undefined
+    editState.state = newAd?.state ?? undefined
+    setState.customerAddressId = newAd?.id ?? undefined
 })
 const setState = reactive({
     customerAddressId: shippingAddress.value?.id
@@ -266,16 +261,16 @@ const options = computed(
 )
 
 const schema = customerAddressSchema
-const setSchema = setShippingAddressSchema
 type Schema = InferType<typeof schema>
-type SetSchema = InferType<typeof setSchema>
 
-async function onSubmitSetAddress(event: FormSubmitEvent<SetSchema>) {
+async function setAddress(customerAddressId: string) {
+    console.log('set', customerAddressId)
     emit('loading:update', true)
-    const {data} = await setAddressExecute(event.data)
+    const {data} = await setAddressExecute({
+        customerAddressId
+    })
     cartStore.setData(data?.setShippingAddress)
     emit('loading:update', false)
-    emit('update:valid', true)
 }
 
 async function onSubmitCreateAddress(event: FormSubmitEvent<Schema>) {
@@ -319,7 +314,6 @@ async function onSubmitUpdateAddress(event: FormSubmitEvent<Schema>) {
         })
         cartStore.setData(data?.updateShippingAddress)
         isEditingAddress.value = false
-        emit('update:valid', true)
     } catch {
 
     } finally {

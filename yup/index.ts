@@ -34,6 +34,3 @@ export const customerAddressSchema = object({
     postal_code: string().required('Код обязателен'),
     state: string().required('Регион обязателен'),
 })
-export const setShippingAddressSchema = object({
-    customerAddressId: string().required('Адрес доставки обязателен')
-})
