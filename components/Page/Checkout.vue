@@ -11,6 +11,15 @@
                                       @loading:update="blockLoading.email=$event"
                                       :valid="valid.email"/>
             </checkout-block>
+            <checkout-block label="1. Адрес доставки"
+                            :inactive="!valid.email"
+                            :loading="blockLoading.shippingAddress"
+                            :valid="valid.shippingAddress"
+                            @update:valid="valid.shippingAddress=$event">
+                <checkout-block-address @update:valid="valid.shippingAddress=$event"
+                                        @loading:update="blockLoading.shippingAddress=$event"
+                                        :valid="valid.shippingAddress"/>
+            </checkout-block>
             <checkout-block :bordered="false" :valid="null">
                 <checkout-block-coupon :cart="cart"/>
                 <div v-if="cart.can_apply_balance" class="mb-2">
@@ -83,8 +92,10 @@ watch(user, (newUser, prevUser) => {
 
 const valid = reactive<{
     email: null | boolean
+    shippingAddress: null | boolean
 }>({
-    email: user.value ? true : null
+    email: user.value ? true : null,
+    shippingAddress: false
 })
 const editable = reactive<{
     email: boolean
@@ -93,8 +104,10 @@ const editable = reactive<{
 })
 const blockLoading = reactive<{
     email: boolean
+    shippingAddress: boolean
 }>({
-    email: false
+    email: false,
+    shippingAddress: false
 })
 const showItemsOnMobile = ref(false)
 const cartStore = useCartStore()

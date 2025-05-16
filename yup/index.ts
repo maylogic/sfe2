@@ -1,4 +1,5 @@
 import {
+    object,
     ref as YupRef,
     string,
     StringSchema
@@ -21,3 +22,18 @@ export const getConfirmPasswordValidation = (
     string()
         .oneOf([YupRef(passwordFieldName)], 'Пароли должны совпадать')
         .required(requiredFieldMessage)
+
+export const customerAddressSchema = object({
+    first_name: string().required('Имя обязательно'),
+    last_name: string().required('Фамилия обязательна'),
+    address1: string().required('Адрес обязателен'),
+    address2: string(),
+    city: string().required('Город обязателен'),
+    country: string().required('Страна обязательна'),
+    phone_number: string().required('Телефон получателя обязателен'),
+    postal_code: string().required('Код обязателен'),
+    state: string().required('Регион обязателен'),
+})
+export const setShippingAddressSchema = object({
+    customerAddressId: string().required('Адрес доставки обязателен')
+})

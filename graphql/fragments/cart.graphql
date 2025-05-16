@@ -82,6 +82,13 @@ fragment SidebarCart on Cart {
     can_place_order
     email
     can_login
+    customer_addresses {
+        ...CustomerAddress
+    }
+    shipping_address {
+        id
+        ...CustomerAddress
+    }
 }
 fragment Totals on Totals {
     subtotal

@@ -39,6 +39,10 @@ const emit = defineEmits(['update:valid'])
         @apply opacity-80;
     }
 
+    &.inactive {
+        @apply pointer-events-none opacity-30;
+    }
+
     &.valid {
         &.bordered {
             @apply border-l-robins-egg-blue-500;

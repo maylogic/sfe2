@@ -1,5 +1,6 @@
 <template>
-    <UInput
+    <u-input
+        name="email"
         :autocomplete="autocomplete"
         @update:modelValue="onChange"
         :model-value="modelValue"
@@ -17,7 +18,7 @@ defineProps({
     },
     autocomplete: {
         type: String,
-        default: 'username',
+        default: 'email',
     },
 })
 const onChange = (val) => {

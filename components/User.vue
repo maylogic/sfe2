@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center gap-2" v-if="!auth.isAuthenticated">
+    <div class="flex items-center gap-2" v-if="!isAuthenticated">
         <u-button variant="outline" color="storm-dust" class="hover:text-primary-500" to="/login">
             Войти
         </u-button>
@@ -8,8 +8,9 @@
 </template>
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth'
-import CustomerBar from '~/components/CustomerBar.vue'
 
-const auth = useAuthStore()
-await auth.hydrate()
+const authStore = useAuthStore()
+await authStore.hydrate()
+
+const {isAuthenticated} = storeToRefs(authStore)
 </script>

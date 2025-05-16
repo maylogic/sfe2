@@ -28,6 +28,7 @@ export const useCartStore = defineStore('cart', {
             can_apply_coupon: false,
             can_place_order: false,
             apply_balance: false,
+            shipping_address: null,
             key: 'default',
             totals: {
                 ' $fragmentRefs': undefined,

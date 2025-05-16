@@ -1,0 +1,5 @@
+mutation SetShippingAddress($customerAddressId: String!) {
+    setShippingAddress(customerAddressId: $customerAddressId) {
+        ...SidebarCart
+    }
+}

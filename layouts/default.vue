@@ -44,8 +44,6 @@
 </template>
 <script setup lang="ts">
 import { useCartStore } from '~/stores/cart'
-import ClosableSlideover from '~/components/ClosableSlideover.vue'
-import HorizontalNav from "~/components/HorizontalNav.vue";
 
 const menuOpen = ref(false)
 const menuItems = [
@@ -56,6 +54,9 @@ const menuItems = [
 ]
 const cartStore = useCartStore()
 const {cart} = storeToRefs(cartStore)
+onMounted(() => {
+    cartStore.hydrate()
+})
 </script>
 <style lang="scss">
 main.main-content {
