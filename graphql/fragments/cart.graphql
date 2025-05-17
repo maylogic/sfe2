@@ -66,11 +66,8 @@ fragment SidebarCart on Cart {
         ...CartCoupon
     }
     shipping_method {
-        name
-        price {
-            ...Price
-        }
-        estimated_delivery
+        id
+        label
         description
     }
     totals {

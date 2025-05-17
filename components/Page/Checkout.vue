@@ -20,6 +20,15 @@
                                         @loading:update="blockLoading.shippingAddress=$event"
                                         :valid="valid.shippingAddress"/>
             </checkout-block>
+            <checkout-block class="px-5" label="3. Способ доставки"
+                            :inactive="!valid.shippingAddress"
+                            :loading="blockLoading.shippingMethod"
+                            :valid="valid.shippingMethod"
+                            @update:valid="valid.shippingMethod=$event">
+                <checkout-block-shipping @update:valid="valid.shippingMethod=$event"
+                                         @loading:update="blockLoading.shippingMethod=$event"
+                                         :valid="valid.shippingMethod"/>
+            </checkout-block>
             <checkout-block :bordered="false" :valid="null">
                 <checkout-block-coupon class="px-5" :cart="cart"/>
                 <div v-if="cart.can_apply_balance" class="mb-2 px-5">
@@ -31,12 +40,12 @@
                     :add-comment="addComment" :comment="comment" class="px-5"/>
                 <div class="flex flex-col gap-2 px-5 mt-2">
                     <u-checkbox class="checkbox-thin"
-                        v-model="subscribe"
-                        label="Получать эксклюзивные предложения и скидки"
+                                v-model="subscribe"
+                                label="Получать эксклюзивные предложения и скидки"
                     />
                     <u-checkbox class="checkbox-thin"
-                        v-model="agree"
-                        label="Подтверждаю, что введенные мною данные на 100% корректны и соглашаюсь с условиями обслуживания"
+                                v-model="agree"
+                                label="Подтверждаю, что введенные мною данные на 100% корректны и соглашаюсь с условиями обслуживания"
                     />
                 </div>
             </checkout-block>
@@ -107,9 +116,11 @@ watch(user, (newUser, prevUser) => {
 const valid = reactive<{
     email: null | boolean
     shippingAddress: null | boolean
+    shippingMethod: null | boolean
 }>({
     email: user.value ? true : null,
-    shippingAddress: false
+    shippingAddress: false,
+    shippingMethod: false,
 })
 const editable = reactive<{
     email: boolean
@@ -119,9 +130,11 @@ const editable = reactive<{
 const blockLoading = reactive<{
     email: boolean
     shippingAddress: boolean
+    shippingMethod: boolean
 }>({
     email: false,
-    shippingAddress: false
+    shippingAddress: false,
+    shippingMethod: false,
 })
 const showItemsOnMobile = ref(false)
 const cartStore = useCartStore()

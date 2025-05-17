@@ -39,13 +39,6 @@
             <div v-if="cart.shipping_method" class="shipping-method">
                 <h3>Способ доставки</h3>
                 <p>{{ cart.shipping_method.name }}</p>
-                <p>
-                    <fragment-price :data="cart.shipping_method.price"/>
-                </p>
-                <p v-if="cart.shipping_method.estimated_delivery">
-                    Примерная продолжительность:
-                    {{ cart.shipping_method.estimated_delivery }}
-                </p>
                 <p v-if="cart.shipping_method.description">
                     {{ cart.shipping_method.description }}
                 </p>

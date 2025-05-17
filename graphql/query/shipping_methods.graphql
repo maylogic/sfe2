@@ -1,0 +1,11 @@
+query ShippingMethods {
+    shippingMethods {
+        description
+        id
+        info {
+            price
+            days
+        }
+        label
+    }
+}

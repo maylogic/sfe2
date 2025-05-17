@@ -65,11 +65,7 @@ fragment OrderData on Order {
         ...CartCoupon
     }
     shipping_method {
-        name
-        price {
-            ...Price
-        }
-        estimated_delivery
+        label
         description
     }
     totals {

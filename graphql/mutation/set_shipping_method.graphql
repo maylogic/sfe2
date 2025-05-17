@@ -1,0 +1,9 @@
+mutation SetShippingMethod(
+    $shippingMethodId: String!
+) {
+    setShippingMethod(
+        shippingMethodId: $shippingMethodId
+    ) {
+        ...SidebarCart
+    }
+}
