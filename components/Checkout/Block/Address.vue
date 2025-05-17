@@ -1,42 +1,31 @@
 <template>
-    <div class="flex flex-col gap-3 mt-3"
-         v-if="!!cart.customer_addresses?.length">
-        <u-form-group name="customerAddressId">
-            <u-select @change="setAddress" v-model="setState.customerAddressId" :options="options"/>
-        </u-form-group>
-    </div>
-    <div class="flex flex-col gap-3 mt-3">
-        <div class="flex flex-col gap-2" v-if="shippingAddress">
-            <div class="flex flex-col gap-2">
-                <div class="flex items-start gap-1">
-                    <div>{{ shippingAddress.first_name }}</div>
-                    <div>{{ shippingAddress.last_name }}</div>
-                </div>
-                <div>{{ shippingAddress.phone_number }}</div>
-                <div class="flex items-start gap-1 flex-wrap">
-                    <div>{{ shippingAddress.country }},</div>
-                    <div>{{ shippingAddress.state }},</div>
-                    <div>{{ shippingAddress.city }}</div>
-                </div>
-                <div>{{ shippingAddress.address1 }}</div>
-                <div v-if="shippingAddress.address2">{{ shippingAddress.address2 }}</div>
-                <div>{{ shippingAddress.postal_code }}</div>
+    <div v-if="!valid">
+        <div class="flex flex-col gap-3 mt-3"
+             v-if="!!cart.customer_addresses?.length">
+            <u-form-group name="customerAddressId">
+                <u-select @change="setAddress" v-model="setState.customerAddressId" :options="options"/>
+            </u-form-group>
+        </div>
+        <div class="flex flex-col gap-3 mt-3">
+            <customer-address-info :address="shippingAddress"/>
+            <div class="flex items-center gap-2 mx-auto">
+                <smallest-button v-if="shippingAddress" @click.prevent="isEditingAddress=true">
+                    <u-icon name="i-lucide-pencil"/>
+                    Редактировать
+                </smallest-button>
+                <u-button variant="outline" size="xs" type="button" @click.prevent="isCreatingAddress=true">
+                    <span>Новый адрес</span>
+                </u-button>
             </div>
+            <button type="submit"
+                    v-if="shippingAddress"
+                    @click="emit('update:valid', true)" class="continue-button">
+                <span>Продолжить</span>
+            </button>
         </div>
-        <div class="flex items-center gap-2 mx-auto">
-            <smallest-button v-if="shippingAddress" @click.prevent="isEditingAddress=true">
-                <u-icon name="i-lucide-pencil"/>
-                Редактировать
-            </smallest-button>
-            <u-button variant="outline" size="xs" type="button" @click.prevent="isCreatingAddress=true">
-                <span>Новый адрес</span>
-            </u-button>
-        </div>
-        <button type="submit"
-                v-if="shippingAddress"
-                @click="emit('update:valid', true)" class="continue-button">
-            <span>Продолжить</span>
-        </button>
+    </div>
+    <div v-else class="current-value">
+        <customer-address-info :address="shippingAddress"/>
     </div>
 
     <u-modal v-model="isCreatingAddress" :overlay="false">

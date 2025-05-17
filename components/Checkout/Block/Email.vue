@@ -1,5 +1,5 @@
 <template>
-    <u-form class="flex flex-col gap-3 mt-3" :schema="schema" :state="state" @submit="onSubmit">
+    <u-form v-if="!valid" class="flex flex-col gap-3 mt-3" :schema="schema" :state="state" @submit="onSubmit">
         <u-form-group name="email">
             <form-input-username v-model="state.email"/>
         </u-form-group>
@@ -26,6 +26,9 @@
             <span>Продолжить как гость</span>
         </button>
     </u-form>
+    <div v-else class="current-value">
+        {{ cart.email }}
+    </div>
 </template>
 <script setup lang="ts">
 import {

@@ -47,10 +47,10 @@ const emit = defineEmits(['update:valid'])
         &.bordered {
             @apply border-l-picton-blue-500;
         }
+    }
 
-        .block-content {
-            @apply hidden;
-        }
+    .current-value {
+        @apply text-sm mt-2;
     }
 
     .title {

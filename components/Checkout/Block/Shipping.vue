@@ -1,5 +1,5 @@
 <template>
-    <u-form class="flex flex-col gap-3 mt-3" :schema="schema" :state="state" @submit="onSubmit">
+    <u-form v-if="!valid" class="flex flex-col gap-3 mt-3" :schema="schema" :state="state" @submit="onSubmit">
         <u-form-group name="shippingMethodId" class="flex items-center gap-2 flex-wrap">
             <u-input class="hidden" name="shippingMethodId" v-model="state.shippingMethodId"/>
             <div class="shipping-methods">
@@ -23,6 +23,9 @@
             <span>Продолжить</span>
         </button>
     </u-form>
+    <div v-else class="current-value">
+        {{ cart.shipping_method?.label ?? 'Не выбран' }}
+    </div>
 </template>
 <script setup lang="ts">
 import { type InferType } from "yup";
