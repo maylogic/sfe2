@@ -6,6 +6,7 @@ import {
 import { defineNuxtPlugin } from '#app'
 import { ref } from 'vue'
 import { createGraphqlClient } from '~/system/createGraphqlClient'
+import { parseCookies } from '~/utils/cookies'
 
 const ssrKey = '__GRAPHQL_DATA__'
 
@@ -30,9 +31,22 @@ export default defineNuxtPlugin((nuxt) => {
         })
     }
 
-    const xdebug = useCookie('XDEBUG_SESSION'),
-        laravelSession = useCookie('laravel_session')
-    const client = createGraphqlClient(ssr, xdebug.value, laravelSession.value)
+    const xdebug = useCookie('XDEBUG_SESSION')
+
+    let laravelSession: string | null | undefined = undefined
+
+    if (import.meta.client) {
+        // Клиент: просто получаем через useCookie
+        laravelSession = useCookie('laravel_session').value
+    } else {
+        // Сервер: получаем куку из заголовков
+        const cookieHeader = import.meta.server ? nuxt.ssrContext?.event?.node?.req?.headers.cookie : ''
+        const cookies = parseCookies(cookieHeader)
+        laravelSession = cookies.laravel_session || null
+        console.error(laravelSession)
+    }
+
+    const client = createGraphqlClient(ssr, xdebug.value, laravelSession)
 
     nuxt.provide('urql', client)
     vueApp.provide('$urql', ref(client))

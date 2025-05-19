@@ -20,7 +20,7 @@ export const createGraphqlClient = (
     exchanges.push(fetchExchange)
 
     const url = getEnvOrPubVal('GRAPHQL_URL')
-    console.log('laravel session', laravelSession)
+    console.error('laravel session', laravelSession)
     return createClient({
         url: xdebug ? url + '?XDEBUG_SESSION_START=' + xdebug : url,
         fetchOptions: () => ({
