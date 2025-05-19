@@ -44,7 +44,6 @@ export default defineNuxtPlugin((nuxt) => {
         const cookies = parseCookies(cookieHeader)
         laravelSession = cookies.laravel_session || null
     }
-    console.error(laravelSession)
 
     const client = createGraphqlClient(ssr, xdebug.value, laravelSession)
 
