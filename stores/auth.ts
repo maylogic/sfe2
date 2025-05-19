@@ -24,11 +24,15 @@ export const useAuthStore = defineStore('auth', {
                 CustomerDataFragmentDoc,
                 user
             )
-            localStorage.setItem('user', JSON.stringify(this.user))
+            if (import.meta.client) {
+                localStorage.setItem('user', JSON.stringify(this.user))
+            }
         },
         clearAuthData() {
             this.user = null
-            localStorage.removeItem('user')
+            if (import.meta.client) {
+                localStorage.removeItem('user')
+            }
         },
         hydrateFromLocalStorage() {
             const userData = localStorage.getItem('user')
