@@ -1,3 +1,6 @@
 #!/bin/bash
-# так нельзя деплоить потому что content-type не определяется правильно и сайт перестает работать
-yc storage s3 cp .output/public/ s3://safepets.ru --recursive --content-type auto
+
+sudo systemctl stop nuxt-app.service
+git pull
+npm run build
+sudo systemctl start nuxt-app.service
