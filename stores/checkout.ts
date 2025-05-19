@@ -50,8 +50,7 @@ export const useCheckoutStore = defineStore('checkout', {
             this.loading = true
             const {data, error} = await useQuery({
                 query: GetCheckoutCartDocument,
-                variables: {},
-                requestPolicy: 'network-only',
+                variables: {}
             })
 
             this.setData(data.value?.getCart)

@@ -23,24 +23,12 @@ const handlePageChange = (newPage: number) => {
 }
 const currentPage = ref(1)
 
-const {data, executeQuery} = await useQuery({
+const {data} = await useQuery({
     query: ProductCardsDocument,
     variables: {
         first: 10,
         page: 1,
     },
-})
-
-onMounted(() => {
-    if (import.meta.client) {
-        executeQuery({
-            requestPolicy: 'network-only',
-            variables: {
-                first: 10,
-                page: 1,
-            },
-        })
-    }
 })
 </script>
 

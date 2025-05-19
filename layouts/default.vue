@@ -10,14 +10,12 @@
                 @click="menuOpen = !menuOpen"
             />
             <div class="ml-auto flex items-center gap-2">
-                <ClientOnly>
-                    <Suspense>
-                        <user/>
-                        <template #fallback>
-                            <u-skeleton class="h-8 w-[60px]"/>
-                        </template>
-                    </Suspense>
-                </ClientOnly>
+                <Suspense>
+                    <user/>
+                    <template #fallback>
+                        <u-skeleton class="h-8 w-[60px]"/>
+                    </template>
+                </Suspense>
                 <div class="black-pseudo-button font-fira-sans max-h-[32px]"
                      @click="cartStore.open = true">
                     <u-icon class="text-[18px]" name="i-lucide-shopping-bag"/>
@@ -31,9 +29,7 @@
         <closable-slideover title="Меню" v-model="menuOpen">
             <u-vertical-navigation @click="menuOpen = false" :links="menuItems"/>
         </closable-slideover>
-        <ClientOnly>
-            <cart-slideover/>
-        </ClientOnly>
+        <cart-slideover/>
         <main class="main-content">
             <slot/>
         </main>
@@ -53,10 +49,8 @@ const menuItems = [
     },
 ]
 const cartStore = useCartStore()
+await cartStore.hydrate()
 const {cart} = storeToRefs(cartStore)
-onMounted(() => {
-    cartStore.hydrate()
-})
 </script>
 <style lang="scss">
 main.main-content {

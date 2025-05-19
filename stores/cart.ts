@@ -51,8 +51,7 @@ export const useCartStore = defineStore('cart', {
             this.loading = true
             const {data, error} = await useQuery({
                 query: GetCartDocument,
-                variables: {},
-                requestPolicy: 'network-only',
+                variables: {}
             })
 
             this.setData(data.value?.getCart)
