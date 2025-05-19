@@ -286,25 +286,23 @@ useHead({
         {textContent: generateFontFace([...usedFonts.values()])}
     ]
 })
-onMounted(() => {
-    if (props.initData) {
-        if (props.initData.design) updateDesign(props.initData.design)
-        if (props.initData.color) updateColor(props.initData.color)
-        if (props.initData.font) updateFont(props.initData.font)
-        if (props.initData.textLines) {
-            for (const [id, value] of props.initData.textLines) {
-                updateTextLine(id, value)
-                if (value) showTextLineDefId(id)
-            }
+if (props.initData) {
+    if (props.initData.design) updateDesign(props.initData.design)
+    if (props.initData.color) updateColor(props.initData.color)
+    if (props.initData.font) updateFont(props.initData.font)
+    if (props.initData.textLines) {
+        for (const [id, value] of props.initData.textLines) {
+            updateTextLine(id, value)
+            if (value) showTextLineDefId(id)
         }
-        if (props.initData.options) {
-            for (const [id, value] of props.initData.options) {
-                updateOption(id, value)
-            }
-        }
-        if (props.initData.size) updateSize(props.initData.size)
     }
-})
+    if (props.initData.options) {
+        for (const [id, value] of props.initData.options) {
+            updateOption(id, value)
+        }
+    }
+    if (props.initData.size) updateSize(props.initData.size)
+}
 </script>
 
 <style lang="scss">
