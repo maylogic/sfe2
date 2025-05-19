@@ -1,4 +1,8 @@
-import { Client, type SSRData, ssrExchange } from '@urql/core'
+import {
+    Client,
+    type SSRData,
+    ssrExchange
+} from '@urql/core'
 import { defineNuxtPlugin } from '#app'
 import { ref } from 'vue'
 import { createGraphqlClient } from '~/system/createGraphqlClient'
@@ -6,7 +10,7 @@ import { createGraphqlClient } from '~/system/createGraphqlClient'
 const ssrKey = '__GRAPHQL_DATA__'
 
 export default defineNuxtPlugin((nuxt) => {
-    const { vueApp } = nuxt
+    const {vueApp} = nuxt
 
     const ssr = ssrExchange({
         isClient: import.meta.client,
@@ -26,8 +30,9 @@ export default defineNuxtPlugin((nuxt) => {
         })
     }
 
-    const xdebug = useCookie('XDEBUG_SESSION')
-    const client = createGraphqlClient(ssr, xdebug.value)
+    const xdebug = useCookie('XDEBUG_SESSION'),
+        laravelSession = useCookie('laravel_session')
+    const client = createGraphqlClient(ssr, xdebug.value, laravelSession.value)
 
     nuxt.provide('urql', client)
     vueApp.provide('$urql', ref(client))
