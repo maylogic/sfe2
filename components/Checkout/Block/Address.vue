@@ -27,128 +27,10 @@
     <div v-else class="current-value">
         <customer-address-info :address="shippingAddress"/>
     </div>
-
-    <u-modal v-model="isCreatingAddress" :overlay="false">
-        <u-form class="flex flex-col gap-3 mt-3" :schema="schema" :state="state" @submit="onSubmitCreateAddress">
-            <u-card>
-                <template #header>
-                    <div class="flex flex-col gap-2">
-                        <div class="grid grid-cols-2 items-start gap-2">
-                            <u-form-group name="first_name" label="Имя">
-                                <u-input name="first_name" v-model="state.first_name"/>
-                            </u-form-group>
-                            <u-form-group name="last_name" label="Фамилия">
-                                <u-input name="last_name" v-model="state.last_name"/>
-                            </u-form-group>
-                        </div>
-                        <u-form-group name="phone_number" label="Телефон получателя">
-                            <u-input name="phone" v-model="state.phone_number"/>
-                        </u-form-group>
-                        <div class="grid grid-cols-2 items-start gap-2">
-                            <u-form-group name="country" label="Страна">
-                                <u-input name="country" v-model="state.country"/>
-                            </u-form-group>
-                            <u-form-group name="city" label="Город">
-                                <u-input name="city" v-model="state.city"/>
-                            </u-form-group>
-                        </div>
-                        <u-form-group name="address1" label="Адрес 1">
-                            <u-input name="address1" v-model="state.address1"/>
-                        </u-form-group>
-                        <u-form-group name="address2" label="Адрес 2">
-                            <u-input name="address2" v-model="state.address2"/>
-                        </u-form-group>
-                        <u-form-group name="postal_code" label="Индекс">
-                            <u-input name="postal_code" v-model="state.postal_code"/>
-                        </u-form-group>
-                        <u-form-group name="state" label="Регион">
-                            <u-input name="state" v-model="state.state"/>
-                        </u-form-group>
-                    </div>
-                    <loading-overlay v-if="creating">
-                        <loading-page label="Создание"/>
-                    </loading-overlay>
-                </template>
-
-                <template #footer>
-                    <div class="flex items-center gap-2">
-                        <u-button
-                            type="submit"
-                            label="Добавить адрес"
-                            :disabled="creating"
-                        />
-                        <u-button
-                            label="Отмена"
-                            @click="isCreatingAddress = false"
-                            :disabled="creating"
-                            color="gray"
-                        />
-                    </div>
-                </template>
-            </u-card>
-        </u-form>
-    </u-modal>
-
-    <u-modal v-model="isEditingAddress" :overlay="false">
-        <u-form class="flex flex-col gap-3 mt-3" :schema="schema" :state="editState" @submit="onSubmitUpdateAddress">
-            <u-card>
-                <template #header>
-                    <div class="flex flex-col gap-2">
-                        <div class="grid grid-cols-2 items-start gap-2">
-                            <u-form-group name="first_name" label="Имя">
-                                <u-input name="first_name" v-model="editState.first_name"/>
-                            </u-form-group>
-                            <u-form-group name="last_name" label="Фамилия">
-                                <u-input name="last_name" v-model="editState.last_name"/>
-                            </u-form-group>
-                        </div>
-                        <u-form-group name="phone_number" label="Телефон получателя">
-                            <u-input name="phone" v-model="editState.phone_number"/>
-                        </u-form-group>
-                        <div class="grid grid-cols-2 items-start gap-2">
-                            <u-form-group name="country" label="Страна">
-                                <u-input name="country" v-model="editState.country"/>
-                            </u-form-group>
-                            <u-form-group name="city" label="Город">
-                                <u-input name="city" v-model="editState.city"/>
-                            </u-form-group>
-                        </div>
-                        <u-form-group name="address1" label="Адрес 1">
-                            <u-input name="address1" v-model="editState.address1"/>
-                        </u-form-group>
-                        <u-form-group name="address2" label="Адрес 2">
-                            <u-input name="address2" v-model="editState.address2"/>
-                        </u-form-group>
-                        <u-form-group name="postal_code" label="Индекс">
-                            <u-input name="postal_code" v-model="editState.postal_code"/>
-                        </u-form-group>
-                        <u-form-group name="state" label="Регион">
-                            <u-input name="state" v-model="editState.state"/>
-                        </u-form-group>
-                    </div>
-                    <loading-overlay v-if="updating">
-                        <loading-page label="Обновление"/>
-                    </loading-overlay>
-                </template>
-
-                <template #footer>
-                    <div class="flex items-center gap-2">
-                        <u-button
-                            type="submit"
-                            label="Обновить адрес"
-                            :disabled="updating"
-                        />
-                        <u-button
-                            label="Отмена"
-                            @click="isEditingAddress = false"
-                            :disabled="updating"
-                            color="gray"
-                        />
-                    </div>
-                </template>
-            </u-card>
-        </u-form>
-    </u-modal>
+    <modal-customer-address-form v-model="isCreatingAddress" :state="state" :fetching="creating"
+                                 :on-submit="onSubmitCreateAddress" button-label="Добавить адрес"/>
+    <modal-customer-address-form v-model="isEditingAddress" :state="editState" :fetching="updating"
+                                 :on-submit="onSubmitUpdateAddress" button-label="Сохранить"/>
 </template>
 <script setup lang="ts">
 import { type InferType } from "yup";
@@ -249,9 +131,6 @@ const options = computed(
     () => cart.value.customer_addresses?.map(address => (getAddressOption(address))) ?? []
 )
 
-const schema = customerAddressSchema
-type Schema = InferType<typeof schema>
-
 async function setAddress(customerAddressId: string) {
     emit('loading:update', true)
     const {data} = await setAddressExecute({
@@ -261,51 +140,39 @@ async function setAddress(customerAddressId: string) {
     emit('loading:update', false)
 }
 
-async function onSubmitCreateAddress(event: FormSubmitEvent<Schema>) {
-    try {
-        emit('loading:update', true)
-        const {data, error} = await createAddressExecute({
-            address1: event.data.address1 ?? null,
-            address2: event.data.address2 ?? null,
-            city: event.data.city ?? null,
-            country: event.data.country ?? null,
-            first_name: event.data.first_name ?? null,
-            last_name: event.data.last_name ?? null,
-            phone_number: event.data.phone_number ?? null,
-            postal_code: event.data.postal_code ?? null,
-            state: event.data.state ?? null,
-        })
-        cartStore.setData(data?.createShippingAddress)
-        emit('update:valid', true)
-        isCreatingAddress.value = false
-    } catch {
+type Schema = InferType<typeof customerAddressSchema>
 
-    } finally {
-        emit('loading:update', false)
-    }
+async function onSubmitCreateAddress(event: FormSubmitEvent<Schema>) {
+    const {data, error} = await createAddressExecute({
+        address1: event.data.address1 ?? null,
+        address2: event.data.address2 ?? null,
+        city: event.data.city ?? null,
+        country: event.data.country ?? null,
+        first_name: event.data.first_name ?? null,
+        last_name: event.data.last_name ?? null,
+        phone_number: event.data.phone_number ?? null,
+        postal_code: event.data.postal_code ?? null,
+        state: event.data.state ?? null,
+    })
+    cartStore.setData(data?.createShippingAddress)
+    emit('update:valid', true)
+    isCreatingAddress.value = false
 }
 
 async function onSubmitUpdateAddress(event: FormSubmitEvent<Schema>) {
-    try {
-        emit('loading:update', true)
-        const {data, error} = await updateAddressExecute({
-            customerAddressId: shippingAddress.value?.id || '0',
-            address1: event.data.address1 ?? null,
-            address2: event.data.address2 ?? null,
-            city: event.data.city ?? null,
-            country: event.data.country ?? null,
-            first_name: event.data.first_name ?? null,
-            last_name: event.data.last_name ?? null,
-            phone_number: event.data.phone_number ?? null,
-            postal_code: event.data.postal_code ?? null,
-            state: event.data.state ?? null,
-        })
-        cartStore.setData(data?.updateShippingAddress)
-        isEditingAddress.value = false
-    } catch {
-
-    } finally {
-        emit('loading:update', false)
-    }
+    const {data, error} = await updateAddressExecute({
+        customerAddressId: shippingAddress.value?.id || '0',
+        address1: event.data.address1 ?? null,
+        address2: event.data.address2 ?? null,
+        city: event.data.city ?? null,
+        country: event.data.country ?? null,
+        first_name: event.data.first_name ?? null,
+        last_name: event.data.last_name ?? null,
+        phone_number: event.data.phone_number ?? null,
+        postal_code: event.data.postal_code ?? null,
+        state: event.data.state ?? null,
+    })
+    cartStore.setData(data?.updateShippingAddress)
+    isEditingAddress.value = false
 }
 </script>
