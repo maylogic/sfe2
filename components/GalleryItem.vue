@@ -1,11 +1,14 @@
 <template>
     <div class="gallery-item">
         <div class="media-container">
+            <div v-if="!loaded" class="placeholder"></div>
             <img
                 v-if="!item.is_video"
                 :src="getStorageUrl(item.filename)"
                 :alt="item.label"
                 class="media-image"
+                :class="{loaded}"
+                @load="loaded=true"
             />
             <video
                 v-else
@@ -25,6 +28,8 @@ import {
 import { GalleryItemFragmentDoc } from '~/gql/graphql'
 import { getStorageUrl } from "~/constants/storage";
 
+const loaded = ref(false)
+
 const props = defineProps<{
     data: FragmentType<typeof GalleryItemFragmentDoc>
 }>()
@@ -32,23 +37,16 @@ const props = defineProps<{
 const item = useFragment(GalleryItemFragmentDoc, props.data)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .gallery-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-}
 
-.media-container {
-    width: 100%;
-    overflow: hidden;
-}
-
-.media-image,
-.media-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    .media-container {
+        width: 100%;
+        overflow: hidden;
+    }
 }
 </style>

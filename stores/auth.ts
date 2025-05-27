@@ -53,7 +53,6 @@ export const useAuthStore = defineStore('auth', {
                 variables: {},
                 requestPolicy: "network-only"
             })
-            console.log(data.value)
             this.setData(data.value?.currentUser)
         },
     },

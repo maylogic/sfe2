@@ -4,6 +4,8 @@
         :src="getImageUrl(item.filename)"
         :alt="item.label"
         class="media-image"
+        :class="{loaded}"
+        @load="loaded=true"
     />
 </template>
 
@@ -22,28 +24,7 @@ const props = defineProps<{
 const item = useFragment(GalleryItemFragmentDoc, props.data)
 
 const getImageUrl = (filename: string) => getStorageUrl(filename)
+const loaded = ref(false)
 
 
 </script>
-
-<style scoped>
-.gallery-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.media-container {
-    width: 100%;
-    overflow: hidden;
-    border-radius: 0.5rem;
-}
-
-.media-image,
-.media-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-</style>
