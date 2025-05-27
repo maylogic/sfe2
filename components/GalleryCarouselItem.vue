@@ -5,7 +5,7 @@
         :alt="item.label"
         class="media-image"
         :class="{loaded}"
-        @load="loaded=true"
+        @load="onLoad"
     />
 </template>
 
@@ -25,6 +25,11 @@ const item = useFragment(GalleryItemFragmentDoc, props.data)
 
 const getImageUrl = (filename: string) => getStorageUrl(filename)
 const loaded = ref(false)
+const onLoad = () => {
+    setTimeout(() => {
+        loaded.value = true
+    })
+}
 
 
 </script>

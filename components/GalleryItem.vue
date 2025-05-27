@@ -8,7 +8,7 @@
                 :alt="item.label"
                 class="media-image"
                 :class="{loaded}"
-                @load="loaded=true"
+                @load="onLoad"
             />
             <video
                 v-else
@@ -29,6 +29,11 @@ import { GalleryItemFragmentDoc } from '~/gql/graphql'
 import { getStorageUrl } from "~/constants/storage";
 
 const loaded = ref(false)
+const onLoad = () => {
+    setTimeout(() => {
+        loaded.value = true
+    })
+}
 
 const props = defineProps<{
     data: FragmentType<typeof GalleryItemFragmentDoc>
