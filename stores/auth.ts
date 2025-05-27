@@ -51,7 +51,9 @@ export const useAuthStore = defineStore('auth', {
             const {data, error} = await useQuery({
                 query: CurrentUserDocument,
                 variables: {},
+                requestPolicy: "network-only"
             })
+            console.log(data.value)
             this.setData(data.value?.currentUser)
         },
     },

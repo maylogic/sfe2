@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import type { SidebarCartFragment } from '~/gql/graphql'
 import {
     GetCartDocument,
+    GetCartItemsCountDocument,
     SidebarCartFragmentDoc
 } from '~/gql/graphql'
 import { useQuery } from '@urql/vue'
@@ -12,6 +13,7 @@ import {
 
 export interface CartStoreData {
     cart: SidebarCartFragment
+    count: number
     open: boolean
     error: boolean
     loading: boolean
@@ -19,6 +21,7 @@ export interface CartStoreData {
 
 export const useCartStore = defineStore('cart', {
     state: (): CartStoreData => ({
+        count: 0,
         cart: {
             id: '0',
             items: [],
@@ -43,6 +46,7 @@ export const useCartStore = defineStore('cart', {
             this.error = false
             if (data) {
                 this.cart = useFragment(SidebarCartFragmentDoc, data)
+                this.count = this.cart.items?.length || 0
             }
             this.loading = false
         },
@@ -51,7 +55,8 @@ export const useCartStore = defineStore('cart', {
             this.loading = true
             const {data, error} = await useQuery({
                 query: GetCartDocument,
-                variables: {}
+                variables: {},
+                requestPolicy: "network-only"
             })
 
             this.setData(data.value?.getCart)
@@ -60,6 +65,16 @@ export const useCartStore = defineStore('cart', {
                 this.error = true
             }
         },
+        async getItemsCount() {
+            this.error = false
+            this.loading = true
+            const {data} = await useQuery({
+                query: GetCartItemsCountDocument,
+                variables: {},
+                requestPolicy: "network-only"
+            })
+            this.count = data.value?.getCartItemsCount || 0
+        }
     },
     getters: {
         isEmpty: (state) => !!state.cart.items?.length

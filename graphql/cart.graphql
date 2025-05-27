@@ -3,3 +3,6 @@ query GetCart {
         ...SidebarCart
     }
 }
+query GetCartItemsCount {
+    getCartItemsCount
+}

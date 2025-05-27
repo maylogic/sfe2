@@ -103,16 +103,6 @@ const authStore = useAuthStore()
 await authStore.hydrate()
 const {user} = storeToRefs(authStore)
 
-watch(user, (newUser, prevUser) => {
-    if (newUser) {
-        valid.email = true
-        editable.email = false
-    } else {
-        valid.email = null
-        editable.email = true
-    }
-})
-
 const valid = reactive<{
     email: null | boolean
     shippingAddress: null | boolean
@@ -136,6 +126,16 @@ const blockLoading = reactive<{
     shippingAddress: false,
     shippingMethod: false,
 })
+
+watch(user, (newUser, prevUser) => {
+    if (newUser) {
+        valid.email = true
+        editable.email = false
+    } else {
+        valid.email = null
+        editable.email = true
+    }
+}, {immediate: true})
 const showItemsOnMobile = ref(false)
 const cartStore = useCartStore()
 await cartStore.hydrate()

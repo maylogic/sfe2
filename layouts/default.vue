@@ -21,7 +21,7 @@
                     <u-icon class="text-[18px]" name="i-lucide-shopping-bag"/>
                     <span>
                         Корзина
-                        <span v-if="!!cart.items?.length">&nbsp;({{ cart.items.length }})</span>
+                        <span v-if="count>0">&nbsp;({{ count }})</span>
                     </span>
                 </div>
             </div>
@@ -49,8 +49,8 @@ const menuItems = [
     },
 ]
 const cartStore = useCartStore()
-await cartStore.hydrate()
-const {cart} = storeToRefs(cartStore)
+await cartStore.getItemsCount()
+const {count} = storeToRefs(cartStore)
 </script>
 <style lang="scss">
 main.main-content {
