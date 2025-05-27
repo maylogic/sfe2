@@ -1,4 +1,5 @@
 <template>
+    <div v-if="!loaded" class="placeholder"></div>
     <img
         v-if="!item.is_video"
         ref="imgRef"
