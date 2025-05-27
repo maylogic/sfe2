@@ -1,7 +1,7 @@
 <template>
     <personalize-item :selected="currentDesign?.id === design.id" @click="updateDesign">
         <div class="design-item">
-            <img :src="getStorageUrl(design.preview)" :alt="design.label" style="width: 80px"/>
+            <personalize-item-image class="w-20" :src="design.preview" :label="design.label"/>
             <div class="label font-fira-sans">{{ design.label }}</div>
         </div>
     </personalize-item>
@@ -15,7 +15,6 @@ import {
     type DesignItemFragment,
     DesignItemFragmentDoc
 } from "~/gql/graphql";
-import { getStorageUrl } from "~/constants/storage";
 
 const props = defineProps<{
     currentDesign: DesignItemFragment | null

@@ -1,11 +1,10 @@
 <template>
     <personalize-item :selected="isCurrent()" @click="updateFont">
-        <img :src="getStorageUrl(font.preview)" :alt="font.label" class="w-28"/>
+        <personalize-item-image :src="font.preview" :label="font.label" class="w-28 horizontal"/>
     </personalize-item>
 </template>
 <script setup lang="ts">
 import { type Font } from "~/gql/graphql";
-import { getStorageUrl } from "~/constants/storage";
 
 const props = defineProps<{
     currentFont: Font | null
