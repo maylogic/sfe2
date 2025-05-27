@@ -37,7 +37,6 @@ onMounted(() => {
     if (!img) return
 
     if (img.complete) {
-        console.log('уже загружено из кэша')
         loaded.value = true
     }
 })
