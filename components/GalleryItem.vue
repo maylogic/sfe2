@@ -30,6 +30,7 @@ import { getStorageUrl } from "~/constants/storage";
 
 const loaded = ref(false)
 const onLoad = () => {
+    console.log('loaded')
     setTimeout(() => {
         loaded.value = true
     })

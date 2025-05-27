@@ -26,6 +26,7 @@ const item = useFragment(GalleryItemFragmentDoc, props.data)
 const getImageUrl = (filename: string) => getStorageUrl(filename)
 const loaded = ref(false)
 const onLoad = () => {
+    console.log('loaded carousel')
     setTimeout(() => {
         loaded.value = true
     })
