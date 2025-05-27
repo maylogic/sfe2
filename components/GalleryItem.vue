@@ -3,12 +3,13 @@
         <div class="media-container">
             <div v-if="!loaded" class="placeholder"></div>
             <img
+                ref="imgRef"
                 v-if="!item.is_video"
+                @load="loaded = true"
                 :src="getStorageUrl(item.filename)"
                 :alt="item.label"
                 class="media-image"
                 :class="{loaded}"
-                @load="onLoad"
             />
             <video
                 v-else
@@ -28,13 +29,18 @@ import {
 import { GalleryItemFragmentDoc } from '~/gql/graphql'
 import { getStorageUrl } from "~/constants/storage";
 
-const loaded = ref(false)
-const onLoad = () => {
-    console.log('loaded')
-    setTimeout(() => {
+const loaded = ref(false),
+    imgRef = ref<HTMLImageElement>()
+
+onMounted(() => {
+    const img = imgRef.value
+    if (!img) return
+
+    if (img.complete) {
+        console.log('уже загружено из кэша')
         loaded.value = true
-    })
-}
+    }
+})
 
 const props = defineProps<{
     data: FragmentType<typeof GalleryItemFragmentDoc>

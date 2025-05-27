@@ -1,11 +1,12 @@
 <template>
     <img
         v-if="!item.is_video"
+        ref="imgRef"
+        @load="loaded = true"
         :src="getImageUrl(item.filename)"
         :alt="item.label"
         class="media-image"
         :class="{loaded}"
-        @load="onLoad"
     />
 </template>
 
@@ -24,13 +25,17 @@ const props = defineProps<{
 const item = useFragment(GalleryItemFragmentDoc, props.data)
 
 const getImageUrl = (filename: string) => getStorageUrl(filename)
-const loaded = ref(false)
-const onLoad = () => {
-    console.log('loaded carousel')
-    setTimeout(() => {
-        loaded.value = true
-    })
-}
+const loaded = ref(false),
+    imgRef = ref<HTMLImageElement>()
 
+onMounted(() => {
+    const img = imgRef.value
+    if (!img) return
+
+    if (img.complete) {
+        console.log('уже загружено из кэша')
+        loaded.value = true
+    }
+})
 
 </script>
