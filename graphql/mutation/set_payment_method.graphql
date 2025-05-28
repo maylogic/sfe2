@@ -1,0 +1,9 @@
+mutation SetPaymentMethod(
+    $paymentMethodId: String!
+) {
+    setPaymentMethod(
+        paymentMethodId: $paymentMethodId
+    ) {
+        ...SidebarCart
+    }
+}

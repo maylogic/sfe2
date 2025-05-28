@@ -27,6 +27,7 @@ export const useCartStore = defineStore('cart', {
             items: [],
             coupons: [],
             shipping_method: null,
+            payment_method: null,
             can_apply_balance: false,
             can_apply_coupon: false,
             can_place_order: false,

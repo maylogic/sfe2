@@ -151,11 +151,17 @@ html, body {
     }
 }
 
-.placeholder {
+.image-placeholder {
     @apply bg-storm-dust-100 rounded-lg;
     aspect-ratio: 1/1;
     width: 100%;
     animation: pulse 1.5s infinite ease-in-out;
+}
+
+.image-error-placeholder {
+    @apply bg-storm-dust-100 rounded-lg flex items-center justify-center text-center;
+    aspect-ratio: 1/1;
+    width: 100%;
 }
 
 .media-image,

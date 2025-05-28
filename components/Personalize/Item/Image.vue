@@ -1,6 +1,6 @@
 <template>
     <div class="personalize-item-image">
-        <div v-if="!loaded" class="placeholder"></div>
+        <div v-if="!loaded" class="image-placeholder"></div>
         <img
             ref="imgRef"
             @load="loaded = true"
@@ -15,17 +15,8 @@
 <script setup lang="ts">
 import { getStorageUrl } from "~/constants/storage";
 
-const loaded = ref(false),
-    imgRef = ref<HTMLImageElement>()
-
-onMounted(() => {
-    const img = imgRef.value
-    if (!img) return
-
-    if (img.complete) {
-        loaded.value = true
-    }
-})
+const imgRef = ref<HTMLImageElement>()
+const {loaded, error} = useImageLoad(imgRef)
 
 defineProps<{
     src: string
@@ -34,7 +25,7 @@ defineProps<{
 </script>
 <style lang="scss">
 .personalize-item-image {
-    &.horizontal .placeholder {
+    &.horizontal .image-placeholder {
         aspect-ratio: 16/9;
     }
 }

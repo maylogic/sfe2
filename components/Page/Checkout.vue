@@ -29,6 +29,15 @@
                                          @loading:update="blockLoading.shippingMethod=$event"
                                          :valid="valid.shippingMethod"/>
             </checkout-block>
+            <checkout-block class="px-5" label="4. Способ оплаты"
+                            :inactive="!valid.shippingMethod"
+                            :loading="blockLoading.paymentMethod"
+                            :valid="valid.paymentMethod"
+                            @update:valid="valid.paymentMethod=$event">
+                <checkout-block-payment-method @update:valid="valid.paymentMethod=$event"
+                                         @loading:update="blockLoading.paymentMethod=$event"
+                                         :valid="valid.paymentMethod"/>
+            </checkout-block>
             <checkout-block :bordered="false" :valid="null">
                 <checkout-block-coupon class="px-5" :cart="cart"/>
                 <div v-if="cart.can_apply_balance" class="mb-2 px-5">
@@ -103,14 +112,20 @@ const authStore = useAuthStore()
 await authStore.hydrate()
 const {user} = storeToRefs(authStore)
 
+const cartStore = useCartStore()
+await cartStore.hydrate()
+const {cart, loading} = storeToRefs(cartStore)
+
 const valid = reactive<{
     email: null | boolean
     shippingAddress: null | boolean
     shippingMethod: null | boolean
+    paymentMethod: null | boolean
 }>({
     email: user.value ? true : null,
-    shippingAddress: false,
-    shippingMethod: false,
+    shippingAddress: cart.value.shipping_address !== null,
+    shippingMethod: cart.value.shipping_method !== null,
+    paymentMethod: cart.value.payment_method !== null,
 })
 const editable = reactive<{
     email: boolean
@@ -121,10 +136,12 @@ const blockLoading = reactive<{
     email: boolean
     shippingAddress: boolean
     shippingMethod: boolean
+    paymentMethod: boolean
 }>({
     email: false,
     shippingAddress: false,
     shippingMethod: false,
+    paymentMethod: false,
 })
 
 watch(user, (newUser, prevUser) => {
@@ -137,9 +154,6 @@ watch(user, (newUser, prevUser) => {
     }
 }, {immediate: true})
 const showItemsOnMobile = ref(false)
-const cartStore = useCartStore()
-await cartStore.hydrate()
-const {cart, loading} = storeToRefs(cartStore)
 const {executeMutation, fetching} = useMutation(PlaceOrderDocument)
 
 async function placeOrder() {

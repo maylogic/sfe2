@@ -1,5 +1,5 @@
 <template>
-    <u-form v-if="!valid" class="flex flex-col gap-3 mt-3" :schema="schema" :state="state" @submit="onSubmit">
+    <u-form v-if="!valid" class="flex flex-col gap-3 mt-3" :schema="schema" :state="state" @submit.prevent="onSubmit">
         <u-form-group name="email">
             <form-input-username v-model="state.email"/>
         </u-form-group>

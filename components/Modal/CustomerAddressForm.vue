@@ -1,6 +1,6 @@
 <template>
     <u-modal @update:modelValue="toggleClose" :model-value="modelValue">
-        <u-form :schema="schema" :state="state" @submit="onSubmit">
+        <u-form :schema="schema" :state="state" @submit.prevent="onSubmit">
             <u-card>
                 <div class="flex flex-col gap-2 pt-1">
                     <u-button color="gray" variant="ghost" icon="i-heroicons-x-mark-20-solid"
