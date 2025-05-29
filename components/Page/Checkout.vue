@@ -21,7 +21,7 @@
                                         :valid="valid.shippingAddress"/>
             </checkout-block>
             <checkout-block class="px-5" label="3. Способ доставки"
-                            :inactive="!valid.shippingAddress"
+                            :inactive="!valid.email || !valid.shippingAddress"
                             :loading="blockLoading.shippingMethod"
                             :valid="valid.shippingMethod"
                             @update:valid="valid.shippingMethod=$event">
@@ -82,7 +82,7 @@
                     <div class="cart-items">
                         <cart-sidebar-cart-item v-for="item in cart.items" :key="cart.key+item.id" :data="item"/>
                     </div>
-                    <cart-totals :key="cart.key" :data="cart.totals"/>
+                    <totals :key="cart.key" :data="cart.totals"/>
                 </div>
             </div>
         </div>
