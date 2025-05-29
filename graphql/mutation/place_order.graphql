@@ -1,5 +1,8 @@
-mutation PlaceOrder($comment: String) {
-    placeOrder(comment: $comment) {
+mutation PlaceOrder(
+    $comment: String,
+    $subscribe: Boolean!
+) {
+    placeOrder(comment: $comment, subscribe: $subscribe) {
         id
     }
 }

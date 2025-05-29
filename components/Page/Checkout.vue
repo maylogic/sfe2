@@ -56,9 +56,9 @@
                     Перейти к оплате
                 </div>
             </div>
-            <div v-if="placingError">
+            <div v-if="placingError" class="error-message">
                 Возникла ошибка при создании заказа.
-                Обратитесь к администратору и получите скидку на свой заказ.
+                Обратитесь к администратору и получите скидку.
             </div>
         </div>
         <div class="order-summary-container">
@@ -155,7 +155,8 @@ const redirecting = ref(false)
 
 async function placeOrder() {
     const {data} = await executeMutation({
-        comment: comment.value
+        comment: comment.value,
+        subscribe: subscribe.value
     })
     if (data) {
         redirecting.value = true

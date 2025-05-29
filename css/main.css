@@ -177,3 +177,8 @@ html, body {
         height: 100%;
     }
 }
+
+.error-message {
+    @apply text-red-500;
+    font-family: "Fira Sans", sans-serif;
+}

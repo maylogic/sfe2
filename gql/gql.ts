@@ -24,7 +24,7 @@ type Documents = {
     "mutation AddCartItem($productId: String!, $quantity: Int!, $personalize: PersonalizeInput!) {\n  addCartItem(\n    productId: $productId\n    quantity: $quantity\n    personalize: $personalize\n  ) {\n    ...SidebarCart\n  }\n}": typeof types.AddCartItemDocument,
     "mutation ApplyCoupon($code: String!) {\n  applyCoupon(code: $code) {\n    ...SidebarCart\n  }\n}": typeof types.ApplyCouponDocument,
     "mutation CreateShippingAddress($address1: String, $address2: String, $city: String, $country: String, $first_name: String, $last_name: String, $phone_number: String, $postal_code: String, $state: String) {\n  createShippingAddress(\n    address1: $address1\n    address2: $address2\n    city: $city\n    country: $country\n    first_name: $first_name\n    last_name: $last_name\n    phone_number: $phone_number\n    postal_code: $postal_code\n    state: $state\n  ) {\n    ...SidebarCart\n  }\n}": typeof types.CreateShippingAddressDocument,
-    "mutation PlaceOrder($comment: String) {\n  placeOrder(comment: $comment) {\n    id\n  }\n}": typeof types.PlaceOrderDocument,
+    "mutation PlaceOrder($comment: String, $subscribe: Boolean!) {\n  placeOrder(comment: $comment, subscribe: $subscribe) {\n    id\n  }\n}": typeof types.PlaceOrderDocument,
     "mutation RemoveCartItem($cartItemId: String!) {\n  removeCartItem(cartItemId: $cartItemId) {\n    ...SidebarCart\n  }\n}": typeof types.RemoveCartItemDocument,
     "mutation RemoveCoupon($code: String!) {\n  removeCoupon(code: $code) {\n    ...SidebarCart\n  }\n}": typeof types.RemoveCouponDocument,
     "mutation SetCartEmail($email: String!) {\n  setCartEmail(email: $email) {\n    ...SidebarCart\n  }\n}": typeof types.SetCartEmailDocument,
@@ -53,7 +53,7 @@ const documents: Documents = {
     "mutation AddCartItem($productId: String!, $quantity: Int!, $personalize: PersonalizeInput!) {\n  addCartItem(\n    productId: $productId\n    quantity: $quantity\n    personalize: $personalize\n  ) {\n    ...SidebarCart\n  }\n}": types.AddCartItemDocument,
     "mutation ApplyCoupon($code: String!) {\n  applyCoupon(code: $code) {\n    ...SidebarCart\n  }\n}": types.ApplyCouponDocument,
     "mutation CreateShippingAddress($address1: String, $address2: String, $city: String, $country: String, $first_name: String, $last_name: String, $phone_number: String, $postal_code: String, $state: String) {\n  createShippingAddress(\n    address1: $address1\n    address2: $address2\n    city: $city\n    country: $country\n    first_name: $first_name\n    last_name: $last_name\n    phone_number: $phone_number\n    postal_code: $postal_code\n    state: $state\n  ) {\n    ...SidebarCart\n  }\n}": types.CreateShippingAddressDocument,
-    "mutation PlaceOrder($comment: String) {\n  placeOrder(comment: $comment) {\n    id\n  }\n}": types.PlaceOrderDocument,
+    "mutation PlaceOrder($comment: String, $subscribe: Boolean!) {\n  placeOrder(comment: $comment, subscribe: $subscribe) {\n    id\n  }\n}": types.PlaceOrderDocument,
     "mutation RemoveCartItem($cartItemId: String!) {\n  removeCartItem(cartItemId: $cartItemId) {\n    ...SidebarCart\n  }\n}": types.RemoveCartItemDocument,
     "mutation RemoveCoupon($code: String!) {\n  removeCoupon(code: $code) {\n    ...SidebarCart\n  }\n}": types.RemoveCouponDocument,
     "mutation SetCartEmail($email: String!) {\n  setCartEmail(email: $email) {\n    ...SidebarCart\n  }\n}": types.SetCartEmailDocument,
@@ -129,7 +129,7 @@ export function graphql(source: "mutation CreateShippingAddress($address1: Strin
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "mutation PlaceOrder($comment: String) {\n  placeOrder(comment: $comment) {\n    id\n  }\n}"): (typeof documents)["mutation PlaceOrder($comment: String) {\n  placeOrder(comment: $comment) {\n    id\n  }\n}"];
+export function graphql(source: "mutation PlaceOrder($comment: String, $subscribe: Boolean!) {\n  placeOrder(comment: $comment, subscribe: $subscribe) {\n    id\n  }\n}"): (typeof documents)["mutation PlaceOrder($comment: String, $subscribe: Boolean!) {\n  placeOrder(comment: $comment, subscribe: $subscribe) {\n    id\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
