@@ -53,7 +53,7 @@
                  @click="placeOrder">
                 <div>
                     <u-icon class="text-xl" name="i-bxs-lock"/>
-                    Оформить заказ
+                    Перейти к оплате
                 </div>
             </div>
             <div v-if="placingError">
