@@ -29,15 +29,6 @@
                                          @loading:update="blockLoading.shippingMethod=$event"
                                          :valid="valid.shippingMethod"/>
             </checkout-block>
-            <checkout-block class="px-5" label="4. Способ оплаты"
-                            :inactive="!valid.shippingMethod"
-                            :loading="blockLoading.paymentMethod"
-                            :valid="valid.paymentMethod"
-                            @update:valid="valid.paymentMethod=$event">
-                <checkout-block-payment-method @update:valid="valid.paymentMethod=$event"
-                                         @loading:update="blockLoading.paymentMethod=$event"
-                                         :valid="valid.paymentMethod"/>
-            </checkout-block>
             <checkout-block :bordered="false" :valid="null">
                 <checkout-block-coupon class="px-5" :cart="cart"/>
                 <div v-if="cart.can_apply_balance" class="mb-2 px-5">
@@ -94,11 +85,14 @@
         <loading-overlay v-if="loading">
             <loading-page/>
         </loading-overlay>
-        <loading-overlay v-if="fetching">
-            <loading-page label="Оформление заказа..."/>
+        <loading-overlay v-if="placing">
+            <loading-page label="Создание заказа"/>
+        </loading-overlay>
+        <loading-overlay v-if="redirecting">
+            <loading-page label="Направляем на платежный шлюз"/>
         </loading-overlay>
         <loading-overlay v-if="!cart.items?.length">
-            <loading-page label="Нет товаров, возвращаем на главную страницу..."/>
+            <loading-page label="Нет товаров, возвращаем на главную страницу"/>
         </loading-overlay>
     </div>
 </template>
@@ -120,12 +114,10 @@ const valid = reactive<{
     email: null | boolean
     shippingAddress: null | boolean
     shippingMethod: null | boolean
-    paymentMethod: null | boolean
 }>({
     email: user.value ? true : null,
     shippingAddress: cart.value.shipping_address !== null,
     shippingMethod: cart.value.shipping_method !== null,
-    paymentMethod: cart.value.payment_method !== null,
 })
 const editable = reactive<{
     email: boolean
@@ -136,12 +128,10 @@ const blockLoading = reactive<{
     email: boolean
     shippingAddress: boolean
     shippingMethod: boolean
-    paymentMethod: boolean
 }>({
     email: false,
     shippingAddress: false,
     shippingMethod: false,
-    paymentMethod: false,
 })
 
 watch(user, (newUser, prevUser) => {
@@ -154,11 +144,14 @@ watch(user, (newUser, prevUser) => {
     }
 }, {immediate: true})
 const showItemsOnMobile = ref(false)
-const {executeMutation, fetching} = useMutation(PlaceOrderDocument)
+const {executeMutation, fetching: placing} = useMutation(PlaceOrderDocument)
 
+const redirecting = ref(false)
 async function placeOrder() {
     const {data} = await executeMutation({})
-    console.log(data)
+    if (data) {
+        redirecting.value = true
+    }
 }
 
 watch(cart, async (value) => {

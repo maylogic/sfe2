@@ -70,12 +70,6 @@ fragment SidebarCart on Cart {
         label
         description
     }
-    payment_method {
-        id
-        label
-        description
-        fee_percent_fractions
-    }
     totals {
         ...Totals
     }

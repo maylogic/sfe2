@@ -1,8 +1,0 @@
-query PaymentMethods {
-    paymentMethods {
-        description
-        id
-        label
-        fee_percent_fractions
-    }
-}

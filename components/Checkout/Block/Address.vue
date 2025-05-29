@@ -6,6 +6,7 @@
                 <u-select @change="setAddress" v-model="setState.customerAddressId" :options="options"/>
             </u-form-group>
         </div>
+        <div v-if="!cart.customer_addresses?.length && !shippingAddress">Необходимо добавить адрес доставки.</div>
         <div class="flex flex-col gap-3 mt-3">
             <customer-address-info :address="shippingAddress"/>
             <div class="flex items-center gap-2 mx-auto">
@@ -13,7 +14,7 @@
                     <u-icon name="i-lucide-pencil"/>
                     Редактировать
                 </smallest-button>
-                <u-button variant="outline" size="xs" type="button" @click.prevent="isCreatingAddress=true">
+                <u-button size="xs" type="button" @click.prevent="isCreatingAddress=true">
                     <span>Новый адрес</span>
                 </u-button>
             </div>
