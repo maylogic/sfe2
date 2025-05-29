@@ -19,7 +19,9 @@
                     <cart-sidebar-cart/>
                 </template>
                 <template #fallback>
-                    <loading-page/>
+                    <div class="relative h-full">
+                        <loading-page/>
+                    </div>
                 </template>
             </Suspense>
         </div>

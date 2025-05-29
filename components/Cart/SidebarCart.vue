@@ -4,7 +4,7 @@
             Произошла ошибка. Пожалуйста, сообщите об этом администратору и получите извинительный промокод.
         </span>
     </div>
-    <div class="empty-cart p-5" v-else-if="!cartStore.isEmpty">
+    <div class="empty-cart p-5" v-else-if="!cart.items?.length">
         <span class="font-fira-sans text-lg">Ваша корзина пуста</span>
         <div autofocus @click="cartStore.open = false"
              class="rose-pseudo-button font-fira-sans flex justify-center items-center mt-5">
@@ -38,7 +38,7 @@
             <!-- Метод доставки -->
             <div v-if="cart.shipping_method" class="shipping-method">
                 <h3>Способ доставки</h3>
-                <p>{{ cart.shipping_method.name }}</p>
+                <p>{{ cart.shipping_method.label }}</p>
                 <p v-if="cart.shipping_method.description">
                     {{ cart.shipping_method.description }}
                 </p>

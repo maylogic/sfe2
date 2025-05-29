@@ -59,8 +59,5 @@ export const useCheckoutStore = defineStore('checkout', {
                 this.error = true
             }
         },
-    },
-    getters: {
-        isEmpty: (state) => !!state.cart.items?.length
     }
 })

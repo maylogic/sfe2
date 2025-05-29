@@ -37,6 +37,3 @@ export const customerAddressSchema = object({
 export const shippingMethodSchema = object({
     shippingMethodId: string().required('Необходимо выбрать способ доставки')
 })
-export const paymentMethodSchema = object({
-    paymentMethodId: string().required('Необходимо выбрать способ оплаты')
-})
