@@ -175,18 +175,18 @@ watchDebounced(
             @apply inline-flex ml-1;
         }
     }
-}
 
-.product-name {
-    font-weight: bold;
-    color: #333;
-    text-decoration: none;
-}
+    .product-name {
+        font-weight: bold;
+        color: #333;
+        text-decoration: none;
+    }
 
-.option-items ul,
-.text-lines ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    .option-items ul,
+    .text-lines ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
 }
 </style>

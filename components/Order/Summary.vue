@@ -2,7 +2,7 @@
     <div class="order-summary font-iskra">
         <span class="mt-[-0.2rem] flex items-center gap-2">
             <u-icon class="text-[20px]" name="i-lucide-shopping-cart"/>
-            <span>Итог: </span>
+            <span>{{label}} </span>
         </span>
         <fragment-price :data="totals.grand_total"/>
         <div class="ml-auto">
@@ -16,9 +16,12 @@ import type { FragmentType } from '~/gql/index.js'
 import { useFragment } from '~/gql/index.js'
 import { TotalsFragmentDoc } from '~/gql/graphql.js'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     data: FragmentType<typeof TotalsFragmentDoc>
-}>()
+    label?: string
+}>(), {
+    label: 'Итог:'
+})
 
 const totals = computed(() => useFragment(TotalsFragmentDoc, props.data))
 </script>

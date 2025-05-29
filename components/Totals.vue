@@ -16,7 +16,7 @@
             </div>
 
             <div class="totals-item">
-                <span class="label font-black">Итог:</span>
+                <span class="label font-black">{{ grandTotalLabel }}</span>
                 <fragment-price :data="totals.grand_total"/>
             </div>
         </div>
@@ -24,14 +24,17 @@
 </template>
 
 <script setup lang="ts">
-import type { FragmentType } from '~/gql/index.js'
-import { useFragment } from '~/gql/index.js'
+import type { FragmentType } from '~/gql'
+import { useFragment } from '~/gql'
 import { TotalsFragmentDoc } from '~/gql/graphql.js'
 import { formatPrice } from '~/utils/price'
 
-const props = defineProps<{
-    data: FragmentType<typeof TotalsFragmentDoc>
-}>()
+const props = withDefaults(defineProps<{
+    data: FragmentType<typeof TotalsFragmentDoc>,
+    grandTotalLabel?: string
+}>(), {
+    grandTotalLabel: 'Итог:'
+})
 
 const totals = computed(() => useFragment(TotalsFragmentDoc, props.data))
 </script>

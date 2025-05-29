@@ -24,7 +24,7 @@ type Documents = {
     "mutation AddCartItem($productId: String!, $quantity: Int!, $personalize: PersonalizeInput!) {\n  addCartItem(\n    productId: $productId\n    quantity: $quantity\n    personalize: $personalize\n  ) {\n    ...SidebarCart\n  }\n}": typeof types.AddCartItemDocument,
     "mutation ApplyCoupon($code: String!) {\n  applyCoupon(code: $code) {\n    ...SidebarCart\n  }\n}": typeof types.ApplyCouponDocument,
     "mutation CreateShippingAddress($address1: String, $address2: String, $city: String, $country: String, $first_name: String, $last_name: String, $phone_number: String, $postal_code: String, $state: String) {\n  createShippingAddress(\n    address1: $address1\n    address2: $address2\n    city: $city\n    country: $country\n    first_name: $first_name\n    last_name: $last_name\n    phone_number: $phone_number\n    postal_code: $postal_code\n    state: $state\n  ) {\n    ...SidebarCart\n  }\n}": typeof types.CreateShippingAddressDocument,
-    "mutation PlaceOrder {\n  placeOrder {\n    ...OrderData\n  }\n}": typeof types.PlaceOrderDocument,
+    "mutation PlaceOrder {\n  placeOrder {\n    id\n  }\n}": typeof types.PlaceOrderDocument,
     "mutation RemoveCartItem($cartItemId: String!) {\n  removeCartItem(cartItemId: $cartItemId) {\n    ...SidebarCart\n  }\n}": typeof types.RemoveCartItemDocument,
     "mutation RemoveCoupon($code: String!) {\n  removeCoupon(code: $code) {\n    ...SidebarCart\n  }\n}": typeof types.RemoveCouponDocument,
     "mutation SetCartEmail($email: String!) {\n  setCartEmail(email: $email) {\n    ...SidebarCart\n  }\n}": typeof types.SetCartEmailDocument,
@@ -35,6 +35,7 @@ type Documents = {
     "mutation UpdateCartItemQuantity($cartItemId: String!, $quantity: Int!) {\n  updateCartItemQuantity(cartItemId: $cartItemId, quantity: $quantity) {\n    ...SidebarCart\n  }\n}": typeof types.UpdateCartItemQuantityDocument,
     "mutation UpdateShippingAddress($customerAddressId: String!, $address1: String, $address2: String, $city: String, $country: String, $first_name: String, $last_name: String, $phone_number: String, $postal_code: String, $state: String) {\n  updateShippingAddress(\n    customerAddressId: $customerAddressId\n    address1: $address1\n    address2: $address2\n    city: $city\n    country: $country\n    first_name: $first_name\n    last_name: $last_name\n    phone_number: $phone_number\n    postal_code: $postal_code\n    state: $state\n  ) {\n    ...SidebarCart\n  }\n}": typeof types.UpdateShippingAddressDocument,
     "mutation RegisterCustomer($email: String!, $password: String!, $name: String!, $passwordConfirmation: String!) {\n  registerCustomer(\n    email: $email\n    password: $password\n    name: $name\n    password_confirmation: $passwordConfirmation\n  ) {\n    ...CustomerData\n  }\n}\n\nmutation LoginCustomer($email: String!, $password: String!) {\n  loginCustomer(email: $email, password: $password) {\n    ...CustomerData\n  }\n}": typeof types.RegisterCustomerDocument,
+    "query OrderById($id: ID!) {\n  getOrderById(id: $id) {\n    ...OrderData\n  }\n}": typeof types.OrderByIdDocument,
     "query ProductBySlug($slug: String!) {\n  getProductBySlug(slug: $slug) {\n    ...ProductPage\n  }\n}": typeof types.ProductBySlugDocument,
     "query ProductCards($first: Int!, $page: Int!) {\n  products(first: $first, page: $page) {\n    data {\n      id\n      slug\n      key\n      ...ProductMini\n    }\n    paginatorInfo {\n      ...Pagination\n    }\n  }\n}": typeof types.ProductCardsDocument,
     "query ProductSlugs {\n  productSlugs\n}": typeof types.ProductSlugsDocument,
@@ -52,7 +53,7 @@ const documents: Documents = {
     "mutation AddCartItem($productId: String!, $quantity: Int!, $personalize: PersonalizeInput!) {\n  addCartItem(\n    productId: $productId\n    quantity: $quantity\n    personalize: $personalize\n  ) {\n    ...SidebarCart\n  }\n}": types.AddCartItemDocument,
     "mutation ApplyCoupon($code: String!) {\n  applyCoupon(code: $code) {\n    ...SidebarCart\n  }\n}": types.ApplyCouponDocument,
     "mutation CreateShippingAddress($address1: String, $address2: String, $city: String, $country: String, $first_name: String, $last_name: String, $phone_number: String, $postal_code: String, $state: String) {\n  createShippingAddress(\n    address1: $address1\n    address2: $address2\n    city: $city\n    country: $country\n    first_name: $first_name\n    last_name: $last_name\n    phone_number: $phone_number\n    postal_code: $postal_code\n    state: $state\n  ) {\n    ...SidebarCart\n  }\n}": types.CreateShippingAddressDocument,
-    "mutation PlaceOrder {\n  placeOrder {\n    ...OrderData\n  }\n}": types.PlaceOrderDocument,
+    "mutation PlaceOrder {\n  placeOrder {\n    id\n  }\n}": types.PlaceOrderDocument,
     "mutation RemoveCartItem($cartItemId: String!) {\n  removeCartItem(cartItemId: $cartItemId) {\n    ...SidebarCart\n  }\n}": types.RemoveCartItemDocument,
     "mutation RemoveCoupon($code: String!) {\n  removeCoupon(code: $code) {\n    ...SidebarCart\n  }\n}": types.RemoveCouponDocument,
     "mutation SetCartEmail($email: String!) {\n  setCartEmail(email: $email) {\n    ...SidebarCart\n  }\n}": types.SetCartEmailDocument,
@@ -63,6 +64,7 @@ const documents: Documents = {
     "mutation UpdateCartItemQuantity($cartItemId: String!, $quantity: Int!) {\n  updateCartItemQuantity(cartItemId: $cartItemId, quantity: $quantity) {\n    ...SidebarCart\n  }\n}": types.UpdateCartItemQuantityDocument,
     "mutation UpdateShippingAddress($customerAddressId: String!, $address1: String, $address2: String, $city: String, $country: String, $first_name: String, $last_name: String, $phone_number: String, $postal_code: String, $state: String) {\n  updateShippingAddress(\n    customerAddressId: $customerAddressId\n    address1: $address1\n    address2: $address2\n    city: $city\n    country: $country\n    first_name: $first_name\n    last_name: $last_name\n    phone_number: $phone_number\n    postal_code: $postal_code\n    state: $state\n  ) {\n    ...SidebarCart\n  }\n}": types.UpdateShippingAddressDocument,
     "mutation RegisterCustomer($email: String!, $password: String!, $name: String!, $passwordConfirmation: String!) {\n  registerCustomer(\n    email: $email\n    password: $password\n    name: $name\n    password_confirmation: $passwordConfirmation\n  ) {\n    ...CustomerData\n  }\n}\n\nmutation LoginCustomer($email: String!, $password: String!) {\n  loginCustomer(email: $email, password: $password) {\n    ...CustomerData\n  }\n}": types.RegisterCustomerDocument,
+    "query OrderById($id: ID!) {\n  getOrderById(id: $id) {\n    ...OrderData\n  }\n}": types.OrderByIdDocument,
     "query ProductBySlug($slug: String!) {\n  getProductBySlug(slug: $slug) {\n    ...ProductPage\n  }\n}": types.ProductBySlugDocument,
     "query ProductCards($first: Int!, $page: Int!) {\n  products(first: $first, page: $page) {\n    data {\n      id\n      slug\n      key\n      ...ProductMini\n    }\n    paginatorInfo {\n      ...Pagination\n    }\n  }\n}": types.ProductCardsDocument,
     "query ProductSlugs {\n  productSlugs\n}": types.ProductSlugsDocument,
@@ -127,7 +129,7 @@ export function graphql(source: "mutation CreateShippingAddress($address1: Strin
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "mutation PlaceOrder {\n  placeOrder {\n    ...OrderData\n  }\n}"): (typeof documents)["mutation PlaceOrder {\n  placeOrder {\n    ...OrderData\n  }\n}"];
+export function graphql(source: "mutation PlaceOrder {\n  placeOrder {\n    id\n  }\n}"): (typeof documents)["mutation PlaceOrder {\n  placeOrder {\n    id\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -168,6 +170,10 @@ export function graphql(source: "mutation UpdateShippingAddress($customerAddress
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "mutation RegisterCustomer($email: String!, $password: String!, $name: String!, $passwordConfirmation: String!) {\n  registerCustomer(\n    email: $email\n    password: $password\n    name: $name\n    password_confirmation: $passwordConfirmation\n  ) {\n    ...CustomerData\n  }\n}\n\nmutation LoginCustomer($email: String!, $password: String!) {\n  loginCustomer(email: $email, password: $password) {\n    ...CustomerData\n  }\n}"): (typeof documents)["mutation RegisterCustomer($email: String!, $password: String!, $name: String!, $passwordConfirmation: String!) {\n  registerCustomer(\n    email: $email\n    password: $password\n    name: $name\n    password_confirmation: $passwordConfirmation\n  ) {\n    ...CustomerData\n  }\n}\n\nmutation LoginCustomer($email: String!, $password: String!) {\n  loginCustomer(email: $email, password: $password) {\n    ...CustomerData\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query OrderById($id: ID!) {\n  getOrderById(id: $id) {\n    ...OrderData\n  }\n}"): (typeof documents)["query OrderById($id: ID!) {\n  getOrderById(id: $id) {\n    ...OrderData\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

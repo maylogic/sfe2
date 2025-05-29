@@ -56,6 +56,10 @@
                     Оформить заказ
                 </div>
             </div>
+            <div v-if="placingError">
+                Возникла ошибка при создании заказа.
+                Обратитесь к администратору и получите скидку на свой заказ.
+            </div>
         </div>
         <div class="order-summary-container">
             <order-summary :key="cart.key" :data="cart.totals">
@@ -101,6 +105,7 @@ import { useCartStore } from "~/stores/cart";
 import { num_word } from "~/utils/misc";
 import { useMutation } from "@urql/vue";
 import { PlaceOrderDocument } from "~/gql/graphql";
+import { navigateTo } from "#app";
 
 const authStore = useAuthStore()
 await authStore.hydrate()
@@ -144,13 +149,23 @@ watch(user, (newUser, prevUser) => {
     }
 }, {immediate: true})
 const showItemsOnMobile = ref(false)
-const {executeMutation, fetching: placing} = useMutation(PlaceOrderDocument)
+const {executeMutation, fetching: placing, error: placingError} = useMutation(PlaceOrderDocument)
 
 const redirecting = ref(false)
+
 async function placeOrder() {
     const {data} = await executeMutation({})
+    // отправить заказ
+    // перенаправить на платежную форму
     if (data) {
         redirecting.value = true
+        await navigateTo({
+            name: 'order-pay-id',
+            params: {
+                id: data.placeOrder.id
+            }
+        })
+        redirecting.value = false
     }
 }
 

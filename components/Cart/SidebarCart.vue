@@ -49,7 +49,7 @@
                 <cart-apply-balance :data="cart?.apply_balance"/>
             </div>
 
-            <cart-totals :data="cart.totals"/>
+            <totals :data="cart.totals"/>
             <nuxt-link autofocus @click="cartStore.open=false" to="/checkout" class="checkout-button">
                 <div>
                     <u-icon class="text-xl" name="i-heroicons-solid-lock-closed"/>
