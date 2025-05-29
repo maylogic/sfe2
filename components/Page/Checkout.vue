@@ -154,9 +154,9 @@ const {executeMutation, fetching: placing, error: placingError} = useMutation(Pl
 const redirecting = ref(false)
 
 async function placeOrder() {
-    const {data} = await executeMutation({})
-    // отправить заказ
-    // перенаправить на платежную форму
+    const {data} = await executeMutation({
+        comment: comment.value
+    })
     if (data) {
         redirecting.value = true
         await navigateTo({
