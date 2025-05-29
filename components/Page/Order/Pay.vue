@@ -1,7 +1,15 @@
 <template>
     <div class="order-pay-page">
-        <div class="payment-container">
-            платежный виджет
+        <div class="relative">
+            <div id="payment-container" ref="paymentContainer"/>
+            <loading-overlay v-if="loadingPaymentIntegration">
+                <loading-page label="Загрузка платежной интеграции"/>
+            </loading-overlay>
+            <div class="error-message" v-if="errorLoadingPaymentIntegration">
+                При загрузке платежной интеграции произошла ошибка.<br/>
+                Пожалуйста, обратитесь в службу поддержки клиентов и получите скидку на этот заказ.<br/>
+                Сообщите код заказа #{{ orderId }}
+            </div>
         </div>
         <div class="order-summary-container" v-if="order">
             <order-summary :key="order.id" :data="order.totals" label="К оплате:">
@@ -52,19 +60,57 @@ if (error.value) {
     console.error('GraphQL Error:', error.value)
     throw createError({
         statusCode: 500,
-        statusMessage: `Произошла ошибка. Если Вы уверены, что оформили заказ, то пожалуйста, обратитесь к администратору и сообщите ему код заказа ${props.orderId}`
+        statusMessage: `Произошла ошибка. Пожалуйста, обратитесь в службу поддержки клиентов и сообщите код заказа #${props.orderId}`
     })
 }
 
 if (!data.value?.getOrderById) {
     throw createError({
         statusCode: 404,
-        statusMessage: `Заказ не найден. Если Вы уверены, что оформили заказ, то пожалуйста, обратитесь к администратору и сообщите ему код заказа ${props.orderId}`
+        statusMessage: `Заказ не найден. Пожалуйста, обратитесь в службу поддержки клиентов и сообщите код заказа #${props.orderId}`
     })
 }
 
 const order = computed(() => useFragment(OrderDataFragmentDoc, data.value?.getOrderById))
 const showItemsOnMobile = ref(false)
+const loadingPaymentIntegration = ref(true),
+    errorLoadingPaymentIntegration = ref(false)
+const paymentContainer = ref<HTMLDivElement>()
+
+onMounted(() => {
+    const initConfig = {
+        terminalKey: 'myTerminalKey',
+        product: 'eacq',
+        features: {
+            payment: {
+                container: paymentContainer.value,
+                paymentStartCallback: async () => {
+                    // @ts-ignore
+                    return 'res.PaymentURL';
+                    // сделать graphql запрос за ссылкой для интеграции
+                },
+            },
+        }
+    }
+    const script = document.createElement('script')
+    script.src = 'https://acq-paymentform-integrationjs.t-static.ru/integration.js '
+    script.async = true
+    script.onload = async () => {
+        try {
+            // @ts-ignore
+            const integration = await PaymentIntegration.init(initConfig);
+        } catch {
+            errorLoadingPaymentIntegration.value = true
+        } finally {
+            loadingPaymentIntegration.value = false
+        }
+    }
+
+    if (import.meta.client) {
+        document.body.appendChild(script)
+    }
+})
+
 </script>
 <style lang="scss">
 .order-pay-page {
