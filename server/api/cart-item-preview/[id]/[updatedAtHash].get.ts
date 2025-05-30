@@ -20,10 +20,8 @@ import type {
 } from "~/utils/text";
 import {
     CanvasRenderingContext2D,
-    createCanvas,
-    registerFont
+    createCanvas
 } from "canvas";
-import * as fs from "node:fs";
 
 export default defineEventHandler(async (event) => {
     const cartItemId = getRouterParam(event, 'id'),
@@ -59,10 +57,6 @@ export default defineEventHandler(async (event) => {
     cartItem.text_lines?.forEach(textLine => {
         textLinesRenderValues.set(textLine.product_line_definition.id, textLine.value)
     })
-    const font = cartItem.font
-    if (font) {
-        //registerFont(`/home/ubuntu/sbe1/storage/app/public/${font.filename_ttf}`, {family: font.name})
-    }
     canvas.each(function (id, block) {
         // @ts-ignore
         const element = this as Element
@@ -76,7 +70,7 @@ export default defineEventHandler(async (event) => {
             applyTextsOnBlock(
                 svg,
                 base,
-                cartItem.font,
+                cartItem.font?.system_name,
                 cartItem.color,
                 cartItem.product.line_definitions,
                 textLinesRenderValues,
@@ -93,9 +87,9 @@ export default defineEventHandler(async (event) => {
 
     try {
         const svg = canvas.svg()
-        fs.writeFileSync(`${process.cwd()}/public/${cartItemId}-${updatedAtHash}.svg`, svg)
+        // fs.writeFileSync(`${process.cwd()}/public/${cartItemId}-${updatedAtHash}.svg`, svg)
 
-        const webpBuffer = await sharp(Buffer.from(svg), {density: 100})
+        const webpBuffer = await sharp(Buffer.from(svg), {density: 400})
             .webp({quality: 100})
             .toBuffer()
 

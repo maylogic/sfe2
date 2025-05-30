@@ -49,7 +49,7 @@ const applyTexts = () => {
     applyTextsOnBlock(
         svg,
         base,
-        props.data.font,
+        props.data.font?.name,
         props.data.color,
         props.lineDefinitions,
         props.textLinesRenderValues

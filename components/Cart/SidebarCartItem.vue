@@ -63,10 +63,10 @@
                                     v-for="textLine in item.text_lines"
                                     :key="textLine.id"/>
                 </div>
-                <div v-if="!loaded" style="aspect-ratio: auto" class="image-placeholder w-32 h-16"></div>
+                <div v-if="!loaded" style="aspect-ratio: auto" class="image-placeholder w-48 h-24"></div>
                 <img ref="cartItemImage"
-                     :src="`/api/cart-item-preview/${item.id}/${item.updated_at}.webp`"
-                     class="w-32 loadable-image"
+                     :src="`/api/cart-item-preview/${item.id}/${item.updated_at.substr(-8).replace(/:/g, '')}.webp`"
+                     class="w-48 loadable-image"
                      :class="{loaded}"
                      alt="Превью"/>
             </div>

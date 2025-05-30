@@ -9,13 +9,7 @@ query CartItemToGen($id: ID!) {
             label
         }
         font {
-            filename_otf
-            filename_ttf
-            filename_woff2
-            id
-            label
-            name
-            preview
+            system_name
         }
         design {
             ...DesignItem

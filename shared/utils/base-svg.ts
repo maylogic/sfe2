@@ -34,7 +34,7 @@ export const applyColorOnBlock = (block: SVGGElement, color: Color | null | unde
 export const applyTextsOnBlock = (
     svg: SVGSVGElement,
     base: BaseFragmentFragment,
-    font: Font | null | undefined,
+    font: string | null | undefined,
     color: Color | null | undefined,
     lineDefinitions: ProductLineDefinition[],
     textLinesRenderValues: InputTextLinesMap,
@@ -60,7 +60,7 @@ export const applyTextsOnBlock = (
         if (rect.inherit_color && color) {
             fill = color.hex
         }
-        const fontFamily = font?.name ?? 'Arial'
+        const fontFamily = font ?? 'Arial'
         textData.push({
             id,
             value,
