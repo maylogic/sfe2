@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
         const svg = canvas.svg()
         fs.writeFileSync(`${process.cwd()}/public/${cartItemId}-${updatedAtHash}.svg`, svg)
 
-        const webpBuffer = await sharp(Buffer.from(svg), {density: 1440})
+        const webpBuffer = await sharp(Buffer.from(svg), {density: 144})
             .webp({quality: 100})
             .toBuffer()
 
