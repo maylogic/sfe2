@@ -23,6 +23,7 @@ import {
     createCanvas,
     registerFont
 } from "canvas";
+import * as fs from "node:fs";
 
 export default defineEventHandler(async (event) => {
     const cartItemId = getRouterParam(event, 'id'),
@@ -71,8 +72,9 @@ export default defineEventHandler(async (event) => {
         const baseId = element.data('base-id') as string
         const base = firstDesignBase?.id == baseId ? firstDesignBase : reverseSideBase
         if (base && cartItem.product.line_definitions) {
+            const svg = element.findOne('svg')
             applyTextsOnBlock(
-                element,
+                svg,
                 base,
                 cartItem.font,
                 cartItem.color,
@@ -91,8 +93,9 @@ export default defineEventHandler(async (event) => {
 
     try {
         const svg = canvas.svg()
+        fs.writeFileSync(`${process.cwd()}/public/${cartItemId}-${updatedAtHash}.svg`, svg)
 
-        const webpBuffer = await sharp(Buffer.from(svg), {density: 144})
+        const webpBuffer = await sharp(Buffer.from(svg), {density: 1440})
             .webp({quality: 100})
             .toBuffer()
 
