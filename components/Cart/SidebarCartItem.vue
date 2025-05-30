@@ -17,6 +17,7 @@
                 @update:quantity="quantity = $event"
             />
         </div>
+        <img :src="`/api/cart-item-preview/${item.id}/1234.webp`" alt="Превью"/>
 
         <div class="info">
             <div class="buttons flex items-center gap-2">

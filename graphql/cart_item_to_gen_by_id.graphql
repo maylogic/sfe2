@@ -1,0 +1,46 @@
+query CartItemToGen($id: ID!) {
+    cartItem(
+        id: $id
+    ) {
+        id
+        color {
+            id
+            hex
+            label
+        }
+        font {
+            filename_otf
+            filename_ttf
+            filename_woff2
+            id
+            label
+            name
+            preview
+        }
+        design {
+            ...DesignItem
+        }
+        text_lines {
+            id
+            product_line_definition {
+                id
+            }
+            value
+        }
+        product {
+            line_definitions {
+                id
+                label
+                max_length
+                required
+                default_value
+                hidden
+                sort
+            }
+            reverse_side_base {
+                ...BaseFragment
+            }
+        }
+        updated_at
+    }
+}

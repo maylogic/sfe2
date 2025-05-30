@@ -46,5 +46,6 @@ query CartItem($id: ID!) {
         product {
             ...ProductPage
         }
+        updated_at
     }
 }

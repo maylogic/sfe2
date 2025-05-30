@@ -26,32 +26,55 @@ export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.setAttribute('text-anchor', 'middle')
     el.setAttribute('x', data.x.toFixed(4))
     el.setAttribute('y', data.y.toFixed(4))
+    el.classList.add('text-data')
     el.children[0].innerHTML = data.value
 }
 
-export const createOrUpdateTexts = (textData: TextRenderData[], svg: SVGSVGElement) => {
+export const createOrUpdateTexts = (
+    textData: TextRenderData[],
+    svg: SVGSVGElement,
+    updater?: (el: SVGTextElement, data: TextRenderData) => void,
+    finder?: (id: string, el: SVGSVGElement) => SVGTextElement | null,
+    creator?: () => SVGTextElement,
+    appender?: (el: SVGTextElement, svg: SVGSVGElement) => void
+) => {
+    const updateFn = updater ?? updTextAttributes,
+        findFn = finder ?? findTextById,
+        createFn = creator ?? createTextElement,
+        appendFn = appender ?? appendTextToSvg
     textData.forEach(data => {
-        const existingEl = findTextById(data.id, svg)
+        const existingEl = findFn(data.id, svg)
         if (existingEl) {
-            updTextAttributes(existingEl, data)
+            updateFn(existingEl, data)
             return
         }
 
-        const el = createTextElement()
-        el.classList.add('text-data')
-        updTextAttributes(el, data)
-        if (svg) {
-            svg.appendChild(el)
-        }
+        const el = createFn()
+        updateFn(el, data)
+        appendFn(el, svg)
     })
+}
+
+const appendTextToSvg = (el: SVGTextElement, svg: SVGSVGElement) => {
+    if (svg) {
+        svg.appendChild(el)
+    }
 }
 
 export const findTextById = (id: string, svg: SVGSVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
-export const calculateTextDataPos = (data: TextRenderData, area: TextPieceArea) => {
-    const realMetrics = getTextMetricsReal(data),
-        metrics = getTextMetrics(data),
+export const calculateTextDataPos = (
+    data: TextRenderData,
+    area: TextPieceArea,
+    getMetrics?: (data: TextRenderData) => { actualBoundingBoxDescent: number },
+    getMetricsReal?: (data: TextRenderData, fontSize?: number) => TextMetricsReal
+) => {
+    const metricsFn = getMetrics ?? getTextMetrics,
+        metricsRealFn = getMetricsReal ?? getTextMetricsReal
+
+    const realMetrics = metricsRealFn(data),
+        metrics = metricsFn(data),
         hasDescentSymbols = metrics.actualBoundingBoxDescent > 0,
         fakeDescent = realMetrics.height * 0.15
     const leftovers = area.height - realMetrics.height,
@@ -67,13 +90,15 @@ const getTargetHeight = (area: TextPieceArea) => area.height - AREA_PADDING_Y * 
 
 export const calculateFontSize = (data: TextRenderData,
                                   area: TextPieceArea,
+                                  getMetricsReal?: (data: TextRenderData, fontSize?: number) => TextMetricsReal,
                                   precision: number = 0.01
 ) => {
+    const metricsRealFn = getMetricsReal ?? getTextMetricsReal
     const targetWidth = getTargetWidth(area),
         targetHeight = getTargetHeight(area)
 
     const doesTextFit = (fontSize: number): boolean => {
-        const metrics = getTextMetricsReal(data, fontSize)
+        const metrics = metricsRealFn(data, fontSize)
         const textWidth = metrics.width;
         const textHeight = metrics.height
 
@@ -112,15 +137,21 @@ export const calculateFontSize = (data: TextRenderData,
     return doesTextFit(fontSize) ? fontSize : fontSize - lastAdjustment;
 }
 
-export const removeTextsForUnusedDefIds = (usedDefIds: string[], defs: ProductLineDefinition[], svg: SVGSVGElement) => {
+export const removeTextsForUnusedDefIds = (
+    usedDefIds: string[],
+    defs: ProductLineDefinition[],
+    svg: SVGSVGElement,
+    finder?: (id: string, el: SVGSVGElement) => SVGTextElement | null
+) => {
+    const findFn = finder ?? findTextById
     defs.map(line => line.id) // get def ids
         .filter((id) => !usedDefIds.includes(id)) // include only unused def ids
         .forEach((id) => {
-            findTextById(id, svg)?.remove() // remove text elements for unused def ids
+            findFn(id, svg)?.remove() // remove text elements for unused def ids
         })
 }
 
-const getTextMetrics = (data: TextRenderData) => {
+const getTextMetrics = (data: TextRenderData): { actualBoundingBoxDescent: number } => {
     const ctx = getCanvasContext(getDpi())
     if (ctx) {
         const size = data.size
@@ -175,7 +206,7 @@ const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetric
     }
 }
 
-type TextMetricsReal = {
+export type TextMetricsReal = {
     width: number,
     height: number,
 }
