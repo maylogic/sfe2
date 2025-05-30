@@ -17,8 +17,6 @@
                 @update:quantity="quantity = $event"
             />
         </div>
-        <img :src="`/api/cart-item-preview/${item.id}/1234.webp`" alt="Превью"/>
-
         <div class="info">
             <div class="buttons flex items-center gap-2">
                 <a href="#" class="flex items-center gap-1" @click.prevent="showInfo = !showInfo">
@@ -65,6 +63,12 @@
                                     v-for="textLine in item.text_lines"
                                     :key="textLine.id"/>
                 </div>
+                <div v-if="!loaded" style="aspect-ratio: auto" class="image-placeholder w-32 h-16"></div>
+                <img ref="cartItemImage"
+                     :src="`/api/cart-item-preview/${item.id}/${item.updated_at}.webp`"
+                     class="w-32 loadable-image"
+                     :class="{loaded}"
+                     alt="Превью"/>
             </div>
         </div>
 
@@ -138,6 +142,8 @@ const remove = async () => {
         }, 100)
     })
 }
+const cartItemImage = ref<HTMLImageElement>()
+const {loaded} = useImageLoad(cartItemImage)
 watchDebounced(
     quantity,
     async () => {

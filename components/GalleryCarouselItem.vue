@@ -1,14 +1,16 @@
 <template>
-    <div v-if="!loaded" class="image-placeholder"></div>
-    <img
-        v-if="!item.is_video"
-        ref="imgRef"
-        @load="loaded = true"
-        :src="getImageUrl(item.filename)"
-        :alt="item.label"
-        class="media-image"
-        :class="{loaded}"
-    />
+    <div class="carousel-item">
+        <div v-if="!loaded" class="image-placeholder w-full"></div>
+        <img
+            v-if="!item.is_video"
+            ref="imgRef"
+            @load="loaded = true"
+            :src="getImageUrl(item.filename)"
+            :alt="item.label"
+            class="media-image"
+            :class="{loaded}"
+        />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -27,6 +29,6 @@ const item = useFragment(GalleryItemFragmentDoc, props.data)
 
 const getImageUrl = (filename: string) => getStorageUrl(filename)
 const imgRef = ref<HTMLImageElement>()
-const { loaded, error } = useImageLoad(imgRef)
+const {loaded, error} = useImageLoad(imgRef)
 
 </script>

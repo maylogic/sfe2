@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
     })
     const font = cartItem.font
     if (font) {
-        registerFont(`/home/ubuntu/sbe1/storage/app/public/${font.filename_ttf}`, {family: font.name})
+        //registerFont(`/home/ubuntu/sbe1/storage/app/public/${font.filename_ttf}`, {family: font.name})
     }
     canvas.each(function (id, block) {
         // @ts-ignore
@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
         const svg = canvas.svg()
         fs.writeFileSync(`${process.cwd()}/public/${cartItemId}-${updatedAtHash}.svg`, svg)
 
-        const webpBuffer = await sharp(Buffer.from(svg), {density: 144})
+        const webpBuffer = await sharp(Buffer.from(svg), {density: 100})
             .webp({quality: 100})
             .toBuffer()
 

@@ -1,6 +1,6 @@
 <template>
     <div class="personalize-item-image">
-        <div v-if="!loaded" class="image-placeholder"></div>
+        <div v-if="!loaded" class="image-placeholder w-full"></div>
         <img
             ref="imgRef"
             @load="loaded = true"

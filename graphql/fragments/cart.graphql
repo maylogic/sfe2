@@ -53,6 +53,7 @@ fragment SidebarCartItem on CartItem {
         ...CartTextLine
     }
     quantity
+    updated_at
 }
 fragment SidebarCart on Cart {
     id
