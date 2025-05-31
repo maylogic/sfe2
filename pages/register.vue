@@ -1,5 +1,5 @@
 <template>
-    <FormRegister />
+    <form-register />
 </template>
 <script setup lang="ts">
 definePageMeta({

@@ -41,6 +41,7 @@ type Documents = {
     "query ProductCards($first: Int!, $page: Int!) {\n  products(first: $first, page: $page) {\n    data {\n      id\n      slug\n      key\n      ...ProductMini\n    }\n    paginatorInfo {\n      ...Pagination\n    }\n  }\n}": typeof types.ProductCardsDocument,
     "query ProductSlugs {\n  productSlugs\n}": typeof types.ProductSlugsDocument,
     "query CurrentUser {\n  currentUser {\n    ...CustomerData\n  }\n}": typeof types.CurrentUserDocument,
+    "query OrderLookup($email: String!, $orderId: Int!) {\n  orderLookup(email: $email, orderId: $orderId) {\n    ...OrderData\n  }\n}": typeof types.OrderLookupDocument,
     "query ShippingMethods {\n  shippingMethods {\n    description\n    id\n    info {\n      price\n      days\n    }\n    label\n  }\n}": typeof types.ShippingMethodsDocument,
 };
 const documents: Documents = {
@@ -71,6 +72,7 @@ const documents: Documents = {
     "query ProductCards($first: Int!, $page: Int!) {\n  products(first: $first, page: $page) {\n    data {\n      id\n      slug\n      key\n      ...ProductMini\n    }\n    paginatorInfo {\n      ...Pagination\n    }\n  }\n}": types.ProductCardsDocument,
     "query ProductSlugs {\n  productSlugs\n}": types.ProductSlugsDocument,
     "query CurrentUser {\n  currentUser {\n    ...CustomerData\n  }\n}": types.CurrentUserDocument,
+    "query OrderLookup($email: String!, $orderId: Int!) {\n  orderLookup(email: $email, orderId: $orderId) {\n    ...OrderData\n  }\n}": types.OrderLookupDocument,
     "query ShippingMethods {\n  shippingMethods {\n    description\n    id\n    info {\n      price\n      days\n    }\n    label\n  }\n}": types.ShippingMethodsDocument,
 };
 
@@ -196,6 +198,10 @@ export function graphql(source: "query ProductSlugs {\n  productSlugs\n}"): (typ
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "query CurrentUser {\n  currentUser {\n    ...CustomerData\n  }\n}"): (typeof documents)["query CurrentUser {\n  currentUser {\n    ...CustomerData\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query OrderLookup($email: String!, $orderId: Int!) {\n  orderLookup(email: $email, orderId: $orderId) {\n    ...OrderData\n  }\n}"): (typeof documents)["query OrderLookup($email: String!, $orderId: Int!) {\n  orderLookup(email: $email, orderId: $orderId) {\n    ...OrderData\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

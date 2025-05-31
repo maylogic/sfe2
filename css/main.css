@@ -185,3 +185,6 @@ html, body {
     @apply text-red-500;
     font-family: "Fira Sans", sans-serif;
 }
+.narrow-form {
+    @apply flex flex-col gap-2 max-w-[320px] mx-auto bg-white p-2;
+}

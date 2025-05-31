@@ -1,0 +1,5 @@
+query OrderLookup($email: String!, $orderId: Int!) {
+    orderLookup(email: $email, orderId: $orderId) {
+        ...OrderData
+    }
+}

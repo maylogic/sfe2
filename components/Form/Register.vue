@@ -1,47 +1,47 @@
 <template>
-    <UForm
+    <u-form
         @submit.prevent="onSubmit"
         :schema="schema"
         :state="state"
-        class="space-y-4 max-w-[320px] mx-auto"
+        class="narrow-form"
     >
-        <UFormGroup label="Имя" name="name">
-            <UInput autocomplete="name" v-model="state.name"/>
-        </UFormGroup>
-        <UFormGroup
+        <u-form-group label="Имя" name="name">
+            <u-input autocomplete="name" v-model="state.name"/>
+        </u-form-group>
+        <u-form-group
             label="Email"
             name="email"
             :error="errors.email ? errors.email[0] : undefined"
         >
             <form-input-username v-model="state.email"/>
-        </UFormGroup>
-        <UFormGroup label="Пароль" name="password">
+        </u-form-group>
+        <u-form-group label="Пароль" name="password">
             <form-input-password
                 autocomplete="new-password"
                 v-model="state.password"
                 :show="showPassword"
                 @toggle="showPassword = !showPassword"
             />
-        </UFormGroup>
-        <UFormGroup label="Повторите пароль" name="passwordConfirmation">
+        </u-form-group>
+        <u-form-group label="Повторите пароль" name="passwordConfirmation">
             <form-input-password
                 autocomplete="new-password"
                 v-model="state.passwordConfirmation"
                 :show="showPassword"
                 @toggle="showPassword = !showPassword"
             />
-        </UFormGroup>
+        </u-form-group>
 
         <div class="flex items-center gap-2">
-            <UButton type="submit" :disabled="fetching">
+            <u-button type="submit" :disabled="fetching">
                 Зарегистрироваться
-            </UButton>
+            </u-button>
             <u-button variant="outline" to="/login">
                 Вход
             </u-button>
         </div>
-        <UProgress v-if="fetching" size="xl"/>
-    </UForm>
+        <loading-page v-if="fetching"/>
+    </u-form>
 </template>
 
 <script setup lang="ts">

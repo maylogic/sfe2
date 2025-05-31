@@ -20,7 +20,7 @@ defineProps<{
 </script>
 <style lang="scss">
 .horizontal-nav {
-    @apply sm:flex hidden items-center gap-2;
+    @apply sm:flex hidden items-center gap-5;
     .nav-item {
         @apply text-black uppercase tracking-wider;
         &:hover {

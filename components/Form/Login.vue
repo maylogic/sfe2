@@ -1,36 +1,36 @@
 <template>
-    <UForm
+    <u-form
         @submit.prevent="onSubmit"
         :schema="schema"
         :state="state"
-        class="space-y-4 max-w-[320px] mx-auto"
+        class="narrow-form"
     >
-        <UFormGroup label="Email" name="email">
+        <u-form-group label="Email" name="email">
             <form-input-username v-model="state.email"/>
-        </UFormGroup>
-        <UFormGroup label="Пароль" name="password">
+        </u-form-group>
+        <u-form-group label="Пароль" name="password">
             <form-input-password
                 v-model="state.password"
                 :show="show"
                 @toggle="show = !show"
             />
-        </UFormGroup>
+        </u-form-group>
         <div class="flex items-center gap-2">
-            <UButton type="submit" :disabled="fetching">
+            <u-button type="submit" :disabled="fetching">
                 Войти
-            </UButton>
+            </u-button>
 
             <u-button variant="outline" to="/register">
                 Регистрация
             </u-button>
         </div>
-        <UProgress v-if="fetching" size="xl"/>
+        <loading-page v-if="fetching"/>
         <u-alert
             v-if="invalidCredentials"
             title="Неправильные логин или пароль"
             color="red"
         />
-    </UForm>
+    </u-form>
 </template>
 
 <script setup lang="ts">
@@ -42,7 +42,6 @@ import {
     emailValidation,
     passwordValidation
 } from '~/yup'
-import FormInputUsername from '~/components/Form/Input/FormInputUsername.vue'
 import type { FormSubmitEvent } from '#ui/types'
 import { useMutation } from '@urql/vue'
 import { LoginCustomerDocument } from '~/gql/graphql'
