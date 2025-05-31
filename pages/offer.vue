@@ -1,5 +1,5 @@
 <template>
-    <div class="offer care-page">
+    <div class="care-page">
         <h1>ДОГОВОР ПУБЛИЧНОЙ ОФЕРТЫ</h1>
         <div>Интернет-магазин safepets, расположенный на доменном имени safepets.ru, ИП Цвингер Артем Сергеевич, и
             юридическим адресом 650070, РОССИЯ, КЕМЕРОВСКАЯ ОБЛАСТЬ - КУЗБАСС, Г КЕМЕРОВО, УЛ ТУХАЧЕВСКОГО, Д 38Б, КВ
@@ -127,13 +127,6 @@
         <company-details/>
     </div>
 </template>
-<style lang="scss">
-.offer {
-    div {
-        @apply my-2;
-    }
-}
-</style>
 <script setup lang="ts">
 definePageMeta({
     layout: 'care'
