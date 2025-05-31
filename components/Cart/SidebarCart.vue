@@ -13,7 +13,7 @@
                 Продолжить шоппинг
             </div>
         </div>
-        <pay-logos class="mx-auto"/>
+        <pay-logos class="mx-auto mt-5"/>
     </div>
     <div class="sidebar-cart p-5" :key="cart.key" v-else>
         <loading-overlay v-if="loading">
