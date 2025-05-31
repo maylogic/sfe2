@@ -1,5 +1,5 @@
 <template>
-    <div class="privacy-policy">
+    <div class="care-page">
         <h1>Политика в отношении обработки персональных данных</h1>
         <h2>1. Общие положения</h2>
         <div>Настоящая политика обработки персональных данных составлена в соответствии с требованиями Федерального
@@ -428,26 +428,3 @@ definePageMeta({
     layout: 'care'
 })
 </script>
-<style lang="scss">
-.privacy-policy {
-    @apply bg-white p-5;
-    h1 {
-        @apply text-2xl;
-    }
-
-    h2 {
-        @apply text-xl my-2;
-    }
-
-    div {
-        @apply my-2;
-    }
-
-    table {
-        @apply border-2 my-2;
-        th, td {
-            @apply border-2 text-left p-2;
-        }
-    }
-}
-</style>
