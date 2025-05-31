@@ -173,14 +173,6 @@ html, body {
     }
 }
 
-.loadable-image {
-    &:not(.loaded) {
-        width: 1px;
-        height: 1px;
-        opacity: 1%;
-    }
-}
-
 .error-message {
     @apply text-red-500;
     font-family: "Fira Sans", sans-serif;

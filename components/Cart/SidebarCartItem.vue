@@ -63,12 +63,12 @@
                                     v-for="textLine in item.text_lines"
                                     :key="textLine.id"/>
                 </div>
-                <div v-if="!loaded" style="aspect-ratio: auto" class="image-placeholder w-48 h-24"></div>
-                <img ref="cartItemImage"
-                     :src="`/api/cart-item-preview/${item.id}/${item.updated_at.substr(-8).replace(/:/g, '')}.webp`"
-                     class="w-48 loadable-image"
-                     :class="{loaded}"
-                     alt="Превью"/>
+                <loadable-image
+                    :src="`/api/cart-item-preview/${item.id}/${item.updated_at.substr(-8).replace(/:/g, '')}.webp`"
+                    class="w-48"
+                    alt="Превью">
+                    <div class="image-placeholder w-48 h-24"></div>
+                </loadable-image>
             </div>
         </div>
 
@@ -142,8 +142,6 @@ const remove = async () => {
         }, 100)
     })
 }
-const cartItemImage = ref<HTMLImageElement>()
-const {loaded} = useImageLoad(cartItemImage)
 watchDebounced(
     quantity,
     async () => {

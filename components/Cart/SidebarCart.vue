@@ -13,6 +13,7 @@
                 Продолжить шоппинг
             </div>
         </div>
+        <pay-logos class="mx-auto"/>
     </div>
     <div class="sidebar-cart p-5" :key="cart.key" v-else>
         <loading-overlay v-if="loading">
@@ -56,6 +57,7 @@
                     Оформить заказ
                 </div>
             </nuxt-link>
+            <pay-logos class="mx-auto"/>
         </div>
     </div>
 </template>
