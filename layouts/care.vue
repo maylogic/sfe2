@@ -14,13 +14,13 @@
 .care-page-layout {
     @apply bg-storm-dust-50;
     .care-page {
-        @apply bg-white py-2 px-5;
+        @apply bg-white py-2 px-5 rounded-md text-base;
         h1 {
-            @apply text-2xl;
+            @apply text-xl;
         }
 
         h2 {
-            @apply text-xl my-2;
+            @apply text-lg my-2;
         }
 
         & > div {

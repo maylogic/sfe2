@@ -153,13 +153,11 @@ html, body {
 
 .image-placeholder {
     @apply bg-storm-dust-200 rounded-lg;
-    aspect-ratio: 1/1;
     animation: pulse 1.5s infinite ease-in-out;
 }
 
 .image-error-placeholder {
     @apply bg-storm-dust-100 rounded-lg flex items-center justify-center text-center;
-    aspect-ratio: 1/1;
     width: 100%;
 }
 
@@ -179,4 +177,10 @@ html, body {
 }
 .narrow-form {
     @apply flex flex-col gap-2 max-w-[320px] mx-auto bg-white p-2;
+}
+
+a {
+    &:active {
+        @apply outline-none;
+    }
 }
