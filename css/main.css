@@ -181,6 +181,6 @@ html, body {
 
 a {
     &:active, &:focus-visible {
-        @apply outline-none;
+        @apply outline-none outline-0;
     }
 }
