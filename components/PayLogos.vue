@@ -29,7 +29,7 @@
     .loadable-image {
         @apply h-4 w-auto;
         img {
-            @apply h-4 opacity-60 hover:opacity-100;
+            @apply h-4 opacity-60 hover:opacity-100 grayscale;
         }
         &.visa, &.mastercard, &.mir {
             @apply h-3;
