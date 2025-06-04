@@ -1,13 +1,4 @@
 <template>
-    <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ3Z5R55"
-                height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <noscript><img src="https://mc.yandex.ru/watch/XXXXXX " style="position:absolute; left:-9999px;" alt=""/></noscript>
-    <noscript>
-        <div><img src="https://top-fwz1.mail.ru/counter?id=3656189;js=na" style="position:absolute;left:-9999px;"
-                  alt="Top.Mail.Ru"/></div>
-    </noscript>
     <NuxtLayout>
         <NuxtPage/>
     </NuxtLayout>
@@ -76,6 +67,11 @@ _tmr.push({id: "3656189", type: "pageView", start: (new Date()).getTime()});
 })(document, window, "tmr-code");
 `
         }
+    ],
+    noscript: [
+        {innerHTML: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ3Z5R55" height="0" width="0" style="display:none;visibility:hidden"></iframe>`},
+        {innerHTML: `<img src="https://mc.yandex.ru/watch/101769326" style="position:absolute; left:-9999px;" alt=""/>`},
+        {innerHTML: `<div><img src="https://top-fwz1.mail.ru/counter?id=3656189;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru"/></div>`}
     ]
 })
 </script>

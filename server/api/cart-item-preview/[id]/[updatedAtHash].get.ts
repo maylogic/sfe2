@@ -176,8 +176,8 @@ const getTextMetricsRealNodejs = (data: TextRenderData, fontSize?: number): Text
     }
 
     return {
-        width: (right - left) / dpi,
-        height: (bottom - top) / dpi,
+        width: Math.max(0, (right - left) / dpi),
+        height: Math.max(0, (bottom - top) / dpi),
     }
 }
 

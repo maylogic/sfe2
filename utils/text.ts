@@ -105,7 +105,7 @@ export const calculateFontSize = (data: TextRenderData,
         return textWidth <= targetWidth && textHeight <= targetHeight;
     };
 
-    let fontSize = targetHeight; // Начальный размер шрифта
+    let fontSize = 1; // Начальный размер шрифта
     let step = fontSize / 2;     // Начальный шаг
     let lastAdjustment = 0;      // Последнее изменение (±)
 
@@ -201,8 +201,8 @@ const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetric
     }
 
     return {
-        width: (right - left) / dpi,
-        height: (bottom - top) / dpi,
+        width: Math.max(0, (right - left) / dpi),
+        height: Math.max(0, (bottom - top) / dpi),
     }
 }
 
