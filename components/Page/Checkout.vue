@@ -49,13 +49,13 @@
                     />
                 </div>
             </checkout-block>
-            <div class="checkout-button" :class="{'disabled': !cart.can_place_order}"
-                 @click="placeOrder">
-                <div>
+            <button type="button" :disabled="!cart.can_place_order" class="checkout-button"
+                    @click="placeOrder">
+                <span>
                     <u-icon class="text-xl" name="i-bxs-lock"/>
                     Перейти к оплате
-                </div>
-            </div>
+                </span>
+            </button>
             <div v-if="placingError" class="error-message">
                 Возникла ошибка при создании заказа.<br/>
                 Обратитесь в службу поддержки клиентов и получите скидку на этот заказ.

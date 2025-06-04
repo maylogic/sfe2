@@ -38,7 +38,11 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             graphqlUrl: 'http://localhost/graphql',
-            storageUrl: 'http://localhost/storage'
+            storageUrl: 'http://localhost/storage',
+            devTerminal: 'dev_terminal',
+            devTerminalPass: 'dev_terminal_pass',
+            prodTerminal: 'prod_terminal',
+            prodTerminalPass: 'prod_terminal_pass'
         }
     },
     css: [

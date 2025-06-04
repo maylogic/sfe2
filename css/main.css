@@ -136,18 +136,21 @@ html, body {
 }
 
 .checkout-button {
-    @apply bg-robins-egg-blue-500 rounded-md flex items-center justify-center outline-none outline-0;
+    @apply bg-robins-egg-blue-500 rounded-md flex items-center justify-center;
     @apply text-white;
     @apply cursor-pointer;
 
-    div {
+    & > div, & > span {
         @apply flex items-center gap-2 h-12 justify-center uppercase text-xl font-bold;
         letter-spacing: 0.05rem;
         font-family: "Fira Sans", sans-serif;
     }
 
-    &.disabled {
+    &:disabled, &.disabled {
         @apply bg-storm-dust-200 cursor-not-allowed;
+    }
+    &:active {
+        @apply outline-none;
     }
 }
 

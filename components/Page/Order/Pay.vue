@@ -47,6 +47,7 @@ import {
     OrderDataFragmentDoc
 } from "~/gql/graphql";
 import { useFragment } from "~/gql";
+import { getTerminal } from "~/utils/terminal";
 
 const props = defineProps<{
     orderId: string
@@ -76,16 +77,19 @@ const showItemsOnMobile = ref(false)
 const loadingPaymentIntegration = ref(true),
     errorLoadingPaymentIntegration = ref(false)
 const paymentContainer = ref<HTMLDivElement>()
+const [terminalKey] = getTerminal()
 
 onMounted(() => {
+    console.log(terminalKey)
     const initConfig = {
-        terminalKey: 'myTerminalKey',
+        terminalKey,
         product: 'eacq',
         features: {
             payment: {
                 container: paymentContainer.value,
                 paymentStartCallback: async () => {
                     // @ts-ignore
+                    console.log('payment start')
                     return 'res.PaymentURL';
                     // сделать graphql запрос за ссылкой для интеграции
                 },
