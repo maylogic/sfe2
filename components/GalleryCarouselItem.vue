@@ -32,3 +32,10 @@ const imgRef = ref<HTMLImageElement>()
 const {loaded, error} = useImageLoad(imgRef)
 
 </script>
+<style lang="scss">
+.carousel-item {
+    .image-placeholder {
+        aspect-ratio: 1/1;
+    }
+}
+</style>

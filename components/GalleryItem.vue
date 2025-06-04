@@ -50,5 +50,9 @@ const item = useFragment(GalleryItemFragmentDoc, props.data)
         width: 100%;
         overflow: hidden;
     }
+
+    .image-placeholder {
+        aspect-ratio: 1/1;
+    }
 }
 </style>

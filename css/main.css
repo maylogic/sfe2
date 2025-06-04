@@ -149,9 +149,6 @@ html, body {
     &:disabled, &.disabled {
         @apply bg-storm-dust-200 cursor-not-allowed;
     }
-    &:active {
-        @apply outline-none;
-    }
 }
 
 .image-placeholder {
@@ -183,7 +180,7 @@ html, body {
 }
 
 a {
-    &:active {
+    &:active, &:focus-visible {
         @apply outline-none;
     }
 }

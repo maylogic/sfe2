@@ -4,5 +4,6 @@ mutation PlaceOrder(
 ) {
     placeOrder(comment: $comment, subscribe: $subscribe) {
         id
+        paymentUrl
     }
 }

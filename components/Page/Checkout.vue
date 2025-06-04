@@ -158,14 +158,9 @@ async function placeOrder() {
         comment: comment.value,
         subscribe: subscribe.value
     })
-    if (data) {
+    if (data?.placeOrder.paymentUrl) {
         redirecting.value = true
-        await navigateTo({
-            name: 'order-pay-id',
-            params: {
-                id: data.placeOrder.id
-            }
-        })
+        window.location.href = data?.placeOrder.paymentUrl
         redirecting.value = false
     }
 }
