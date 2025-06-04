@@ -1,4 +1,9 @@
 <template>
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ3Z5R55"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <noscript><img src="https://mc.yandex.ru/watch/XXXXXX " style="position:absolute; left:-9999px;" alt=""/></noscript>
     <NuxtLayout>
         <NuxtPage/>
     </NuxtLayout>
@@ -54,16 +59,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
    });
       `,
         },
-    ],
-    noscript: [
-        {
-            innerHTML: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ3Z5R55"
-height="0" width="0" style="display:none;visibility:hidden"></iframe>`
-        },
-        {
-            innerHTML: '<img src="https://mc.yandex.ru/watch/XXXXXX " style="position:absolute; left:-9999px;" alt="" />',
-        },
-    ],
+    ]
 })
 </script>
 <style>
