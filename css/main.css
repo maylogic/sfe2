@@ -152,12 +152,12 @@ html, body {
 }
 
 .image-placeholder {
-    @apply bg-storm-dust-200 rounded-lg;
+    @apply bg-storm-dust-200;
     animation: pulse 1.5s infinite ease-in-out;
 }
 
 .image-error-placeholder {
-    @apply bg-storm-dust-100 rounded-lg flex items-center justify-center text-center;
+    @apply bg-storm-dust-100 flex items-center justify-center text-center;
     width: 100%;
 }
 

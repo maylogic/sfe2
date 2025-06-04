@@ -32,8 +32,5 @@ defineProps<{
             opacity: 1%;
         }
     }
-    .image-placeholder {
-        @apply h-full rounded-sm;
-    }
 }
 </style>

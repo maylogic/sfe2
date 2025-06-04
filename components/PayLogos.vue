@@ -37,6 +37,9 @@
                 @apply h-3;
             }
         }
+        .image-placeholder {
+            @apply rounded-sm h-full;
+        }
     }
 }
 </style>

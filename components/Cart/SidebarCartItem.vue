@@ -67,7 +67,7 @@
                     :src="`/api/cart-item-preview/${item.id}/${item.updated_at.substr(-8).replace(/:/g, '')}.webp`"
                     class="w-48"
                     alt="Превью">
-                    <div class="image-placeholder w-48 h-24"></div>
+                    <div class="image-placeholder w-48 h-24 rounded-lg"></div>
                 </loadable-image>
             </div>
         </div>
