@@ -15,7 +15,7 @@ export type TextRenderData = {
     size: number
 }
 
-const AREA_PADDING_Y = 0.2,
+const AREA_PADDING_Y = 0.5,
     AREA_PADDING_X = 0.1
 
 export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
