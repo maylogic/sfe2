@@ -5,5 +5,8 @@ export default () => {
         const a = 2+ 2
         const b = a + Math.random()
         c += b
+        setTimeout(() => {
+            c = 0
+        })
     }
 }
