@@ -53,25 +53,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         ecommerce:"dataLayer"
    });
       `,
-        },
-        {
-            innerHTML: `
-            var _tmr = window._tmr || (window._tmr = []);
-_tmr.push({id: "3656189", type: "pageView", start: (new Date()).getTime()});
-(function (d, w, id) {
-  if (d.getElementById(id)) return;
-  var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
-  ts.src = "https://top-fwz1.mail.ru/js/code.js";
-  var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
-  if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
-})(document, window, "tmr-code");
-`
         }
     ],
     noscript: [
         {innerHTML: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ3Z5R55" height="0" width="0" style="display:none;visibility:hidden"></iframe>`},
-        {innerHTML: `<img src="https://mc.yandex.ru/watch/101769326" style="position:absolute; left:-9999px;" alt=""/>`},
-        {innerHTML: `<div><img src="https://top-fwz1.mail.ru/counter?id=3656189;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru"/></div>`}
+        {innerHTML: `<img src="https://mc.yandex.ru/watch/101769326" style="position:absolute; left:-9999px;" alt=""/>`}
     ]
 })
 </script>
