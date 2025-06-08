@@ -4,11 +4,11 @@
     </personalize-item>
 </template>
 <script setup lang="ts">
-import { type Font } from "~/gql/graphql";
+import type { FrontendFont } from "~/data/types";
 
 const props = defineProps<{
-    currentFont: Font | null
-    font: Font
+    currentFont: FrontendFont | null
+    font: FrontendFont
 }>()
 
 const isCurrent = () => {

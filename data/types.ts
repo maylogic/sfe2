@@ -1,3 +1,5 @@
+import type { Font } from "~/gql/graphql";
+
 export type AddressFormState = {
     address1: string|undefined
     address2: string|undefined
@@ -9,3 +11,5 @@ export type AddressFormState = {
     postal_code: string|undefined
     state: string|undefined
 }
+
+export type FrontendFont = Pick<Font, 'name' | 'label' | 'filename_woff2' | 'preview' | 'id'>

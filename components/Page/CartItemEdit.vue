@@ -91,7 +91,7 @@ const inputData = reactive<PersonalizeInputData>({
 const {executeMutation: updateCartItemExec, fetching: addingToCart} = useMutation(UpdateCartItemDocument)
 const cart = useCartStore()
 const addToCart = (productId: string, personalize: PersonalizeInput) => {
-    updateCartItemExec({
+    return updateCartItemExec({
         cartItemId: props.id,
         personalize
     }).then((result) => {

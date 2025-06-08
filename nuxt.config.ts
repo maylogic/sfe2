@@ -37,7 +37,7 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
-            graphqlUrl: 'http://localhost/graphql',
+            graphqlUrl: 'http://localhost/apila/graphql',
             storageUrl: 'http://localhost/storage',
             devTerminal: 'dev_terminal',
             devTerminalPass: 'dev_terminal_pass',

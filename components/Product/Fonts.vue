@@ -10,16 +10,16 @@
     </personalize-block>
 </template>
 <script setup lang="ts">
-import type { Font } from "~/gql/graphql";
+import type { FrontendFont } from "~/data/types";
 
 defineProps<{
     valid: boolean | null
     index: number
-    currentFont: Font | null
-    data: Font[]
+    currentFont: FrontendFont | null
+    data: FrontendFont[]
 }>()
 
-const updateFont = (val: Font | null) => {
+const updateFont = (val: FrontendFont | null) => {
     emit("update:font", val)
 }
 

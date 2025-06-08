@@ -2,10 +2,10 @@
     <div class="preload-font" :style="`font-family: ${font.name}`">.</div>
 </template>
 <script setup lang="ts">
-import type { Font } from "~/gql/graphql";
+import type { FrontendFont } from "~/data/types";
 
 defineProps<{
-    font: Font
+    font: FrontendFont
 }>()
 </script>
 <style>

@@ -37,7 +37,7 @@ export const validateOptions = (product: ProductPageFragment, input: Personalize
     })
 }
 export const validateSize = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
-    return hasSizes(product) && input.size !== null
+    return hasSizes(product) ? input.size !== null : true
 }
 export const validateTextLines = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
     return !!product.line_definitions?.every(def => {

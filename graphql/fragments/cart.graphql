@@ -33,6 +33,9 @@ fragment SidebarCartItem on CartItem {
     option_items {
         id
         label
+        product_option {
+            label
+        }
         price {
             ...Price
         }

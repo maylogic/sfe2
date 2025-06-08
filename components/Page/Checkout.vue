@@ -104,8 +104,14 @@
 import { useCartStore } from "~/stores/cart";
 import { num_word } from "~/utils/misc";
 import { useMutation } from "@urql/vue";
-import { PlaceOrderDocument } from "~/gql/graphql";
+import {
+    PlaceOrderDocument,
+    PriceFragmentDoc,
+    TotalsFragmentDoc
+} from "~/gql/graphql";
 import { navigateTo } from "#app";
+import { useFragment } from "~/gql";
+import { getCartItemToTrack } from "~/utils/tracking";
 
 const authStore = useAuthStore()
 await authStore.hydrate()
@@ -171,6 +177,20 @@ watch(cart, async (value) => {
     }
 }, {
     immediate: true
+})
+const {$gtm} = useNuxtApp()
+onClientMounted(() => {
+    const totals = useFragment(TotalsFragmentDoc, cart.value.totals),
+        grandTotal = useFragment(PriceFragmentDoc, totals.grand_total)
+    if (cart.value.items) {
+        $gtm.sendEcommerceEvent('begin_checkout', {
+            ecommerce: {
+                currency: "RUB",
+                value: getPriceToTrack(grandTotal),
+                items: cart.value.items.map(itemFrag => getCartItemToTrack(itemFrag))
+            }
+        })
+    }
 })
 
 const addComment = ref(false),

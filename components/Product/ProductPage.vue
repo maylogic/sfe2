@@ -42,7 +42,7 @@
                                :current-size="inputData.size"
                                :key="product.key"
                                @update:size="updateSize"
-                               v-if="inputData.design !== null"
+                               v-if="inputData.design !== null && !!product.sizes?.length"
                                :data="product.sizes"/>
                 <product-options v-for="(option,index) in product.options"
                                  :key="product.key"
@@ -113,18 +113,24 @@ import {
     getRemoteFontPreloadLink
 } from "~/utils/fonts";
 import FontPreloadBlock from "~/components/Product/FontPreloadBlock.vue";
+import type { FrontendFont } from "~/data/types";
+import { onClientMounted } from "~/composables/onClientMounted";
+import {
+    getAddToCartItemToTrack,
+    getViewItemToTrack
+} from "~/utils/tracking";
 
 const props = defineProps<{
     productFragment: FragmentType<typeof ProductPageFragmentDoc>,
     inputData: PersonalizeInputData,
     initData?: PersonalizeInputData,
-    addToCart: (productId: string, personalize: PersonalizeInput) => void,
+    addToCart: (productId: string, personalize: PersonalizeInput) => Promise<void>,
     fetching: boolean,
     addingToCart: boolean,
     addToCartLabel: string
 }>()
+const {$gtm} = useNuxtApp()
 const product = computed(() => useFragment(ProductPageFragmentDoc, props.productFragment))
-
 const textLinesRenderValues = reactive<InputTextLinesMap>(new Map)
 const textLineErrors = ref(new Map<PersonalizeLineDefId, string>())
 const optionsErrors = ref(new Map<ProductOptionId, string>())
@@ -136,6 +142,15 @@ const validated = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const blocksVisibility = ref<Map<number, boolean>>(new Map)
 const price = ref(useFragment(PriceFragmentDoc, product.value.price))
+onClientMounted(() => {
+    $gtm.sendEcommerceEvent('view_item', {
+        ecommerce: {
+            items: [
+                getViewItemToTrack(product.value, price.value)
+            ]
+        }
+    })
+})
 watch(product, () => {
     price.value = getFullProductPrice(product.value, props.inputData)
 })
@@ -152,11 +167,20 @@ const validate = () => {
     validated.value = true
 }
 const availableColors = ref<Color[]>([])
-const availableFonts = ref<Font[]>([])
+const availableFonts = ref<FrontendFont[]>([])
 const addToCartInternal = () => {
     validate()
     if (valid.value) {
-        props.addToCart(product.value.id, getPersonalizeInputFromData(props.inputData))
+        props.addToCart(product.value.id, getPersonalizeInputFromData(props.inputData)).then(() => {
+
+            $gtm.sendEcommerceEvent('add_to_cart', {
+                ecommerce: {
+                    items: [
+                        getAddToCartItemToTrack(props.inputData, product.value, price.value)
+                    ]
+                }
+            })
+        })
     }
 }
 const updateDesign = (design: DesignItemFragment | null) => {
@@ -263,7 +287,7 @@ const getBlockIndex = (id: number) => {
 
 blocksVisibility.value = getBlocksVisibility(product.value, props.inputData)
 
-const usedFonts = new Map<string, Font>()
+const usedFonts = new Map<string, FrontendFont>()
 product.value.designs.forEach(designFrag => {
     const design = useFragment(DesignItemFragmentDoc, designFrag)
     design.fonts?.forEach(font => {

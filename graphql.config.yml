@@ -1,2 +1,2 @@
-schema: http://localhost/graphql
+schema: http://localhost/apila/graphql
 documents: '**/*.vue'
