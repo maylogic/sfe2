@@ -64,7 +64,7 @@ export const getPersonalizeDataToTrack = (data: PersonalizeInputData) => {
         color: data.color?.label,
         font: data.font?.label,
         design: data.design?.label,
-        textLines: [...data.textLines.values()]
+        textLines: [...data.textLines.values()].filter(item => item !== null)
     }
 }
 export const getDataVariantToTrack = (data: PersonalizeInputData, product: ProductPageFragment): string[] => {
