@@ -10,8 +10,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
 
     nuxtApp.provide('gtm', {
-        sendEvent,
-        sendEcommerceEvent: (eventType: string, payload: Record<string, any>) => sendEvent(`ecommerce_${eventType}`, payload)
+        sendEcommerceEvent: (eventType: string, payload: Record<string, any>) => sendEvent(`${eventType}`, payload),
     })
 })
 
