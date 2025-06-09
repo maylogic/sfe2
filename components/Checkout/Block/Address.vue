@@ -137,7 +137,7 @@ async function setAddress(customerAddressId: string) {
     const {data} = await setAddressExecute({
         customerAddressId
     })
-    cartStore.setData(data?.setShippingAddress)
+    await cartStore.setData(data?.setShippingAddress)
     emit('loading:update', false)
 }
 
@@ -155,7 +155,7 @@ async function onSubmitCreateAddress(event: FormSubmitEvent<Schema>) {
         postal_code: event.data.postal_code ?? null,
         state: event.data.state ?? null,
     })
-    cartStore.setData(data?.createShippingAddress)
+    await cartStore.setData(data?.createShippingAddress)
     emit('update:valid', true)
     isCreatingAddress.value = false
 }
@@ -173,7 +173,7 @@ async function onSubmitUpdateAddress(event: FormSubmitEvent<Schema>) {
         postal_code: event.data.postal_code ?? null,
         state: event.data.state ?? null,
     })
-    cartStore.setData(data?.updateShippingAddress)
+    await cartStore.setData(data?.updateShippingAddress)
     isEditingAddress.value = false
 }
 </script>

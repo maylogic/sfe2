@@ -79,7 +79,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     try {
         emit('loading:update', true)
         const {data, error} = await executeMutation(event.data)
-        cartStore.setData(data?.setShippingMethod)
+        await cartStore.setData(data?.setShippingMethod)
         emit('update:valid', true)
     } catch (err) {
         console.log(err)
