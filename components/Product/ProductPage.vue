@@ -80,10 +80,9 @@ import {
     type Color,
     type DesignItemFragment,
     DesignItemFragmentDoc,
-    type Font,
     type PersonalizeInput,
     PriceFragmentDoc,
-    ProductPageFragmentDoc
+    type ProductPageFragment
 } from '~/gql/graphql.js'
 import {
     getBlocksVisibility,
@@ -104,10 +103,7 @@ import {
     validateTextLines
 } from "~/utils/product";
 import { getKeys } from "~/utils/type"
-import {
-    type FragmentType,
-    useFragment
-} from "~/gql";
+import { useFragment } from "~/gql";
 import {
     generateFontFace,
     getRemoteFontPreloadLink
@@ -121,7 +117,7 @@ import {
 } from "~/utils/tracking";
 
 const props = defineProps<{
-    productFragment: FragmentType<typeof ProductPageFragmentDoc>,
+    product: ProductPageFragment,
     inputData: PersonalizeInputData,
     initData?: PersonalizeInputData,
     addToCart: (productId: string, personalize: PersonalizeInput) => Promise<void>,
@@ -130,7 +126,7 @@ const props = defineProps<{
     addToCartLabel: string
 }>()
 const {$gtm} = useNuxtApp()
-const product = computed(() => useFragment(ProductPageFragmentDoc, props.productFragment))
+const product = computed(() => props.product)
 const textLinesRenderValues = reactive<InputTextLinesMap>(new Map)
 const textLineErrors = ref(new Map<PersonalizeLineDefId, string>())
 const optionsErrors = ref(new Map<ProductOptionId, string>())
@@ -206,7 +202,7 @@ const updateColor = (color: Color | null) => {
     props.inputData.color = color
     personalizeValidity.color = color ? validateColor(product.value, props.inputData) : null
 }
-const updateFont = (font: Font | null) => {
+const updateFont = (font: FrontendFont | null) => {
     validated.value = false
     editor.value = true
     props.inputData.font = font
@@ -296,13 +292,6 @@ product.value.designs.forEach(designFrag => {
 })
 setTextLineDefaults()
 useHead({
-    title: product.value.meta_title,
-    meta: [
-        {
-            name: 'description',
-            content: product.value.meta_description,
-        },
-    ],
     link: [
         ...[...usedFonts.values()].map(font => getRemoteFontPreloadLink(font.filename_woff2))
     ],

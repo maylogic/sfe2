@@ -6,7 +6,7 @@
         :adding-to-cart="addingToCart"
         :fetching="fetching"
         :input-data="inputData"
-        :product-fragment="data?.getProductBySlug"/>
+        :product="product"/>
 </template>
 <script setup lang="ts">
 import {
@@ -16,13 +16,17 @@ import {
 import {
     AddCartItemDocument,
     type PersonalizeInput,
-    ProductBySlugDocument
+    ProductBySlugDocument,
+    type ProductPageFragment,
+    ProductPageFragmentDoc
 } from '~/gql/graphql.js'
 import {
     type PersonalizeInputData,
     type PersonalizeLineDefId
 } from "~/utils/product";
 import { useCartStore } from "~/stores/cart";
+import { useFragment } from "~/gql";
+import { getCanonicalUrl } from "~/utils/seo";
 
 const props = defineProps<{ slug: string }>()
 
@@ -66,4 +70,21 @@ const addToCart = async (productId: string, personalize: PersonalizeInput) => {
         }
     })
 }
+// обработано в if выше
+const product = computed(() => useFragment(ProductPageFragmentDoc, data.value?.getProductBySlug)) as ComputedRef<ProductPageFragment>
+useHead({
+    title: product.value.meta_title,
+    meta: [
+        {
+            name: 'description',
+            content: product.value.meta_description,
+        },
+    ],
+    link: [
+        {
+            rel: 'canonical',
+            href: getCanonicalUrl(`product/${product.value.slug}`)
+        }
+    ]
+})
 </script>

@@ -1,11 +1,20 @@
 <script setup lang="ts">
-import { getSiteTitle } from "~/utils/seo";
+import {
+    getCanonicalUrl,
+    getSiteTitle
+} from "~/utils/seo";
 
 definePageMeta({
     layout: 'care'
 })
 useHead({
-    title: getSiteTitle('Согласие на обработку персональных данных с помощью сервиса «ЯНДЕКС.МЕТРИКА»')
+    title: getSiteTitle('Согласие на обработку персональных данных с помощью сервиса «ЯНДЕКС.МЕТРИКА»'),
+    link: [
+        {
+            rel: 'canonical',
+            href: getCanonicalUrl('metrika')
+        }
+    ]
 })
 </script>
 <template>

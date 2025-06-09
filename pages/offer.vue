@@ -1,11 +1,20 @@
 <script setup lang="ts">
-import { getSiteTitle } from "~/utils/seo";
+import {
+    getCanonicalUrl,
+    getSiteTitle
+} from "~/utils/seo";
 
 definePageMeta({
     layout: 'care'
 })
 useHead({
-    title: getSiteTitle('Договор публичной оферты')
+    title: getSiteTitle('Договор публичной оферты'),
+    link: [
+        {
+            rel: 'canonical',
+            href: getCanonicalUrl('offer')
+        }
+    ]
 })
 </script>
 <template>

@@ -21,7 +21,6 @@ import { useFragment } from "~/gql";
 import {
     type BaseFragmentFragment,
     type Color,
-    type Font,
     type ProductLineDefinition,
     type TextAreaFragment,
     TextAreaFragmentDoc

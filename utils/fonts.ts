@@ -1,6 +1,6 @@
 import type { ResolvableLink } from "@unhead/vue/types";
 import { getStorageUrl } from "~/constants/storage";
-import type { Font } from "~/gql/graphql";
+import type { FrontendFont } from "~/data/types";
 
 export const getLocalFontPreloadLink = (href: string): ResolvableLink => {
     return ({
@@ -38,7 +38,7 @@ export const getLocalFontPreloads = () => {
     ]
 }
 
-export const generateFontFace = (fonts: Array<Pick<Font, 'name' | 'filename_woff2'>>) => {
+export const generateFontFace = (fonts: Array<FrontendFont>) => {
     return fonts.map(font => `
           @font-face {
             font-family: ${font.name};

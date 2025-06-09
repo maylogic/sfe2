@@ -43,7 +43,8 @@ export default defineNuxtConfig({
             devTerminalPass: 'dev_terminal_pass',
             prodTerminal: 'prod_terminal',
             prodTerminalPass: 'prod_terminal_pass',
-            siteName: 'Safepets - адресники, ошейники, аммуниция для собак и кошек'
+            siteName: 'Safepets - адресники, ошейники, аммуниция для собак и кошек',
+            siteDomain: 'safepets.ru'
         }
     },
     css: [

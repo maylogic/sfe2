@@ -80,13 +80,6 @@ export const useCartStore = defineStore('cart', {
                             items: this.cart.items?.map(itemFrag => getCartItemToTrack(itemFrag)) || []
                         }
                     })
-                    console.log('tracking view cart', {
-                        ecommerce: {
-                            currency: "RUB",
-                            value: getPriceToTrack(grandTotal),
-                            items: this.cart.items?.map(itemFrag => getCartItemToTrack(itemFrag)) || []
-                        }
-                    })
                 }
             })
 

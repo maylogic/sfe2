@@ -7,7 +7,7 @@
         :fetching="fetching"
         :input-data="inputData"
         :init-data="initData"
-        :product-fragment="cartItemQuery?.cartItem.product"/>
+        :product="product"/>
 </template>
 <script setup lang="ts">
 
@@ -20,6 +20,7 @@ import {
     type CartItemQuery,
     DesignItemFragmentDoc,
     type PersonalizeInput,
+    type ProductPageFragment,
     ProductPageFragmentDoc,
     UpdateCartItemDocument
 } from "~/gql/graphql";
@@ -102,4 +103,6 @@ const addToCart = async (productId: string, personalize: PersonalizeInput) => {
         }
     })
 }
+// обработано в if выше
+const product = computed(() => useFragment(ProductPageFragmentDoc, cartItemQuery.value?.cartItem?.product)) as ComputedRef<ProductPageFragment>
 </script>
