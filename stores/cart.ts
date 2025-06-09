@@ -3,13 +3,16 @@ import type { SidebarCartFragment } from '~/gql/graphql'
 import {
     GetCartDocument,
     GetCartItemsCountDocument,
-    SidebarCartFragmentDoc
+    PriceFragmentDoc,
+    SidebarCartFragmentDoc,
+    TotalsFragmentDoc
 } from '~/gql/graphql'
 import { useQuery } from '@urql/vue'
 import {
     type FragmentType,
     useFragment
 } from '~/gql'
+import { getCartItemToTrack } from "~/utils/tracking";
 
 export interface CartStoreData {
     cart: SidebarCartFragment
@@ -42,13 +45,19 @@ export const useCartStore = defineStore('cart', {
         error: false
     }),
     actions: {
-        setData(data: undefined | FragmentType<typeof SidebarCartFragmentDoc>) {
-            this.error = false
-            if (data) {
-                this.cart = useFragment(SidebarCartFragmentDoc, data)
-                this.count = this.cart.items?.length || 0
-            }
-            this.loading = false
+        async setData(data: undefined | FragmentType<typeof SidebarCartFragmentDoc>) {
+            return new Promise<void>((resolve, reject) => {
+                this.error = false
+                if (data) {
+                    this.cart = useFragment(SidebarCartFragmentDoc, data)
+                    this.count = this.cart.items?.length || 0
+                    resolve()
+                } else {
+                    reject()
+                }
+            }).finally(() => {
+                this.loading = false
+            })
         },
         async hydrate() {
             this.error = false
@@ -59,7 +68,27 @@ export const useCartStore = defineStore('cart', {
                 requestPolicy: "network-only"
             })
 
-            this.setData(data.value?.getCart)
+            const {$gtm} = useNuxtApp()
+            this.setData(data.value?.getCart).then(() => {
+                if ($gtm) {
+                    const totals = useFragment(TotalsFragmentDoc, this.cart.totals),
+                        grandTotal = useFragment(PriceFragmentDoc, totals.grand_total)
+                    $gtm.sendEcommerceEvent('view_cart', {
+                        ecommerce: {
+                            currency: "RUB",
+                            value: getPriceToTrack(grandTotal),
+                            items: this.cart.items?.map(itemFrag => getCartItemToTrack(itemFrag)) || []
+                        }
+                    })
+                    console.log('tracking view cart', {
+                        ecommerce: {
+                            currency: "RUB",
+                            value: getPriceToTrack(grandTotal),
+                            items: this.cart.items?.map(itemFrag => getCartItemToTrack(itemFrag)) || []
+                        }
+                    })
+                }
+            })
 
             if (error.value) {
                 this.error = true

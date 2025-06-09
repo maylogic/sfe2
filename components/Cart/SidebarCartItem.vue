@@ -130,14 +130,14 @@ const {
     fetching: updatingQuantity
 } = useMutation(UpdateCartItemQuantityDocument)
 const fetching = computed(() => removing.value || updatingQuantity.value)
-const cart = useCartStore()
+const cartStore = useCartStore()
 const remove = async () => {
     isRemovingModalOpen.value = false
-    cart.loading = true
+    cartStore.loading = true
     return new Promise<void>(resolve => {
         setTimeout(async () => {
             const {data} = await removeCartItem({cartItemId: item.value.id})
-            cart.setData(data?.removeCartItem)
+            cartStore.setData(data?.removeCartItem)
             resolve()
         }, 100)
     })
@@ -145,9 +145,9 @@ const remove = async () => {
 watchDebounced(
     quantity,
     async () => {
-        cart.loading = true
+        cartStore.loading = true
         const {data} = await updateCartItemQuantity({cartItemId: item.value.id, quantity: quantity.value})
-        cart.setData(data?.updateCartItemQuantity)
+        await cartStore.setData(data?.updateCartItemQuantity)
     },
     {debounce: 500, maxWait: 1000},
 )

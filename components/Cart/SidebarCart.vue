@@ -51,7 +51,7 @@
             </div>
 
             <totals :data="cart.totals"/>
-            <nuxt-link autofocus @click="cartStore.open=false" to="/checkout" class="checkout-button">
+            <nuxt-link autofocus @click="cartStore.open = false" to="/checkout" class="checkout-button">
                 <div>
                     <u-icon class="text-xl" name="i-heroicons-solid-lock-closed"/>
                     Оформить заказ
