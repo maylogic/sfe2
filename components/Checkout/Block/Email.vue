@@ -119,6 +119,6 @@ async function setEmail(email: string) {
     const {data} = await setCartEmail({
         email: email
     })
-    cartStore.setData(data?.setCartEmail)
+    await cartStore.setData(data?.setCartEmail)
 }
 </script>

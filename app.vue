@@ -5,14 +5,13 @@
 </template>
 <script setup lang="ts">
 import { getLocalFontPreloads } from "~/utils/fonts";
-
-const {siteName} = useAppConfig()
+import { getSiteTitle } from "~/utils/seo";
 
 useHead({
     htmlAttrs: {
         lang: 'ru',
     },
-    title: siteName,
+    title: getSiteTitle(),
     meta: [
         {
             name: 'description',

@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import { getSiteTitle } from "~/utils/seo";
+
+definePageMeta({
+    layout: 'care'
+})
+useHead({
+    title: getSiteTitle('Политика в отношении обработки персональных данных')
+})
+</script>
 <template>
     <div class="care-page">
         <h1>Политика в отношении обработки персональных данных</h1>
@@ -423,8 +433,3 @@
         </div>
     </div>
 </template>
-<script setup lang="ts">
-definePageMeta({
-    layout: 'care'
-})
-</script>

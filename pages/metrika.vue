@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import { getSiteTitle } from "~/utils/seo";
+
+definePageMeta({
+    layout: 'care'
+})
+useHead({
+    title: getSiteTitle('Согласие на обработку персональных данных с помощью сервиса «ЯНДЕКС.МЕТРИКА»')
+})
+</script>
 <template>
     <div class="care-page">
         <h1>Согласие на обработку персональных данных с помощью сервиса «ЯНДЕКС.МЕТРИКА»</h1>
@@ -66,8 +76,3 @@
         </div>
     </div>
 </template>
-<script setup lang="ts">
-definePageMeta({
-    layout: 'care'
-})
-</script>

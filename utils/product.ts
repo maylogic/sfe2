@@ -1,7 +1,6 @@
 import {
     type Color,
     type DesignItemFragment,
-    type Font,
     type OptionInput,
     type PersonalizeInput,
     type Price,
@@ -12,6 +11,7 @@ import {
     type TextLineInput
 } from "~/gql/graphql";
 import { useFragment } from "~/gql";
+import type { FrontendFont } from "~/data/types";
 
 export type PersonalizeLineDefId = string
 export type ProductOptionId = string
@@ -21,7 +21,7 @@ export type InputTextLinesMap = Map<PersonalizeLineDefId, string | null>
 export type InputOptionsMap = Map<ProductOptionId, ProductOptionItemId>
 export type PersonalizeInputData = {
     color: Color | null
-    font: Font | null
+    font: FrontendFont | null
     design: DesignItemFragment | null
     textLines: InputTextLinesMap
     size: ProductSizeId | null

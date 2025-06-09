@@ -9,7 +9,12 @@
 
 <script setup lang="ts">
 
+import { getSiteTitle } from "~/utils/seo";
+
 const route = useRoute()
 const id = route.params.id.toString()
 
+useHead({
+    title: getSiteTitle('Редактирование')
+})
 </script>

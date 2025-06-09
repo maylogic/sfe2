@@ -11,7 +11,12 @@
     </client-only>
 </template>
 <script setup lang="ts">
+import { getSiteTitle } from "~/utils/seo";
+
 definePageMeta({
     layout: 'checkout'
+})
+useHead({
+    title: getSiteTitle('Оформление заказа')
 })
 </script>

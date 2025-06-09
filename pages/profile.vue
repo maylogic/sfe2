@@ -3,6 +3,9 @@ definePageMeta({
     middleware: ['auth'], // Используем middleware для защиты маршрута
     requiresAuth: true, // Добавляем метаданные для middleware
 })
+useHead({
+    title: 'Мой профиль на safepets'
+})
 </script>
 
 <template>
