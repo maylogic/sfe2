@@ -96,8 +96,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     errors.value = {}
     const {data, error} = await executeMutation(event.data)
     errorHandler(error)
-    if (!error) {
-        console.log('User registered:', data?.registerCustomer)
+    if (data?.registerCustomer) {
+        navigateTo('/profile')
     }
 }
 </script>
