@@ -1,0 +1,23 @@
+query ProductsFeed($first: Int!, $page: Int!) {
+    products(first: $first, page: $page) {
+        data {
+            id
+            slug
+            sku
+            meta_title
+            meta_description
+            price {
+                regular
+                is_discounted
+                discounted
+            }
+            gallery {
+                filename
+                is_video
+            }
+        }
+        paginatorInfo {
+            ...Pagination
+        }
+    }
+}
