@@ -19,7 +19,7 @@ export const getCartItemToTrack = (itemFrag: FragmentType<typeof SidebarCartItem
         item_name: item.product.name,
         item_category: "Адресники",
         item_variant: getItemVariantToTrack(item),
-        item_brand: "MySupplements",
+        item_brand: "SAFEPETS",
         price: getPriceToTrack(price),
         quantity: item.quantity
     }

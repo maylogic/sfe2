@@ -131,13 +131,21 @@ const {
 } = useMutation(UpdateCartItemQuantityDocument)
 const fetching = computed(() => removing.value || updatingQuantity.value)
 const cartStore = useCartStore()
+const {$gtm} = useNuxtApp()
 const remove = async () => {
     isRemovingModalOpen.value = false
     cartStore.loading = true
+    $gtm.sendEcommerceEvent('remove_from_cart', {
+        ecommerce: {
+            items: [
+                getCartItemToTrack(props.data)
+            ]
+        }
+    })
     return new Promise<void>(resolve => {
         setTimeout(async () => {
             const {data} = await removeCartItem({cartItemId: item.value.id})
-            cartStore.setData(data?.removeCartItem)
+            await cartStore.setData(data?.removeCartItem)
             resolve()
         }, 100)
     })
