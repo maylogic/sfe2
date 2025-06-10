@@ -1,5 +1,5 @@
 <template>
-    <div class="production-info swiper" ref="bannerRef">
+    <div class="production-info swiper font-fira-sans" ref="bannerRef">
         <div class="swiper-wrapper">
             <div class="swiper-slide">
                 Сделано в России
@@ -23,6 +23,8 @@ onMounted(() => {
         console.log('init swiper')
         const swiper = new Swiper(bannerRef.value, {
             modules: [Autoplay],
+            spaceBetween: 0,
+            slidesPerView: 1,
             autoplay: {
                 delay: 1500,
                 disableOnInteraction: false,
@@ -32,7 +34,6 @@ onMounted(() => {
             breakpoints: {
                 768: {
                     slidesPerView: 3,
-                    spaceBetween: 40,
                 }
             }
         });
@@ -41,9 +42,12 @@ onMounted(() => {
 </script>
 <style lang="scss">
 .production-info {
-    @apply mb-5;
+    @apply md:mb-2 border-t-[1px] md:border-[1px];
     .swiper-slide {
-        @apply text-center border-[1px] py-2;
+        @apply text-center py-2 md:border-r-[1px] text-base tracking-wide text-storm-dust-800;
+        &:last-child {
+            @apply border-r-0;
+        }
     }
 }
 </style>
