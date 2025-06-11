@@ -4,8 +4,8 @@
             <div class="swiper-slide">
                 Сделано в России
             </div>
-            <div class="swiper-slide">
-                Изготовим за 1-3 дня
+            <div class="swiper-slide cursor-pointer" @click="modalStore.productionTime=true">
+                Изготовим за 1-3 дня*
             </div>
             <div class="swiper-slide">
                 Бесплатная доставка от 5000 ₽
@@ -13,15 +13,17 @@
         </div>
     </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import Swiper from "swiper";
 import {Autoplay} from "swiper/modules";
+import {useModalStore} from "~/stores/modal.js";
 
 const bannerRef = useTemplateRef('bannerRef')
+const modalStore = useModalStore()
+const swiper = ref()
 onMounted(() => {
-    if (bannerRef.value) {
-        console.log('init swiper')
-        const swiper = new Swiper(bannerRef.value, {
+    if (bannerRef.value && !swiper.value) {
+        swiper.value = new Swiper(bannerRef.value, {
             modules: [Autoplay],
             spaceBetween: 0,
             slidesPerView: 1,

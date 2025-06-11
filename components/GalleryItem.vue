@@ -4,6 +4,8 @@
             <div v-if="!loaded" class="image-placeholder w-full"></div>
             <img
                 ref="imgRef"
+                :width="size"
+                :height="size"
                 v-if="!item.is_video"
                 @load="loaded = true"
                 :src="getStorageUrl(item.filename)"
@@ -32,9 +34,12 @@ import { getStorageUrl } from "~/constants/storage";
 const imgRef = ref<HTMLImageElement>()
 const {loaded, error} = useImageLoad(imgRef)
 
-const props = defineProps<{
-    data: FragmentType<typeof GalleryItemFragmentDoc>
-}>()
+const props = withDefaults(defineProps<{
+    data: FragmentType<typeof GalleryItemFragmentDoc>,
+    size?: number | 'auto',
+}>(), {
+    size: 'auto'
+})
 
 const item = useFragment(GalleryItemFragmentDoc, props.data)
 </script>

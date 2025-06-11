@@ -8,6 +8,7 @@
             </main>
         </u-container>
         <footer-content/>
+        <layout-default-modals/>
     </div>
 </template>
 <style lang="scss">

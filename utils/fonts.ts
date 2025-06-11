@@ -41,6 +41,7 @@ export const getLocalFontPreloads = () => {
 export const generateFontFace = (fonts: Array<FrontendFont>) => {
     return fonts.map(font => `
           @font-face {
+            font-display: block;
             font-family: ${font.name};
             src: url(${getRemoteFontUrl(font.filename_woff2)}) format('woff2');
             font-weight: normal;

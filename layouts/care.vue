@@ -8,11 +8,12 @@
             </main>
         </u-container>
         <footer-content/>
+        <layout-default-modals/>
     </div>
 </template>
 <style lang="scss">
 .care-page-layout {
-    @apply bg-storm-dust-50;
+    @apply bg-white;
     .care-page {
         @apply bg-white py-2 px-5 rounded-md text-base;
         h1 {
