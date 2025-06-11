@@ -36,7 +36,7 @@ const {loaded, error} = useImageLoad(imgRef)
 
 const props = withDefaults(defineProps<{
     data: FragmentType<typeof GalleryItemFragmentDoc>,
-    size?: number | 'auto',
+    size?: string,
 }>(), {
     size: 'auto'
 })
