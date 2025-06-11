@@ -1,7 +1,8 @@
 <template>
     <div class="gallery-item">
         <div class="media-container">
-            <div v-if="!loaded" class="image-placeholder w-full"></div>
+            <div v-if="!loaded" :style="{width: size, height: size}"
+                 class="image-placeholder w-full"></div>
             <img
                 ref="imgRef"
                 :width="size"
