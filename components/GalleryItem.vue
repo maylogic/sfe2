@@ -13,6 +13,7 @@
                 :alt="item.label"
                 class="media-image"
                 :class="{loaded}"
+                itemprop="image"
             />
             <video
                 v-else

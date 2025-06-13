@@ -1,20 +1,23 @@
 <template>
-    <product-link
-        :class="{ 'in-viewport': isInViewport }"
-        ref="gridItem"
-        class="product-card" :slug="product.slug">
-        <div class="product-card-content flex flex-col gap-3">
-            <GalleryItem
-                v-if="product.primary_image"
-                :data="product.primary_image"
-            />
-            <h3 class="font-iskra">{{ product.name }}</h3>
-            <labeled-price label="От">
-                <fragment-price :data="product.price"/>
-            </labeled-price>
-            <div class="rose-pseudo-button font-fira-sans create-and-buy">Создать и купить</div>
-        </div>
-    </product-link>
+    <div itemscope itemtype="http://schema.org/Product">
+        <product-link
+            :class="{ 'in-viewport': isInViewport }"
+            ref="gridItem"
+            itemprop="url"
+            class="product-card" :slug="product.slug">
+            <div class="product-card-content flex flex-col gap-3">
+                <GalleryItem
+                    v-if="product.primary_image"
+                    :data="product.primary_image"
+                />
+                <h3 class="font-iskra" itemprop="name">{{ product.name }}</h3>
+                <labeled-price label="От">
+                    <fragment-price :data="product.price"/>
+                </labeled-price>
+                <div class="rose-pseudo-button font-fira-sans create-and-buy">Создать и купить</div>
+            </div>
+        </product-link>
+    </div>
 </template>
 <script setup lang="ts">
 import {
@@ -84,6 +87,7 @@ onUnmounted(() => {
             will-change: opacity;
             display: block;
         }
+
         .create-and-buy {
             @apply invisible;
             position: absolute;

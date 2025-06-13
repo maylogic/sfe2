@@ -26,6 +26,8 @@ export const getSeoMeta = (): ResolvableMeta[] => {
     ]
 }
 
+export const getProductLink = (slug: string): string => `https://${getEnvOrPubVal('SITE_DOMAIN')}/product/${slug}`
+
 export const getSeoLinks = (): ResolvableLink[] => {
     return [
         {rel: "yandex-tableau-widget", href: "/yandex-browser-manifest.json"},

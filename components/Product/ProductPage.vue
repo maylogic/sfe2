@@ -1,6 +1,22 @@
 <template>
     <div class="product-page">
-        <script type="application/ld+json" v-html="jsonLd"/>
+        <component is="script" type="application/ld+json">
+            {
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: {{ product.meta_title }},
+            description: {{ product.meta_description }},
+            sku: {{ product.sku }},
+            url: {{ getProductLink(product.slug) }},
+            {{ primaryImage ? `image: ${getStorageUrl(primaryImage.filename)},` : '' }}
+            offers: {
+            '@type': 'Offer',
+            priceCurrency: 'RUB',
+            price: {{ getDiscountedOrRegularPrice(price) }},
+            availability: 'https://schema.org/InStock'
+            }
+            }
+        </component>
         <product-page-gallery @toggle-editor="editor = $event"
                               :text-lines-render-values="textLinesRenderValues"
                               :editor="editor"
@@ -121,6 +137,7 @@ import {
 import { getDiscountedOrRegularPrice } from "~/utils/price";
 import { getStorageUrl } from "~/constants/storage";
 import type { ResolvableMeta } from "@unhead/vue/types";
+import { getProductLink } from "~/utils/seo";
 
 const props = defineProps<{
     product: ProductPageFragment,
@@ -144,24 +161,6 @@ const validated = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const blocksVisibility = ref<Map<number, boolean>>(new Map)
 const price = ref(useFragment(PriceFragmentDoc, product.value.price))
-const jsonLd = computed(() => JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.value.meta_title,
-    description: product.value.meta_description,
-    sku: product.value.sku,
-    url: `https://${getEnvOrPubVal('SITE_DOMAIN')}/product/${product.value.slug}`,
-    image: product.value.gallery.map(galleryItem => {
-        const item = useFragment(GalleryItemFragmentDoc, galleryItem)
-        return getStorageUrl(item.filename)
-    }),
-    offers: {
-        '@type': 'Offer',
-        priceCurrency: 'RUB',
-        price: getDiscountedOrRegularPrice(price.value),
-        availability: 'https://schema.org/InStock'
-    }
-}))
 
 onClientMounted(() => {
     console.log(getViewItemToTrack(product.value, price.value))
@@ -322,7 +321,7 @@ const meta: ResolvableMeta[] = [
     {property: "og:title", content: `${product.value.meta_title}`},
     {property: "og:description", content: `${product.value.meta_description}`},
     {property: "og:type", content: `product`},
-    {property: "og:url", content: `https://${getEnvOrPubVal('SITE_DOMAIN')}/product/${product.value.slug}`},
+    {property: "og:url", content: getProductLink(product.value.slug)},
     {property: "product:brand", content: `Safepets`},
     {property: "product:availability", content: `in stock`},
     {property: "product:price:amount", content: getDiscountedOrRegularPrice(price.value)},

@@ -1,5 +1,5 @@
 <template>
-    <div
+    <div itemprop="price"
         class="price-container font-fira-sans"
         :class="is_discounted ? 'discounted' : ''"
     >
