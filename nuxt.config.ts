@@ -33,6 +33,7 @@ export default defineNuxtConfig({
                 'lucide:list-collapse',
                 'lucide:pencil',
                 'heroicons:envelope',
+                'heroicons:solid-lock-closed',
                 'heroicons:lock-closed-24-solid',
                 'heroicons:plus',
                 'heroicons:minus',
