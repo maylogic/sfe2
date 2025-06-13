@@ -35,9 +35,7 @@ const {cart} = storeToRefs(cartStore)
 </script>
 <style>
 .slideover-content {
+    @apply max-h-dvh;
     grid-template-rows: min-content 1fr;
-    max-height: 100vh;
-    max-height: 100dvh;
-    max-height: 100svh;
 }
 </style>
