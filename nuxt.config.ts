@@ -29,6 +29,13 @@ export default defineNuxtConfig({
                 'lucide:minus',
                 'lucide:shopping-bag',
                 'lucide:menu',
+                'lucide:list-collapse',
+                'lucide:pencil',
+                'heroicons:envelope',
+                'heroicons:solid-lock-closed',
+                'heroicons:plus',
+                'heroicons:minus',
+                'heroicons:x-mark-20-solid'
             ],
             scan: true,
             includeCustomCollections: true,
