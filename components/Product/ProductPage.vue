@@ -1,22 +1,5 @@
 <template>
     <div class="product-page">
-        <component is="script" type="application/ld+json">
-            {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "name": "{{ product.meta_title }}",
-            "description": "{{ product.meta_description }}",
-            "sku": "{{ product.sku }}",
-            "url": "{{ getProductLink(product.slug) }}",
-            {{ primaryImage ? `"image": "${getStorageUrl(primaryImage.filename)}",` : "" }}
-            "offers": {
-            "@type": "Offer",
-            "priceCurrency": "RUB",
-            "price": "{{ getDiscountedOrRegularPrice(price) }}",
-            "availability": "https://schema.org/InStock"
-            }
-            }
-        </component>
         <product-page-gallery @toggle-editor="editor = $event"
                               :text-lines-render-values="textLinesRenderValues"
                               :editor="editor"
@@ -340,7 +323,26 @@ useHead({
         {textContent: generateFontFace([...usedFonts.values()])}
     ],
     meta,
-    script: [],
+    script: [
+        {
+            innerHTML: JSON.stringify({
+                '@context': 'http://schema.org',
+                '@type': 'Product',
+                name: product.value.meta_title,
+                description: product.value.meta_description,
+                sku: product.value.sku,
+                url: getProductLink(product.value.slug),
+                image: primaryImage ? getStorageUrl(primaryImage.filename) : undefined,
+                offers: {
+                    '@type': 'Offer',
+                    priceCurrency: 'RUB',
+                    price: getDiscountedOrRegularPrice(price.value),
+                    availability: 'http://schema.org/InStock'
+                }
+            }),
+            type: 'application/ld+json'
+        }
+    ],
 })
 if (props.initData) {
     if (props.initData.design) updateDesign(props.initData.design)
