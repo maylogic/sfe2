@@ -5,7 +5,6 @@
         class="product-card" :slug="product.slug">
         <div class="product-card-content flex flex-col gap-3">
             <GalleryItem
-                size="262px"
                 v-if="product.primary_image"
                 :data="product.primary_image"
             />

@@ -13,6 +13,7 @@
             <div class="create-fields">
                 <h2 class="font-iskra">Создание и предпросмотр</h2>
                 <product-designs @update:design="updateDesign"
+                                 v-if="product.designs.length"
                                  :index="getBlockIndex(1)"
                                  :current-design="inputData.design"
                                  :data="product.designs" :valid="personalizeValidity.design"/>
