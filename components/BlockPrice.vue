@@ -9,7 +9,8 @@
         <span class="regular-price" itemprop="price">
             {{ formatPrice(regular) }}
         </span>
-        <span class="currency" itemprop="priceCurrency">₽</span>
+        <span class="currency">₽</span>
+        <span class="hidden" itemprop="priceCurrency">RUB</span>
     </div>
 </template>
 
