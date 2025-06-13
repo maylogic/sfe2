@@ -78,19 +78,13 @@ export const validatePerOption = (product: ProductPageFragment, input: Personali
     return errors
 }
 export const validateDesign = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
-    return designsBlockVisible(product) && input.design !== null
+    return hasDesigns(product) ? input.design !== null : true
 }
 export const validateFont = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
-    if (input.font !== null && input.design !== null) {
-        return !!input.design.fonts?.find(font => font.id === input.font?.id)
-    }
-    return false
+    return hasFonts(input) ? !!input.design?.fonts?.find(font => font.id === input.font?.id) : true
 }
 export const validateColor = (product: ProductPageFragment, input: PersonalizeInputData): boolean => {
-    if (input.color !== null && input.design !== null) {
-        return !!input.design.colors?.find(color => color.id === input.color?.id)
-    }
-    return false
+    return hasColors(input) ? !!input.design?.colors?.find(color => color.id === input.color?.id) : true
 }
 export const getNullValidation = () => ({
     color: null,
@@ -110,19 +104,19 @@ export const getSortedTextLines = (defs: ProductLineDefinition[], textLines: Inp
     return sortedTextLines;
 }
 
-export const designsBlockVisible = (product: ProductPageFragment): boolean => !!product.designs.length
-export const fontsBlockVisible = (input: PersonalizeInputData): boolean => !!input.design?.fonts?.length
-export const colorsBlockVisible = (input: PersonalizeInputData): boolean => !!input.design?.colors?.length
-export const textLinesBlockVisible = (product: ProductPageFragment, input: PersonalizeInputData): boolean =>
+export const hasDesigns = (product: ProductPageFragment): boolean => !!product.designs.length
+export const hasFonts = (input: PersonalizeInputData): boolean => !!input.design?.fonts?.length
+export const hasColors = (input: PersonalizeInputData): boolean => !!input.design?.colors?.length
+export const hasTextLines = (product: ProductPageFragment, input: PersonalizeInputData): boolean =>
     input.design !== null && !!product.line_definitions?.length
 export const hasSizes = (product: ProductPageFragment): boolean => !!product.sizes?.length
 
 export const getBlocksVisibility = (product: ProductPageFragment, input: PersonalizeInputData): Map<number, boolean> => {
     const blocks = new Map<number, boolean>()
-    blocks.set(1, designsBlockVisible(product))
-    blocks.set(2, colorsBlockVisible(input))
-    blocks.set(3, fontsBlockVisible(input))
-    blocks.set(4, textLinesBlockVisible(product, input))
+    blocks.set(1, hasDesigns(product))
+    blocks.set(2, hasColors(input))
+    blocks.set(3, hasFonts(input))
+    blocks.set(4, hasTextLines(product, input))
     blocks.set(5, hasSizes(product))
     const optionsCount = Number(product.options?.length)
     for (let i = 0; i < optionsCount; i++) {

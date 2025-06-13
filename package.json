@@ -19,6 +19,7 @@
     "@types/svgdom": "^0.1.2",
     "@vueuse/nuxt": "^13.0.0",
     "aws-sdk": "^2.1692.0",
+    "favicons": "^7.2.0",
     "mime-types": "^3.0.1",
     "nuxt": "^3.16.0",
     "prettier": "^3.5.3",

@@ -5,7 +5,11 @@
 </template>
 <script setup lang="ts">
 import { getLocalFontPreloads } from "~/utils/fonts";
-import { getSiteTitle } from "~/utils/seo";
+import {
+    getSeoLinks,
+    getSeoMeta,
+    getSiteTitle
+} from "~/utils/seo";
 
 useHead({
     htmlAttrs: {
@@ -22,9 +26,11 @@ useHead({
             content:
                 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover',
         },
+        ...getSeoMeta()
     ],
     link: [
-        ...getLocalFontPreloads()
+        ...getLocalFontPreloads(),
+        ...getSeoLinks()
     ],
 
     script: [
