@@ -4,16 +4,16 @@
             {
             "@context": "https://schema.org",
             "@type": "Product",
-            name: "{{ product.meta_title }}",
-            description: "{{ product.meta_description }}",
-            sku: "{{ product.sku }}",
-            url: "{{ getProductLink(product.slug) }}",
-            {{ primaryImage ? `image: "${getStorageUrl(primaryImage.filename)}",` : "" }}
-            offers: {
+            "name": "{{ product.meta_title }}",
+            "description": "{{ product.meta_description }}",
+            "sku": "{{ product.sku }}",
+            "url": "{{ getProductLink(product.slug) }}",
+            {{ primaryImage ? `"image": "${getStorageUrl(primaryImage.filename)}",` : "" }}
+            "offers": {
             "@type": "Offer",
-            priceCurrency: "RUB",
-            price: "{{ getDiscountedOrRegularPrice(price) }}",
-            availability: "https://schema.org/InStock"
+            "priceCurrency": "RUB",
+            "price": "{{ getDiscountedOrRegularPrice(price) }}",
+            "availability": "https://schema.org/InStock"
             }
             }
         </component>
