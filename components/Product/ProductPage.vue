@@ -329,7 +329,7 @@ useHead({
                 '@context': 'http://schema.org',
                 '@type': 'Product',
                 name: product.value.name,
-                description: product.value.meta_description,
+                description: product.value.description,
                 sku: product.value.sku,
                 url: getProductLink(product.value.slug),
                 image: primaryImage ? getStorageUrl(primaryImage.filename) : undefined,
