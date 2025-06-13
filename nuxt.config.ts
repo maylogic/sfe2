@@ -10,7 +10,9 @@ export default defineNuxtConfig({
         }
     },
     icon: {
-        serverBundle: 'local',
+        serverBundle: {
+            collections: ['lucide', 'heroicons', 'heroicons-solid', 'bxs']
+        },
 
         clientBundle: {
             icons: [
