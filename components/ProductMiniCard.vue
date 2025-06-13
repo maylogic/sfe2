@@ -1,5 +1,5 @@
 <template>
-    <div itemscope itemtype="http://schema.org/Product">
+    <div class="product-card-container" itemscope itemtype="http://schema.org/Product">
         <product-link
             :class="{ 'in-viewport': isInViewport }"
             ref="gridItem"
@@ -65,53 +65,56 @@ onUnmounted(() => {
 });
 </script>
 <style lang="scss">
-.product-card {
-    @apply border-storm-dust-500 rounded-md p-3;
+.product-card-container {
+    @apply p-3;
+    .product-card {
+        @apply border-storm-dust-500 rounded-md;
 
-    .product-card-content {
-        @apply relative;
-        &:after {
-            content: "";
-            box-shadow: 0 .25rem .625rem 0 #0006;
-            position: absolute;
-            background: #fff;
-            z-index: -1;
-            top: -.75rem;
-            bottom: -4.75rem;
-            left: -.75rem;
-            right: -.75rem;
-            border-radius: .25rem;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity .12s;
-            will-change: opacity;
-            display: block;
+        .product-card-content {
+            @apply relative;
+            &:after {
+                content: "";
+                box-shadow: 0 .25rem .625rem 0 #0006;
+                position: absolute;
+                background: #fff;
+                z-index: -1;
+                top: -.75rem;
+                bottom: -4.75rem;
+                left: -.75rem;
+                right: -.75rem;
+                border-radius: .25rem;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity .12s;
+                will-change: opacity;
+                display: block;
+            }
+
+            .create-and-buy {
+                @apply invisible;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                margin-top: 1rem;
+            }
         }
 
-        .create-and-buy {
-            @apply invisible;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            margin-top: 1rem;
-        }
-    }
+        &:hover, &.in-viewport {
+            z-index: 1;
 
-    &:hover, &.in-viewport {
-        z-index: 1;
+            .product-card-content:after {
+                @apply visible opacity-100;
+            }
 
-        .product-card-content:after {
-            @apply visible opacity-100;
+            .create-and-buy {
+                @apply visible;
+            }
         }
 
-        .create-and-buy {
-            @apply visible;
+        .price-label, .price-container {
+            font-size: 18px;
         }
-    }
-
-    .price-label, .price-container {
-        font-size: 18px;
     }
 }
 </style>
