@@ -328,7 +328,7 @@ useHead({
             innerHTML: JSON.stringify({
                 '@context': 'http://schema.org',
                 '@type': 'Product',
-                name: product.value.meta_title,
+                name: product.value.name,
                 description: product.value.meta_description,
                 sku: product.value.sku,
                 url: getProductLink(product.value.slug),
