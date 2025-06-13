@@ -10,7 +10,7 @@
                     <div class="option-mark"/>
                     <span class="font-fira-sans text-xs">{{ option.label }} - {{
                             formatPrice(option.info.price)
-                        }}</span>
+                        }} ₽</span>
                 </div>
                 <div v-else>
                     Что-то пошло не так. Нет подходящих способов доставки.<br/>

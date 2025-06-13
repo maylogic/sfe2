@@ -1,14 +1,15 @@
 <template>
-    <div itemprop="price"
+    <div
         class="price-container font-fira-sans"
         :class="is_discounted ? 'discounted' : ''"
     >
-        <span v-if="is_discounted" class="discounted-price text-brilliant-rose-500">
+        <span v-if="is_discounted" itemprop="price" class="discounted-price text-brilliant-rose-500">
             {{ formatPrice(discounted, 2) }}
         </span>
-        <span class="regular-price">
+        <span class="regular-price" itemprop="price">
             {{ formatPrice(regular) }}
         </span>
+        <span class="currency" itemprop="priceCurrency">₽</span>
     </div>
 </template>
 
@@ -22,7 +23,7 @@ defineProps<{
 <style lang="scss">
 .price-container {
     @apply inline-flex items-center;
-    gap: 0.5rem;
+    gap: 0.15rem;
 
     &.discounted .regular-price {
         @apply text-storm-dust-500 opacity-30;
