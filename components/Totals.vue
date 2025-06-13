@@ -4,7 +4,7 @@
         <div class="totals-list">
             <div class="totals-item">
                 <span class="label font-normal">Подытог:</span>
-                <span class="value font-fira-sans">{{ formatPrice(totals.subtotal) }} ₽</span>
+                <span class="value font-fira-sans">{{ formatPrice(totals.subtotal) }}</span>
             </div>
 
             <div v-if="totals.points_used" class="flex flex-col w-full">
