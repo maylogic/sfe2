@@ -3,6 +3,7 @@ import {
     getCanonicalUrl,
     getSiteTitle
 } from "~/utils/seo";
+import { getEnvOrPubVal } from "~/utils/env";
 
 definePageMeta({
     layout: 'care'
@@ -20,7 +21,7 @@ useHead({
 <template>
     <div class="care-page">
         <h1>Договор публичной оферты</h1>
-        <div>Интернет-магазин safepets, расположенный на доменном имени safepets.ru, ИП Цвингер Артем Сергеевич, и
+        <div>Интернет-магазин safepets, расположенный на доменном имени {{ getEnvOrPubVal('SITE_DOMAIN') }}, ИП Цвингер Артем Сергеевич, и
             юридическим адресом 650070, РОССИЯ, КЕМЕРОВСКАЯ ОБЛАСТЬ - КУЗБАСС, Г КЕМЕРОВО, УЛ ТУХАЧЕВСКОГО, Д 38Б, КВ
             408, в
             лице руководителя Цвингера Артема Сергеевича, действующего на основании свидетельства о гос регистрации в

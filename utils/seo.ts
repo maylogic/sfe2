@@ -18,6 +18,11 @@ export const getSeoMeta = (): ResolvableMeta[] => {
         {name: "msapplication-TileColor", content: "#fff"},
         {name: "msapplication-TileImage", content: "/mstile-144x144.png"},
         {name: "msapplication-config", content: "/browserconfig.xml"},
+        {property: "og:title", content: getEnvOrPubVal('SITE_NAME')},
+        {property: "og:description", content: getEnvOrPubVal('SITE_DESCRIPTION')},
+        {property: "og:type", content: "website"},
+        {property: "og:url", content: `https://${getEnvOrPubVal('SITE_DOMAIN')}/`},
+        {property: "og:image", content: `https://${getEnvOrPubVal('SITE_DOMAIN')}/apple-touch-icon-1024x1024.png`},
     ]
 }
 

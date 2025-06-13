@@ -52,6 +52,9 @@ fragment ProductPage on Product {
         id
         ...DesignItem
     }
+    primary_image {
+        ...GalleryItem
+    }
 }
 fragment ProductMini on Product {
     id

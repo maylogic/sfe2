@@ -33,7 +33,7 @@ export const getViewItemToTrack = (product: ProductPageFragment, price: PriceFra
     return {
         item_id: product.sku,
         item_name: product.name,
-        affiliation: 'safepets.ru',
+        affiliation: getEnvOrPubVal('SITE_DOMAIN'),
         coupon: '',
         discount: getDiscount(price),
         index: 0,

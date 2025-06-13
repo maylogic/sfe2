@@ -56,6 +56,7 @@ export default defineNuxtConfig({
             prodTerminal: 'prod_terminal',
             prodTerminalPass: 'prod_terminal_pass',
             siteName: 'Safepets - адресники, ошейники, аммуниция для собак и кошек',
+            siteDescription: 'Уникальная дизайнерская аммуниция и адресники для собак. Легкий заказ через онлайн-конструктор, изготовления от 1 до 3 дней.',
             siteDomain: 'safepets.ru'
         }
     },

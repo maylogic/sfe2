@@ -1,5 +1,6 @@
 <template>
     <div class="product-page">
+        <script type="application/ld+json" v-html="jsonLd"/>
         <product-page-gallery @toggle-editor="editor = $event"
                               :text-lines-render-values="textLinesRenderValues"
                               :editor="editor"
@@ -81,6 +82,7 @@ import {
     type Color,
     type DesignItemFragment,
     DesignItemFragmentDoc,
+    GalleryItemFragmentDoc,
     type PersonalizeInput,
     PriceFragmentDoc,
     type ProductPageFragment
@@ -116,6 +118,9 @@ import {
     getAddToCartItemToTrack,
     getViewItemToTrack
 } from "~/utils/tracking";
+import { getDiscountedOrRegularPrice } from "~/utils/price";
+import { getStorageUrl } from "~/constants/storage";
+import type { ResolvableMeta } from "@unhead/vue/types";
 
 const props = defineProps<{
     product: ProductPageFragment,
@@ -139,7 +144,27 @@ const validated = ref(false)
 const personalizeValidity = reactive<PersonalizeValidity>(getNullValidation())
 const blocksVisibility = ref<Map<number, boolean>>(new Map)
 const price = ref(useFragment(PriceFragmentDoc, product.value.price))
+const jsonLd = computed(() => JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.value.meta_title,
+    description: product.value.meta_description,
+    sku: product.value.sku,
+    url: `https://${getEnvOrPubVal('SITE_DOMAIN')}/product/${product.value.slug}`,
+    image: product.value.gallery.map(galleryItem => {
+        const item = useFragment(GalleryItemFragmentDoc, galleryItem)
+        return getStorageUrl(item.filename)
+    }),
+    offers: {
+        '@type': 'Offer',
+        priceCurrency: 'RUB',
+        price: getDiscountedOrRegularPrice(price.value),
+        availability: 'https://schema.org/InStock'
+    }
+}))
+
 onClientMounted(() => {
+    console.log(getViewItemToTrack(product.value, price.value))
     $gtm.sendEcommerceEvent('view_item', {
         ecommerce: {
             items: [
@@ -292,13 +317,31 @@ product.value.designs.forEach(designFrag => {
     })
 })
 setTextLineDefaults()
+const primaryImage = useFragment(GalleryItemFragmentDoc, product.value.primary_image)
+const meta: ResolvableMeta[] = [
+    {property: "og:title", content: `${product.value.meta_title}`},
+    {property: "og:description", content: `${product.value.meta_description}`},
+    {property: "og:type", content: `product`},
+    {property: "og:url", content: `https://${getEnvOrPubVal('SITE_DOMAIN')}/product/${product.value.slug}`},
+    {property: "product:brand", content: `Safepets`},
+    {property: "product:availability", content: `in stock`},
+    {property: "product:price:amount", content: getDiscountedOrRegularPrice(price.value)},
+    {property: "product:price:currency", content: `RUB`},
+]
+if (primaryImage) {
+    meta.push({
+        property: "og:image", content: getStorageUrl(primaryImage.filename)
+    })
+}
 useHead({
     link: [
         ...[...usedFonts.values()].map(font => getRemoteFontPreloadLink(font.filename_woff2))
     ],
     style: [
         {textContent: generateFontFace([...usedFonts.values()])}
-    ]
+    ],
+    meta,
+    script: [],
 })
 if (props.initData) {
     if (props.initData.design) updateDesign(props.initData.design)
