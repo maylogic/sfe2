@@ -2,18 +2,18 @@
     <div class="product-page">
         <component is="script" type="application/ld+json">
             {
-            '@context': 'https://schema.org',
-            '@type': 'Product',
+            "@context": "https://schema.org",
+            "@type": "Product",
             name: "{{ product.meta_title }}",
             description: "{{ product.meta_description }}",
             sku: "{{ product.sku }}",
             url: "{{ getProductLink(product.slug) }}",
-            {{ primaryImage ? `image: "${getStorageUrl(primaryImage.filename)}",` : '' }}
+            {{ primaryImage ? `image: "${getStorageUrl(primaryImage.filename)}",` : "" }}
             offers: {
-            '@type': 'Offer',
-            priceCurrency: 'RUB',
+            "@type": "Offer",
+            priceCurrency: "RUB",
             price: "{{ getDiscountedOrRegularPrice(price) }}",
-            availability: 'https://schema.org/InStock'
+            availability: "https://schema.org/InStock"
             }
             }
         </component>
