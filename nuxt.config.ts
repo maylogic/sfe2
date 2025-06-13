@@ -29,6 +29,7 @@ export default defineNuxtConfig({
                 'lucide:chevron-left',
                 'lucide:chevron-right',
                 'lucide:chevron-down',
+                'lucide:chevron-up',
                 'lucide:minus',
                 'lucide:shopping-bag',
                 'lucide:menu',
