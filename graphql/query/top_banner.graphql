@@ -1,0 +1,8 @@
+query TopBanner {
+    getTopBanner {
+        sales_rule {
+            label
+            ends_at
+        }
+    }
+}

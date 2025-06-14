@@ -45,6 +45,7 @@ type Documents = {
     "query OrderLookup($email: String!, $orderId: Int!) {\n  orderLookup(email: $email, orderId: $orderId) {\n    ...OrderData\n  }\n}": typeof types.OrderLookupDocument,
     "query ProductsFeed($first: Int!, $page: Int!) {\n  products(first: $first, page: $page) {\n    data {\n      id\n      slug\n      sku\n      meta_title\n      meta_description\n      price {\n        regular\n        is_discounted\n        discounted\n      }\n      gallery {\n        filename\n        is_video\n      }\n    }\n    paginatorInfo {\n      ...Pagination\n    }\n  }\n}": typeof types.ProductsFeedDocument,
     "query ShippingMethods {\n  shippingMethods {\n    description\n    id\n    info {\n      price\n      days\n    }\n    label\n  }\n}": typeof types.ShippingMethodsDocument,
+    "query TopBanner {\n  getTopBanner {\n    sales_rule {\n      label\n      ends_at\n    }\n  }\n}": typeof types.TopBannerDocument,
 };
 const documents: Documents = {
     "query GetCart {\n  getCart {\n    ...SidebarCart\n  }\n}\n\nquery GetCartItemsCount {\n  getCartItemsCount\n}": types.GetCartDocument,
@@ -78,6 +79,7 @@ const documents: Documents = {
     "query OrderLookup($email: String!, $orderId: Int!) {\n  orderLookup(email: $email, orderId: $orderId) {\n    ...OrderData\n  }\n}": types.OrderLookupDocument,
     "query ProductsFeed($first: Int!, $page: Int!) {\n  products(first: $first, page: $page) {\n    data {\n      id\n      slug\n      sku\n      meta_title\n      meta_description\n      price {\n        regular\n        is_discounted\n        discounted\n      }\n      gallery {\n        filename\n        is_video\n      }\n    }\n    paginatorInfo {\n      ...Pagination\n    }\n  }\n}": types.ProductsFeedDocument,
     "query ShippingMethods {\n  shippingMethods {\n    description\n    id\n    info {\n      price\n      days\n    }\n    label\n  }\n}": types.ShippingMethodsDocument,
+    "query TopBanner {\n  getTopBanner {\n    sales_rule {\n      label\n      ends_at\n    }\n  }\n}": types.TopBannerDocument,
 };
 
 /**
@@ -218,6 +220,10 @@ export function graphql(source: "query ProductsFeed($first: Int!, $page: Int!) {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "query ShippingMethods {\n  shippingMethods {\n    description\n    id\n    info {\n      price\n      days\n    }\n    label\n  }\n}"): (typeof documents)["query ShippingMethods {\n  shippingMethods {\n    description\n    id\n    info {\n      price\n      days\n    }\n    label\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query TopBanner {\n  getTopBanner {\n    sales_rule {\n      label\n      ends_at\n    }\n  }\n}"): (typeof documents)["query TopBanner {\n  getTopBanner {\n    sales_rule {\n      label\n      ends_at\n    }\n  }\n}"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

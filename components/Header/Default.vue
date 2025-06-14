@@ -1,5 +1,6 @@
 <template>
     <div class="header-default">
+        <top-banner/>
         <u-container>
             <div class="flex items-center py-5">
                 <horizontal-nav v-if="!!menuItems.length" :items="menuItems"/>
