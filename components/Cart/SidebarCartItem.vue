@@ -150,14 +150,15 @@ const remove = async () => {
         }, 100)
     })
 }
-watchDebounced(
-    quantity,
+
+debouncedWatch(
+    () => quantity.value,
     async () => {
         cartStore.loading = true
         const {data} = await updateCartItemQuantity({cartItemId: item.value.id, quantity: quantity.value})
         await cartStore.setData(data?.updateCartItemQuantity)
     },
-    {debounce: 500, maxWait: 1000},
+    { debounce: 600 }
 )
 
 </script>

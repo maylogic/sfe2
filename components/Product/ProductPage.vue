@@ -146,7 +146,6 @@ const blocksVisibility = ref<Map<number, boolean>>(new Map)
 const price = ref(useFragment(PriceFragmentDoc, product.value.price))
 
 onClientMounted(() => {
-    console.log(getViewItemToTrack(product.value, price.value))
     $gtm.sendEcommerceEvent('view_item', {
         ecommerce: {
             items: [

@@ -96,6 +96,9 @@ fragment Totals on Totals {
     grand_total {
         ...Price
     }
+    shipping_price {
+        ...Price
+    }
     points_used
 }
 fragment CartCoupon on Coupon {

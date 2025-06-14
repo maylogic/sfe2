@@ -33,13 +33,4 @@ defineProps<{
         font-weight: 700;
     }
 }
-
-.regular-price {
-    font-weight: 900;
-    color: #000;
-}
-
-.discounted-price {
-    font-weight: 900;
-}
 </style>

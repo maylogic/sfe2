@@ -37,12 +37,14 @@
             </div>
 
             <!-- Метод доставки -->
-            <div v-if="cart.shipping_method" class="shipping-method">
-                <h3>Способ доставки</h3>
-                <p>{{ cart.shipping_method.label }}</p>
-                <p v-if="cart.shipping_method.description">
-                    {{ cart.shipping_method.description }}
-                </p>
+            <div v-if="cart.shipping_method" class="shipping-method text-xs">
+                <h3 class="text-sm">Способ доставки</h3>
+                <div class="ml-2">
+                    <p>{{ cart.shipping_method.label }}</p>
+                    <p v-if="cart.shipping_method.description">
+                        {{ cart.shipping_method.description }}
+                    </p>
+                </div>
             </div>
 
             <!-- Баланс -->
@@ -54,7 +56,7 @@
             <nuxt-link autofocus @click="cartStore.open = false" to="/checkout" class="checkout-button">
                 <div>
                     <u-icon class="text-xl" name="i-heroicons-solid-lock-closed"/>
-                    Оформить заказ
+                    Перейти к оформлению
                 </div>
             </nuxt-link>
             <pay-logos class="mx-auto"/>
@@ -93,10 +95,6 @@ const {cart, loading} = storeToRefs(cartStore)
         list-style: none;
         padding: 0;
         margin: 0;
-    }
-
-    .shipping-method p {
-        margin: 0.25rem 0;
     }
 
     .apply-balance {

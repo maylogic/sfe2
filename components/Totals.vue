@@ -15,9 +15,14 @@
                 <span class="points-description">(1 балл = 1 ₽, применяются до других скидок)</span>
             </div>
 
+            <div class="totals-item" v-if="totals.shipping_price">
+                <span class="label font-normal">Доставка:</span>
+                <fragment-price :data="totals.shipping_price"/>
+            </div>
+
             <div class="totals-item">
                 <span class="label font-black">{{ grandTotalLabel }}</span>
-                <fragment-price :data="totals.grand_total"/>
+                <fragment-price class="font-black" :data="totals.grand_total"/>
             </div>
         </div>
     </div>

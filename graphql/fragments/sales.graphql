@@ -1,0 +1,8 @@
+fragment SalesRule on SalesRule {
+    active
+    amount
+    id
+    is_percentage
+    label
+    sort
+}

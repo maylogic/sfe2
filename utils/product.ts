@@ -143,10 +143,10 @@ export const getPersonalizeInputFromData = (inputData: PersonalizeInputData): Pe
             })
         }
     }
-    const colorId = inputData.color?.id ?? '0',
-        fontId = inputData.font?.id ?? '0',
-        designId = inputData.design?.id ?? '0',
-        sizeId = inputData.size ?? '0'
+    const colorId = inputData.color?.id ?? null,
+        fontId = inputData.font?.id ?? null,
+        designId = inputData.design?.id ?? null,
+        sizeId = inputData.size ?? null
 
     return {
         colorId,
