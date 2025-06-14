@@ -85,7 +85,7 @@ onUnmounted(() => {
         @apply bg-brilliant-rose-500 py-1 text-center;
     }
     .placeholder {
-        @apply min-h-10 rounded-md;
+        @apply min-h-8 rounded-md;
         animation: pulse 1.5s infinite ease-in-out;
     }
 }
