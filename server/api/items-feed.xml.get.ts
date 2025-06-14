@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
       <description>${escapeXml(product.meta_description)}</description>
       ${image ? `<g:image_link>${escapeXml(getStorageUrl(image.filename))}</g:image_link>` : ''}
       <g:price>${product.price.regular} RUB</g:price>
-      ${product.price.is_discounted ? `<g:sale_price>{{ product.price.discounted }} RUB</g:sale_price>` : ''}
+      ${product.price.is_discounted ? `<g:sale_price>${product.price.discounted} RUB</g:sale_price>` : ''}
       <g:id>${product.sku}</g:id>
       <g:availability>true</g:availability>
       <g:brand>${escapeXml('Safepets')}</g:brand>
