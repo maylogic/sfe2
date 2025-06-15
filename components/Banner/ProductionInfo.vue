@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import Swiper from "swiper";
 import { Autoplay } from "swiper/modules";
-import { useModalStore } from "~/stores/modal.js";
+import { useModalStore } from "~/stores/modal";
 
 const bannerRef = useTemplateRef('bannerRef')
 const modalStore = useModalStore()

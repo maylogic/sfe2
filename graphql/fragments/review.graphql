@@ -1,0 +1,12 @@
+fragment Review on Review {
+    id
+    product {
+        name
+        slug
+    }
+    name
+    title
+    rating
+    text
+    created_at
+}

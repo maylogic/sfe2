@@ -34,7 +34,7 @@ const {data} = await useQuery({
 
 <style scoped>
 .product-grid-container {
-    @apply flex flex-col gap-8;
+    @apply flex flex-col gap-8 pb-20;
 }
 
 .product-grid {

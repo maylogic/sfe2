@@ -1,10 +1,12 @@
 <template>
-    <Suspense>
+    <u-container>
         <product-cards/>
-        <template #fallback>
-            <loading-page/>
-        </template>
-    </Suspense>
+    </u-container>
+    <home-reviews/>
+    <home-perks/>
 </template>
 <script setup lang="ts">
+definePageMeta({
+    layout: 'home'
+})
 </script>
