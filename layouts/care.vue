@@ -38,7 +38,7 @@
 }
 
 main.main-content {
-    @apply mt-2;
+    @apply min-h-screen mt-2;
 }
 
 footer {
