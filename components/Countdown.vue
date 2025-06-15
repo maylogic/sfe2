@@ -79,7 +79,7 @@ onUnmounted(() => {
 <style scoped>
 .countdown-container {
     & > div {
-        @apply min-w-[180px] bg-brilliant-rose-500 rounded-md font-bold;
+        @apply min-w-[190px] bg-brilliant-rose-500 rounded-md font-bold;
     }
     &.countdown-size-1 {
         & > div {
