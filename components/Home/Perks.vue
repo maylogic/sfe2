@@ -54,7 +54,7 @@
         @apply py-8;
         & > div {
             @apply w-36 flex flex-col gap-2 items-center leading-5 uppercase flex-shrink-0 flex-grow-0;
-            img {
+            img.loaded {
                 @apply w-[72px] h-[72px];
             }
         }

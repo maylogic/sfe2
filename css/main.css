@@ -154,7 +154,7 @@ html, body {
 }
 
 .image-placeholder {
-    @apply bg-storm-dust-200;
+    @apply bg-storm-dust-200 rounded-md;
     animation: pulse 1.5s infinite ease-in-out;
 }
 
