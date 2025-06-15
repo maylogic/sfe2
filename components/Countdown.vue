@@ -1,10 +1,15 @@
 <template>
-    <div class="countdown-container">
+    <div class="countdown-container" :class="`countdown-size-${placeholderSize}`">
         <div v-if="isMounted" class="countdown">
-            <span v-if="timeLeft.days > 0">{{ timeLeft.days }} д. </span>
-            <span>{{ timeLeft.hours }} ч. </span>
-            <span>{{ timeLeft.minutes }} м. </span>
-            <span>{{ timeLeft.seconds }} с.</span>
+            <span v-if="timeLeft.days > 0">
+                {{ timeLeft.days }} {{ num_word(timeLeft.days, ['день', 'дня', 'дней']) }}
+            </span>
+            <span v-if="timeLeft.hours > 0">
+                {{ timeLeft.hours }} {{ num_word(timeLeft.hours, ['час', 'часа', 'часов']) }}
+            </span>
+            <span v-if="timeLeft.minutes > 0">
+                {{ timeLeft.minutes }} {{ num_word(timeLeft.minutes, ['минута', 'минуты', 'минут']) }}
+            </span>
         </div>
         <div v-if="!isMounted" class="placeholder"></div>
     </div>
@@ -16,6 +21,7 @@ import {
     onUnmounted,
     ref
 } from 'vue'
+import { num_word } from "~/utils/misc";
 
 const props = defineProps<{
     endDate: string | Date
@@ -26,26 +32,21 @@ const endDate = props.endDate instanceof Date ? props.endDate : convertUtcToLoca
 const isMounted = ref(false)
 const intervalId = ref()
 
-const timeLeft = ref({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-})
+const timeLeft = ref(calculateTimeLeft()),
+    placeholderSize = computed(() => Object.values(timeLeft.value).filter(value => value !== 0).length)
 
 function calculateTimeLeft() {
-    const total = endDate - new Date()
+    const total = endDate.getTime() - Date.now()
     if (total <= 0) {
         clearInterval(intervalId.value)
-        return {days: 0, hours: 0, minutes: 0, seconds: 0}
+        return {days: 0, hours: 0, minutes: 0}
     }
 
-    const seconds = Math.floor((total / 1000) % 60)
     const minutes = Math.floor((total / 1000 / 60) % 60)
     const hours = Math.floor((total / (1000 * 60 * 60)) % 24)
     const days = Math.floor(total / (1000 * 60 * 60 * 24))
 
-    return {days, hours, minutes, seconds}
+    return {days, hours, minutes}
 }
 
 function startTimer() {
@@ -56,8 +57,7 @@ function startTimer() {
         if (
             timeLeft.value.days === 0 &&
             timeLeft.value.hours === 0 &&
-            timeLeft.value.minutes === 0 &&
-            timeLeft.value.seconds === 0
+            timeLeft.value.minutes === 0
         ) {
             clearInterval(intervalId.value)
         }
@@ -79,10 +79,20 @@ onUnmounted(() => {
 <style scoped>
 .countdown-container {
     & > div {
-        @apply min-w-[150px] bg-brilliant-rose-500 rounded-md font-bold;
+        @apply min-w-[180px] bg-brilliant-rose-500 rounded-md font-bold;
+    }
+    &.countdown-size-1 {
+        & > div {
+            @apply min-w-[70px];
+        }
+    }
+    &.countdown-size-2 {
+        & > div {
+            @apply min-w-[130px];
+        }
     }
     .countdown {
-        @apply bg-brilliant-rose-500 py-1 text-center;
+        @apply bg-brilliant-rose-500 py-1 text-center flex items-center gap-1 justify-center;
     }
     .placeholder {
         @apply min-h-8 rounded-md;
