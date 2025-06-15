@@ -28,8 +28,8 @@
                     </div>
                 </div>
             </div>
-            <banner-production-info/>
         </u-container>
+        <banner-production-info/>
         <closable-slideover title="Меню" v-model="menuOpen">
             <u-vertical-navigation @click="menuOpen = false" :links="menuItems"/>
         </closable-slideover>

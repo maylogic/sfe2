@@ -1,22 +1,26 @@
 <template>
-    <div class="production-info swiper font-fira-sans" ref="bannerRef">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                Сделано в России
+    <div class="production-info">
+        <u-container>
+            <div class="swiper font-fira-sans" ref="bannerRef">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        Сделано в России
+                    </div>
+                    <div class="swiper-slide cursor-pointer" @click="modalStore.productionTime=true">
+                        Изготовим за 1-3 дня*
+                    </div>
+                    <div class="swiper-slide">
+                        Бесплатная доставка от 5000 ₽
+                    </div>
+                </div>
             </div>
-            <div class="swiper-slide cursor-pointer" @click="modalStore.productionTime=true">
-                Изготовим за 1-3 дня*
-            </div>
-            <div class="swiper-slide">
-                Бесплатная доставка от 5000 ₽
-            </div>
-        </div>
+        </u-container>
     </div>
 </template>
 <script setup lang="ts">
 import Swiper from "swiper";
-import {Autoplay} from "swiper/modules";
-import {useModalStore} from "~/stores/modal.js";
+import { Autoplay } from "swiper/modules";
+import { useModalStore } from "~/stores/modal.js";
 
 const bannerRef = useTemplateRef('bannerRef')
 const modalStore = useModalStore()
@@ -44,11 +48,14 @@ onMounted(() => {
 </script>
 <style lang="scss">
 .production-info {
-    @apply md:mb-2 border-t-[1px] md:border-[1px];
+    @apply border-t-[1px] border-storm-dust-100;
     .swiper-slide {
-        @apply text-center py-2 md:border-r-[1px] text-base tracking-wide text-storm-dust-800;
-        &:last-child {
-            @apply border-r-0;
+        @apply text-center py-2 tracking-wide text-storm-dust-800 relative text-sm;
+        &:not(:last-child):after {
+            @apply bg-storm-dust-100 absolute right-0 top-1/2 -translate-y-1/2 hidden md:block;
+            content: '';
+            height: 20px;
+            width: 1px;
         }
     }
 }
