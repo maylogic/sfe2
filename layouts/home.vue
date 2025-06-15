@@ -11,7 +11,7 @@
 </template>
 <style lang="scss">
 main.main-content {
-    @apply min-h-screen mt-2;
+    @apply mt-2;
 }
 
 footer {

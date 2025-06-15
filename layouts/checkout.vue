@@ -12,10 +12,6 @@
     @apply bg-storm-dust-50;
 }
 
-.main-content-checkout {
-    @apply min-h-screen;
-}
-
 footer {
     @apply text-sm py-2;
 }
