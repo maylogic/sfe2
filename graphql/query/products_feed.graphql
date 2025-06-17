@@ -2,6 +2,7 @@ query ProductsFeed($first: Int!, $page: Int!) {
     products(first: $first, page: $page) {
         data {
             id
+            name
             slug
             sku
             meta_title

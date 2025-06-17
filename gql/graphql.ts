@@ -998,7 +998,7 @@ export type ProductsFeedQueryVariables = Exact<{
 }>;
 
 
-export type ProductsFeedQuery = { __typename?: 'Query', products: { __typename?: 'ProductPaginator', data: Array<{ __typename?: 'Product', id: string, slug: string, sku: string, meta_title: string, meta_description: string, price: { __typename?: 'Price', regular: number, is_discounted: boolean, discounted: number }, gallery: Array<{ __typename?: 'ProductGalleryItem', filename: string, is_video: boolean }> }>, paginatorInfo: (
+export type ProductsFeedQuery = { __typename?: 'Query', products: { __typename?: 'ProductPaginator', data: Array<{ __typename?: 'Product', id: string, slug: string, sku: string, meta_title: string, name: string, meta_description: string, price: { __typename?: 'Price', regular: number, is_discounted: boolean, discounted: number }, gallery: Array<{ __typename?: 'ProductGalleryItem', filename: string, is_video: boolean }> }>, paginatorInfo: (
       { __typename?: 'PaginatorInfo' }
       & { ' $fragmentRefs'?: { 'PaginationFragment': PaginationFragment } }
     ) } };

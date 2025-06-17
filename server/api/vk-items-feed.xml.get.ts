@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
         const image = product.gallery.find(item => !item.is_video)
         return `
     <item>
-      <title>${escapeXml(product.meta_title)}</title>
+      <title>${escapeXml(product.name)}</title>
       <link>${escapeXml(getCanonicalUrl(`product/${product.slug}`))}</link>
       <description>${escapeXml(product.meta_description)}</description>
       ${image ? `<g:image_link>${escapeXml(getStorageUrl(image.filename))}</g:image_link>` : ''}
