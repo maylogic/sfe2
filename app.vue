@@ -71,10 +71,6 @@ _tmr.push({id: "3656189", type: "pageView", start: (new Date()).getTime()});
         ecommerce:"dataLayer"
    });
    `
-        },
-        {
-            async: true,
-            src: 'https://f212915888bb400cb5e6d8e2e39bdda1.ops.beeline.ru'
         }
     ],
     noscript: [

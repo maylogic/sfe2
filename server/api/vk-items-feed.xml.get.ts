@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
       <g:price>${product.price.regular} RUB</g:price>
       ${product.price.is_discounted ? `<g:sale_price>${product.price.discounted} RUB</g:sale_price>` : ''}
       <g:id>${product.sku}</g:id>
-      <g:availability>True</g:availability>
+      <g:availability>true</g:availability>
       <g:brand>${escapeXml('Safepets')}</g:brand>
       <g:google_product_category>${escapeXml('Pet Supplies > Pet ID Tags')}</g:google_product_category>
     </item>
