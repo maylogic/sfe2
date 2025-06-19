@@ -34,6 +34,9 @@ const intervalId = ref()
 
 const timeLeft = ref(calculateTimeLeft()),
     placeholderSize = computed(() => Object.values(timeLeft.value).filter(value => value > 0).length)
+watch(placeholderSize, (newsize) => {
+    console.log(newsize, placeholderSize.value)
+})
 
 function calculateTimeLeft() {
     const total = endDate.getTime() - Date.now()
