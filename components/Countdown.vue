@@ -34,7 +34,7 @@ const intervalId = ref()
 
 const timeLeft = ref(calculateTimeLeft()),
     placeholderSize = ref(Object.values(timeLeft.value).filter(value => value > 0).length)
-console.log(timeLeft.value, placeholderSize, Object.values(newTimeLeft).filter(value => value > 0))
+console.log(timeLeft.value, placeholderSize, Object.values(timeLeft.value).filter(value => value > 0))
 watch(timeLeft, (newTimeLeft) => {
     console.log(newTimeLeft)
     placeholderSize.value = Object.values(newTimeLeft).filter(value => value > 0).length
