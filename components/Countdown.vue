@@ -64,7 +64,7 @@ function startTimer() {
     }, 1000)
 }
 
-onClientMounted(() => {
+onMounted(() => {
     startTimer()
     isMounted.value = true
 })
@@ -81,19 +81,23 @@ onUnmounted(() => {
     & > div {
         @apply min-w-[190px] bg-brilliant-rose-500 rounded-md font-bold;
     }
+
     &.countdown-size-1 {
         & > div {
             @apply min-w-[70px];
         }
     }
+
     &.countdown-size-2 {
         & > div {
             @apply min-w-[130px];
         }
     }
+
     .countdown {
         @apply bg-brilliant-rose-500 py-1 text-center flex items-center gap-1 justify-center;
     }
+
     .placeholder {
         @apply min-h-8 rounded-md;
         animation: pulse 1.5s infinite ease-in-out;

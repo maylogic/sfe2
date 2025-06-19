@@ -1,7 +1,9 @@
 <template>
     <div class="top-banner font-fira-sans" v-if="data?.getTopBanner">
         {{ data.getTopBanner.sales_rule.label }}
-        <countdown :end-date="data.getTopBanner.sales_rule.ends_at"/>
+        <client-only>
+            <countdown :end-date="data.getTopBanner.sales_rule.ends_at"/>
+        </client-only>
     </div>
 </template>
 <script setup lang="ts">
