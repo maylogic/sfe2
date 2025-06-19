@@ -33,7 +33,7 @@ const isMounted = ref(false)
 const intervalId = ref()
 
 const timeLeft = ref(calculateTimeLeft()),
-    placeholderSize = computed(() => Object.values(timeLeft.value).filter(value => value !== 0).length)
+    placeholderSize = computed(() => Object.values(timeLeft.value).filter(value => value > 0).length)
 
 function calculateTimeLeft() {
     const total = endDate.getTime() - Date.now()
