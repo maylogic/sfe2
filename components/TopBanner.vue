@@ -21,5 +21,6 @@ const {data} = await useQuery({
     @apply flex items-center justify-center;
     @apply flex-col md:flex-row md:gap-2 gap-1;
     @apply pt-1 pb-2 md:py-1;
+    @apply min-h-[72px] md:min-h-[40px];
 }
 </style>
