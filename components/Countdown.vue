@@ -12,6 +12,8 @@
             </span>
         </div>
         <div v-if="!isMounted" class="placeholder"></div>
+        {{ placeholderSize }}
+        {{ JSON.stringify(timeLeft) }}
     </div>
 </template>
 
@@ -34,6 +36,7 @@ const intervalId = ref()
 
 const timeLeft = ref(calculateTimeLeft()),
     placeholderSize = computed(() => Object.values(timeLeft.value).filter(value => value > 0).length)
+console.log(placeholderSize.value, timeLeft.value)
 watch(placeholderSize, (newsize) => {
     console.log(newsize, placeholderSize.value)
 })
