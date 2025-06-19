@@ -1,5 +1,5 @@
 <template>
-    <div class="countdown-container" :class="`countdown-size-${placeholderSize}`">
+    <div class="countdown-container" :class="`countdown-size-${placeholderSize}`" :data-size="placeholderSize">
         <div v-if="isMounted" class="countdown">
             <span v-if="timeLeft.days > 0">
                 {{ timeLeft.days }} {{ num_word(timeLeft.days, ['день', 'дня', 'дней']) }}
@@ -33,13 +33,7 @@ const isMounted = ref(false)
 const intervalId = ref()
 
 const timeLeft = ref(calculateTimeLeft()),
-    placeholderSize = ref(Object.values(timeLeft.value).filter(value => value > 0).length)
-console.log(timeLeft.value, placeholderSize, Object.values(timeLeft.value).filter(value => value > 0))
-watch(timeLeft, (newTimeLeft) => {
-    console.log(newTimeLeft)
-    placeholderSize.value = Object.values(newTimeLeft).filter(value => value > 0).length
-    console.log(Object.values(newTimeLeft).filter(value => value > 0).length, Object.values(newTimeLeft).filter(value => value > 0))
-})
+    placeholderSize = computed(() => Object.values(timeLeft.value).filter(value => value > 0).length)
 
 function calculateTimeLeft() {
     const total = endDate.getTime() - Date.now()
