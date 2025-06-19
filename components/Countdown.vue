@@ -1,6 +1,6 @@
 <template>
-    <div class="countdown-container">
-        <div class="countdown">
+    <div class="countdown-container" :class="`countdown-size-${placeholderSize}`" :data-size="placeholderSize">
+        <div v-if="isMounted" class="countdown">
             <span v-if="timeLeft.days > 0">
                 {{ timeLeft.days }} {{ num_word(timeLeft.days, ['день', 'дня', 'дней']) }}
             </span>
@@ -11,6 +11,7 @@
                 {{ timeLeft.minutes }} {{ num_word(timeLeft.minutes, ['минута', 'минуты', 'минут']) }}
             </span>
         </div>
+        <div v-if="!isMounted" class="placeholder"></div>
     </div>
 </template>
 
@@ -31,7 +32,8 @@ const endDate = props.endDate instanceof Date ? props.endDate : convertUtcToLoca
 const isMounted = ref(false)
 const intervalId = ref()
 
-const timeLeft = ref(calculateTimeLeft())
+const timeLeft = ref(calculateTimeLeft()),
+    placeholderSize = computed(() => Object.values(timeLeft.value).filter(value => value > 0).length)
 
 function calculateTimeLeft() {
     const total = endDate.getTime() - Date.now()
@@ -62,7 +64,7 @@ function startTimer() {
     }, 1000)
 }
 
-onMounted(() => {
+onClientMounted(() => {
     startTimer()
     isMounted.value = true
 })
@@ -77,11 +79,24 @@ onUnmounted(() => {
 <style scoped>
 .countdown-container {
     & > div {
-        @apply bg-brilliant-rose-500 rounded-md font-bold;
+        @apply min-w-[190px] bg-brilliant-rose-500 rounded-md font-bold;
+    }
+    &.countdown-size-1 {
+        & > div {
+            @apply min-w-[70px];
+        }
+    }
+    &.countdown-size-2 {
+        & > div {
+            @apply min-w-[130px];
+        }
     }
     .countdown {
         @apply bg-brilliant-rose-500 py-1 text-center flex items-center gap-1 justify-center;
-        @apply w-max px-2;
+    }
+    .placeholder {
+        @apply min-h-8 rounded-md;
+        animation: pulse 1.5s infinite ease-in-out;
     }
 }
 </style>
