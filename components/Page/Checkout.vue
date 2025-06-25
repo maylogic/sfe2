@@ -48,8 +48,7 @@
                         <template #label>
                             Подтверждаю, что введенные мною данные на 100% корректны и соглашаюсь с <a href="#"
                                                                                                        class="link"
-                                                                                                       @click.prevent="modalStore.returnPolicy=true">условиями
-                            обслуживания</a>
+                                                                                                       @click.prevent="modalStore.returnPolicy=true">политикой возврата персонализированных товаров</a>
                         </template>
                     </u-checkbox>
                 </div>
