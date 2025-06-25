@@ -3,6 +3,7 @@
         <header-checkout/>
         <main class="main-content-checkout">
             <slot/>
+            <modal-return-policy/>
         </main>
     </div>
     <footer-content/>

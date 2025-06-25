@@ -44,9 +44,14 @@
                                 label="Получать эксклюзивные предложения и скидки"
                     />
                     <u-checkbox class="checkbox-thin"
-                                v-model="agree"
-                                label="Подтверждаю, что введенные мною данные на 100% корректны и соглашаюсь с условиями обслуживания"
-                    />
+                                v-model="agree">
+                        <template #label>
+                            Подтверждаю, что введенные мною данные на 100% корректны и соглашаюсь с <a href="#"
+                                                                                                       class="link"
+                                                                                                       @click.prevent="modalStore.returnPolicy=true">условиями
+                            обслуживания</a>
+                        </template>
+                    </u-checkbox>
                 </div>
             </checkout-block>
             <button type="button" :disabled="!cart.can_place_order" class="checkout-button"
@@ -112,7 +117,9 @@ import {
 import { navigateTo } from "#app";
 import { useFragment } from "~/gql";
 import { getCartItemToTrack } from "~/utils/tracking";
+import { useModalStore } from "~/stores/modal";
 
+const modalStore = useModalStore()
 const authStore = useAuthStore()
 await authStore.hydrate()
 const {user} = storeToRefs(authStore)
