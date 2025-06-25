@@ -1,7 +1,8 @@
 <template>
 <div class="horizontal-nav">
     <div class="nav-item font-fira-sans" v-for="item in items">
-        <nuxt-link :to="item.to">{{ item.label }}</nuxt-link>
+        <nuxt-link v-if="item.to" @click="item.onClick" :to="item.to">{{ item.label }}</nuxt-link>
+        <span v-else @click="item.onClick">{{ item.label }}</span>
     </div>
 </div>
 </template>
@@ -14,7 +15,8 @@ import type {
 defineProps<{
     items: {
         label: string,
-        to: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric
+        to: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric | undefined,
+        onClick: () => void
     }[]
 }>()
 </script>
@@ -22,7 +24,7 @@ defineProps<{
 .horizontal-nav {
     @apply sm:flex hidden items-center gap-5;
     .nav-item {
-        @apply text-black uppercase tracking-wider;
+        @apply text-black uppercase tracking-wider cursor-pointer;
         &:hover {
             @apply text-viking-500;
         }

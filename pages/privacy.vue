@@ -4,9 +4,6 @@ import {
     getSiteTitle
 } from "~/utils/seo";
 
-definePageMeta({
-    layout: 'care'
-})
 useHead({
     title: getSiteTitle('Политика в отношении обработки персональных данных'),
     link: [
@@ -18,7 +15,7 @@ useHead({
 })
 </script>
 <template>
-    <div class="care-page">
+    <div class="prose mx-auto">
         <h1>Политика в отношении обработки персональных данных</h1>
         <h2>1. Общие положения</h2>
         <div>Настоящая политика обработки персональных данных составлена в соответствии с требованиями Федерального

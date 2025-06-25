@@ -1,6 +1,7 @@
 export const useModalStore = defineStore('modal', {
     state: () => ({
         productionTime: false,
-        cookieTerms: false
+        cookieTerms: false,
+        returnPolicy: false
     })
 })

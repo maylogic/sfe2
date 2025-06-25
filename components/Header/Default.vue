@@ -37,7 +37,9 @@
 </template>
 <script setup lang="ts">
 import { useCartStore } from "~/stores/cart";
+import { useModalStore } from "~/stores/modal";
 
+const modalStore = useModalStore()
 const menuOpen = ref(false)
 const menuItems = [
     {
@@ -45,16 +47,10 @@ const menuItems = [
         to: '/',
     },
     {
-        label: 'Статус заказа',
-        to: '/status'
-    },
-    {
-        label: 'Возврат',
-        to: '/return'
-    },
-    {
-        label: 'Отмена',
-        to: '/cancel'
+        label: 'Возврат или отмена',
+        onClick: function() {
+            modalStore.returnPolicy = true
+        }
     },
     {
         label: 'Контакты',

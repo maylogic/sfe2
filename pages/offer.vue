@@ -5,9 +5,6 @@ import {
 } from "~/utils/seo";
 import { getEnvOrPubVal } from "~/utils/env";
 
-definePageMeta({
-    layout: 'care'
-})
 useHead({
     title: getSiteTitle('Договор публичной оферты'),
     link: [
@@ -19,7 +16,7 @@ useHead({
 })
 </script>
 <template>
-    <div class="care-page">
+    <div class="prose mx-auto">
         <h1>Договор публичной оферты</h1>
         <div>Интернет-магазин safepets, расположенный на доменном имени {{ getEnvOrPubVal('SITE_DOMAIN') }}, ИП Цвингер Артем Сергеевич, и
             юридическим адресом 650070, РОССИЯ, КЕМЕРОВСКАЯ ОБЛАСТЬ - КУЗБАСС, Г КЕМЕРОВО, УЛ ТУХАЧЕВСКОГО, Д 38Б, КВ

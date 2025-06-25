@@ -1,5 +1,5 @@
 <template>
-    <div class="care-page">
+    <div class="prose mx-auto">
         <h1>Банковские реквизиты</h1>
         <company-details/>
     </div>
@@ -10,9 +10,6 @@ import {
     getSiteTitle
 } from "~/utils/seo";
 
-definePageMeta({
-    layout: 'care'
-})
 useHead({
     title: getSiteTitle('Банковские реквизиты'),
     link: [

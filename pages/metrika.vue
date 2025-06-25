@@ -4,9 +4,6 @@ import {
     getSiteTitle
 } from "~/utils/seo";
 
-definePageMeta({
-    layout: 'care'
-})
 useHead({
     title: getSiteTitle('Согласие на обработку персональных данных с помощью сервиса «ЯНДЕКС.МЕТРИКА»'),
     link: [
@@ -18,7 +15,7 @@ useHead({
 })
 </script>
 <template>
-    <div class="care-page">
+    <div class="prose mx-auto">
         <h1>Согласие на обработку персональных данных с помощью сервиса «ЯНДЕКС.МЕТРИКА»</h1>
         <div>1. Я (далее — «Пользователь» или «Субъект персональных данных»), осуществляя заполнение и отправку заявки
             на

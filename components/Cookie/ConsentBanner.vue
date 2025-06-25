@@ -28,7 +28,7 @@ const consent = () => {
             </u-card>
         </u-container>
     </div>
-    <cookie-terms-modal @consent="consent"/>
+    <modal-consent @consent="consent"/>
 </template>
 
 <style lang="scss">
