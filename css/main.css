@@ -182,6 +182,9 @@ html, body {
 }
 
 a {
+    &.link {
+        @apply text-brilliant-rose-500 underline;
+    }
     &:active, &:focus-visible {
         @apply outline-none outline-0;
     }

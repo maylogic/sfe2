@@ -1,7 +1,10 @@
 <template>
-    <NuxtLayout>
-        <NuxtPage/>
-    </NuxtLayout>
+    <div class="app relative">
+        <NuxtLayout>
+            <NuxtPage/>
+        </NuxtLayout>
+        <cookie-consent-banner/>
+    </div>
 </template>
 <script setup lang="ts">
 import { getLocalFontPreloads } from "~/utils/fonts";

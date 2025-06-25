@@ -1,0 +1,38 @@
+<script setup>
+import {useBooleanCookie} from '~/composables/useBooleanCookie'
+import {useModalStore} from "~/stores/modal";
+
+const consentGiven = useBooleanCookie('consent_banner_closed')
+const modalStore = useModalStore()
+
+const consent = () => {
+    consentGiven.value = true
+}
+</script>
+
+<template>
+    <div v-if="!consentGiven" class="cookie-consent-banner">
+        <u-container>
+            <u-card :ui="{ body: {padding: 'p-3 sm:p-3'},footer: {padding: 'p-3 sm:p-3'} }">
+                <div class="flex items-center w-full">
+                    <span>
+                        Мы используем файлы cookies. Оставаясь на нашем сайте, вы соглашаетесь с&nbsp;
+                        <a class="link" href="#"
+                           @click.prevent="modalStore.cookieTerms=true">условиями их использования</a>.
+                    </span>
+                    <u-icon name="i-lucide-x" class="ml-auto cursor-pointer" @click="consent"/>
+                </div>
+                <template #footer>
+                    <u-button size="xs" @click="consent">Хорошо</u-button>
+                </template>
+            </u-card>
+        </u-container>
+    </div>
+    <cookie-terms-modal @consent="consent"/>
+</template>
+
+<style lang="scss">
+.cookie-consent-banner {
+    @apply sticky bottom-0 w-full py-2 text-xs z-10;
+}
+</style>
