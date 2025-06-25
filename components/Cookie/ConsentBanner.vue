@@ -14,13 +14,13 @@ const consent = () => {
     <div v-if="!consentGiven" class="cookie-consent-banner">
         <u-container>
             <u-card :ui="{ body: {padding: 'p-3 sm:p-3'},footer: {padding: 'p-3 sm:p-3'} }">
-                <div class="flex items-center w-full">
+                <div class="flex items-start w-full gap-2">
                     <span>
                         Мы используем файлы cookies. Оставаясь на нашем сайте, вы соглашаетесь с&nbsp;
                         <a class="link" href="#"
                            @click.prevent="modalStore.cookieTerms=true">условиями их использования</a>.
                     </span>
-                    <u-icon name="i-lucide-x" class="ml-auto cursor-pointer" @click="consent"/>
+                    <u-icon name="i-lucide-x" class="ml-auto cursor-pointer shrink-0" @click="consent"/>
                 </div>
                 <template #footer>
                     <u-button size="xs" @click="consent">Хорошо</u-button>

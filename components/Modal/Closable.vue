@@ -2,10 +2,10 @@
     <u-modal :model-value="modelValue" @update:modelValue="emit('update:modelValue', $event)">
         <u-card>
             <template #header>
-                <div class="flex items-center w-full">
+                <div class="flex items-start w-full gap-2">
                     <slot name="header"/>
                     <u-icon
-                        class="cursor-pointer ml-auto"
+                        class="cursor-pointer ml-auto shrink-0"
                         name="i-lucide-x"
                         @click="emit('update:modelValue', false)"
                     />
