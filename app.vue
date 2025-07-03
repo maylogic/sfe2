@@ -79,7 +79,7 @@ _tmr.push({id: "3656189", type: "pageView", start: (new Date()).getTime()});
     noscript: [
         {innerHTML: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQ3Z5R55" height="0" width="0" style="display:none;visibility:hidden"></iframe>`},
         {innerHTML: `<div><img src="https://top-fwz1.mail.ru/counter?id=3656189;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></div>`},
-        {innerHTML: `<div><img src="https://mc.yandex.ru/watch/101769326" style="position:absolute; left:-9999px;" alt="" /></div>`}
+        {innerHTML: `<div><img referrerpolicy="no-referrer" src="https://mc.yandex.ru/watch/101769326" style="position:absolute; left:-9999px;" alt="" /></div>`}
     ]
 })
 </script>
