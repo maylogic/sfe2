@@ -33,6 +33,6 @@ const consent = () => {
 
 <style lang="scss">
 .cookie-consent-banner {
-    @apply sticky bottom-0 w-full py-2 text-xs z-10;
+    @apply fixed bottom-0 w-full py-2 text-xs z-10;
 }
 </style>
