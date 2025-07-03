@@ -17,6 +17,12 @@
                     <u-form-group name="phone_number" label="Телефон получателя">
                         <u-input autocomplete="shipping tel" name="phone_number" v-model="state.phone_number"/>
                     </u-form-group>
+                    <form-geo-suggest v-model="state.address1" @selected="selectedSuggestionItem"/>
+                    <u-form-group class="suggestions-container" name="address2"
+                                  label="Квартира, подъезд, этаж, доп. инфо">
+                        <u-input autocomplete="shipping address-line2" name="address2"
+                                 v-model="state.address2"/>
+                    </u-form-group>
                     <div class="grid grid-cols-2 items-start gap-2">
                         <u-form-group name="country" label="Страна">
                             <u-input autocomplete="shipping country" name="country" v-model="state.country"/>
@@ -25,18 +31,15 @@
                             <u-input autocomplete="shipping city" name="city" v-model="state.city"/>
                         </u-form-group>
                     </div>
-                    <u-form-group name="address1" label="Адрес 1">
-                        <u-input autocomplete="shipping address-line1" name="address1" v-model="state.address1"/>
-                    </u-form-group>
-                    <u-form-group name="address2" label="Адрес 2">
-                        <u-input autocomplete="shipping address-line2" name="address2" v-model="state.address2"/>
-                    </u-form-group>
-                    <u-form-group name="postal_code" label="Индекс">
-                        <u-input autocomplete="shipping postal-code" name="postal_code" v-model="state.postal_code"/>
-                    </u-form-group>
-                    <u-form-group name="state" label="Регион">
-                        <u-input autocomplete="shipping state" name="state" v-model="state.state"/>
-                    </u-form-group>
+                    <div class="grid grid-cols-2 items-start gap-2">
+                        <u-form-group name="postal_code" label="Индекс">
+                            <u-input autocomplete="shipping postal-code" name="postal_code"
+                                     v-model="state.postal_code"/>
+                        </u-form-group>
+                        <u-form-group name="state" label="Регион">
+                            <u-input autocomplete="shipping state" name="state" v-model="state.state"/>
+                        </u-form-group>
+                    </div>
                 </div>
                 <loading-overlay v-if="fetching">
                     <loading-page label="Создание"/>
@@ -66,11 +69,12 @@ import type { AddressFormState } from "~/data/types";
 import { customerAddressSchema } from "~/yup";
 import type { InferType } from "yup";
 import type { FormSubmitEvent } from "#ui/types";
+import type { SuggestionItem } from "~/types/geosuggest";
 
 const schema = customerAddressSchema
 type Schema = InferType<typeof schema>
 
-defineProps<{
+const props = defineProps<{
     modelValue: boolean,
     fetching: boolean,
     state: AddressFormState,
@@ -82,5 +86,25 @@ const emit = defineEmits(['update:modelValue'])
 
 function toggleClose(newValue: boolean) {
     emit('update:modelValue', newValue)
+}
+
+const selectedSuggestionItem = (item: SuggestionItem) => {
+    props.state.postal_code = item.address.postcode
+    item.adm_div.forEach(div => {
+        if (div?.type === 'country') {
+            props.state.country = div.name
+        }
+        if (div?.type === 'region') {
+            props.state.state = div.name
+        }
+        if (div?.type === 'city') {
+            props.state.city = div.name
+        }
+    })
+    if (item.address_name) {
+        props.state.address1 = item.address_name
+    } else if (item.name) {
+        props.state.address1 = item.name
+    }
 }
 </script>
