@@ -1,5 +1,5 @@
 <template>
-    <span class="font-fira-sans">Начните вводить город и адрес в поле «адрес дома», затем выберите подходящий адрес из подсказок, чтобы быстро заполнить остальные поля</span>
+    <span class="font-fira-sans text-sm">Начните вводить город и адрес в поле «адрес дома», затем выберите подходящий адрес из подсказок, чтобы быстро заполнить остальные поля</span>
     <u-form-group class="suggestions-container" name="address1" label="Адрес дома">
         <u-input @keyup="suggest" autocomplete="none" name="address1"
                  :model-value="modelValue" @update:modelValue="emit('update:modelValue', $event)"/>
