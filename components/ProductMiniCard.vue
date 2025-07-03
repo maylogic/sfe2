@@ -76,8 +76,8 @@ onUnmounted(() => {
                 content: "";
                 box-shadow: 0 .25rem .625rem 0 #0006;
                 position: absolute;
-                background: #fff;
-                z-index: -1;
+                background: transparent;
+                z-index: 1;
                 top: -.75rem;
                 bottom: -4.75rem;
                 left: -.75rem;
@@ -97,6 +97,7 @@ onUnmounted(() => {
                 left: 0;
                 right: 0;
                 margin-top: 1rem;
+                z-index: 2;
             }
         }
 
