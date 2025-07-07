@@ -6,7 +6,7 @@
         <transition name="fade-in" v-show="showSuggestions">
             <div class="suggestions">
                 <div class="suggestion-item" @click="selectSuggestion(item)" v-for="item in suggestions">
-                    <span><b>{{ item.query }}</b>{{ item.label }}</span>
+                    <span>{{ item.full_name }}</span>
                 </div>
             </div>
         </transition>
@@ -16,8 +16,7 @@
 import type { AddressFormState } from "~/data/types";
 import type {
     DGisSuggestionItem,
-    DGisSuggestResponse,
-    SuggestionItem
+    DGisSuggestResponse
 } from "~/types/geosuggest";
 
 const SUGGEST_URL = 'https://catalog.api.2gis.com/3.0/suggests?fields=items.address,items.adm_div&suggest_type=address&key=1614b16a-316b-4558-b5af-62b8327148b5&q='
@@ -26,25 +25,20 @@ const props = defineProps<{
     modelValue: AddressFormState['address1'],
 }>()
 
-const suggestions = ref<SuggestionItem[]>([]),
+const suggestions = ref<DGisSuggestionItem[]>([]),
     showSuggestions = ref(false)
 
-const selectSuggestion = (item: SuggestionItem) => {
+const selectSuggestion = (item: DGisSuggestionItem) => {
     emit('selected', item)
     showSuggestions.value = false
 }
 
 const suggest = useDebounceFn(async () => {
     const items = await fetchSuggestions(props.modelValue)
-    const dropdownItems: SuggestionItem[] = []
+    const dropdownItems: DGisSuggestionItem[] = []
     items.forEach(item => {
         if (item.search_attributes && item.adm_div && item.address?.postcode) {
-            let query = '', label = ''
-            item.search_attributes.suggest_parts.forEach(part => {
-                if (part.is_suggested) label += part.text
-                else query += part.text
-            })
-            dropdownItems.push({...item, query, label})
+            dropdownItems.push(item)
         }
     })
     suggestions.value = dropdownItems

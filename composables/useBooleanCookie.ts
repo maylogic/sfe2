@@ -1,5 +1,7 @@
-export function useBooleanCookie(name: string, options = {}) {
-    const cookie = useCookie(name, options)
+import type { CookieOptions } from "#app";
+
+export function useBooleanCookie(name: string, options: CookieOptions = {}) {
+    const cookie = useCookie(name, {...options, readonly: false})
     const value = ref<boolean>(!!cookie.value && cookie.value !== 'false')
 
     watch(

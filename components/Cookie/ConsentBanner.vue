@@ -2,7 +2,11 @@
 import {useBooleanCookie} from '~/composables/useBooleanCookie'
 import {useModalStore} from "~/stores/modal";
 
-const consentGiven = useBooleanCookie('consent_banner_closed')
+const oneYearFromNow = new Date();
+oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+const consentGiven = useBooleanCookie('consent_banner_closed', {
+    expires: oneYearFromNow
+})
 const modalStore = useModalStore()
 
 const consent = () => {
