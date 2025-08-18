@@ -54,6 +54,7 @@ export default defineEventHandler(async (event) => {
             .toBuffer()
 
         await writeFileAndCreateDir(`${process.cwd()}/public/font-preview/${fontId}/${updatedAtHash}`, webpBuffer)
+        await writeFileAndCreateDir(`${process.cwd()}/.output/public/font-preview/${fontId}/${updatedAtHash}`, webpBuffer)
 
         event.node.res.setHeader('Content-Type', 'image/webp')
         event.node.res.setHeader('Content-Disposition', 'inline; filename=output.webp')
