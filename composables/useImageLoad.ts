@@ -1,4 +1,6 @@
-export const useImageLoad = (imageRef: Ref<HTMLImageElement | undefined, HTMLImageElement | undefined>) => {
+import { ref, watch, type Ref } from 'vue'
+
+export const useImageLoad = (imageRef: Ref<HTMLImageElement | undefined>) => {
     const loaded = ref(false)
     const error = ref(false)
 
@@ -12,22 +14,47 @@ export const useImageLoad = (imageRef: Ref<HTMLImageElement | undefined, HTMLIma
         error.value = true
     }
 
+    // Очистка предыдущих обработчиков
+    let currentElement: HTMLImageElement | null = null
+
+    const cleanup = () => {
+        if (currentElement) {
+            currentElement.removeEventListener('load', handleLoad)
+            currentElement.removeEventListener('error', handleError)
+            currentElement = null
+        }
+    }
+
     watch(
         imageRef,
         (imgElement) => {
-            if (imgElement) {
-                // Если изображение уже загружено (например, кэшировано)
-                if (imgElement.complete && imgElement.naturalWidth !== 0) {
-                    loaded.value = true
-                    return
-                }
+            cleanup() // убираем старые обработчики
 
-                imgElement.addEventListener('load', handleLoad)
-                imgElement.addEventListener('error', handleError)
+            if (!imgElement) return
+
+            // Если изображение уже загружено (например, из кэша)
+            if (imgElement.complete && imgElement.naturalWidth > 0) {
+                loaded.value = true
+                error.value = false
+                return
             }
+
+            // Если изображение завершено, но с ошибкой (например, битое)
+            if (imgElement.complete && imgElement.naturalWidth === 0) {
+                loaded.value = true
+                error.value = true
+                return
+            }
+
+            // В противном случае ждём событий
+            imgElement.addEventListener('load', handleLoad)
+            imgElement.addEventListener('error', handleError)
+            currentElement = imgElement
         },
-        {immediate: true}
+        { immediate: true }
     )
 
-    return {loaded, error}
+    // Очистка при разрушении компонента (если используется внутри setup)
+    // В Nuxt/Vue это делается автоматически, если watch привязан к контексту
+    return { loaded, error }
 }

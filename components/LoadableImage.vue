@@ -5,7 +5,6 @@
         </slot>
         <img
             ref="imgRef"
-            @load="loaded = true"
             :src="src"
             :alt="alt"
             :class="{loaded}"
