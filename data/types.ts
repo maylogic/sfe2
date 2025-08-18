@@ -12,4 +12,4 @@ export type AddressFormState = {
     state: string|undefined
 }
 
-export type FrontendFont = Pick<Font, 'name' | 'label' | 'filename_woff2' | 'preview' | 'id'>
+export type FrontendFont = Pick<Font, 'name' | 'label' | 'filename_woff2' | 'id' | 'updated_at'>

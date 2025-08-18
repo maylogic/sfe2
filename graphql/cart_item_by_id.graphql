@@ -15,7 +15,7 @@ query CartItem($id: ID!) {
             id
             label
             name
-            preview
+            updated_at
         }
         design {
             ...DesignItem

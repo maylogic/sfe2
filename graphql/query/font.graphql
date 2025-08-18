@@ -1,0 +1,12 @@
+query Font($id: ID!) {
+    font(id: $id) {
+        id
+        label
+        name
+        filename_woff2
+        filename_ttf
+        filename_otf
+        system_name
+        preview_size
+    }
+}
