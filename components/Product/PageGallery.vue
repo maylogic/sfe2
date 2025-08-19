@@ -4,7 +4,6 @@
             <gallery-item v-if="!editor && gallery[currentItem]" :data="gallery[currentItem]"/>
             <product-editor :text-lines-render-values="textLinesRenderValues"
                             :line-definitions="lineDefinitions"
-                            :reverse-side-base="reverseSideBase"
                             :personalize-data="personalizeData" v-if="editor"/>
         </div>
         <div class="items-carousel">
@@ -22,7 +21,6 @@
 </template>
 <script setup lang="ts">
 import {
-    BaseFragmentFragmentDoc,
     GalleryItemFragmentDoc,
     type ProductLineDefinition
 } from "~/gql/graphql";
@@ -32,7 +30,6 @@ import type { InputTextLinesMap } from "~/utils/product";
 
 defineProps<{
     gallery: FragmentType<typeof GalleryItemFragmentDoc>[],
-    reverseSideBase: null | undefined | FragmentType<typeof BaseFragmentFragmentDoc>,
     personalizeData: PersonalizeInputData,
     editor: boolean,
     lineDefinitions: ProductLineDefinition[],

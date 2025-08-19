@@ -55,6 +55,18 @@ fragment BaseFragment on Base {
     text_areas {
         ...TextArea
     }
+    base_preview {
+        ...BasePreviewFragment
+    }
+}
+fragment BasePreviewFragment on BasePreview {
+    filename
+    content
+    id
+    label
+    text_areas {
+        ...TextArea
+    }
 }
 fragment DesignItem on Design {
     id

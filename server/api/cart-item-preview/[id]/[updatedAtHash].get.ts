@@ -46,12 +46,10 @@ export default defineEventHandler(async (event) => {
     const document = window.document
 
     registerWindow(window, document)
-    const reverseSideBase = useFragment(BaseFragmentFragmentDoc, cartItem.product.reverse_side_base)
     const design = useFragment(DesignItemFragmentDoc, cartItem.design)
     const firstDesignBase = useFragment(BaseFragmentFragmentDoc, design?.bases[0])
     const canvas = SVG(`<svg viewBox="0 0 200 100">
-        ${reverseSideBase ? `<g data-base-id="${reverseSideBase.id}" transform="translate(5, 5)">${reverseSideBase.content}</g>` : ''}
-        ${firstDesignBase ? `<g data-base-id="${firstDesignBase.id}" transform="translate(105, 5)">${firstDesignBase.content}</g>` : ''}
+        ${firstDesignBase ? `<g data-base-id="${firstDesignBase.id}">${firstDesignBase.content}</g>` : ''}
     </svg>`)
     const textLinesRenderValues = new Map<string, string>()
     cartItem.text_lines?.forEach(textLine => {
@@ -62,9 +60,7 @@ export default defineEventHandler(async (event) => {
         const element = this as Element
         // @ts-ignore
         element.findOne('g#system > path').fill(cartItem.color?.hex ?? 'currentColor')
-        // @ts-ignore
-        const baseId = element.data('base-id') as string
-        const base = firstDesignBase?.id == baseId ? firstDesignBase : reverseSideBase
+        const base = firstDesignBase
         if (base && cartItem.product.line_definitions) {
             const svg = element.findOne('svg')
             applyTextsOnBlock(

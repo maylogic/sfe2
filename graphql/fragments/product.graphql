@@ -16,9 +16,6 @@ fragment ProductPage on Product {
         width
         height
     }
-    reverse_side_base {
-        ...BaseFragment
-    }
     price {
         ...Price
     }

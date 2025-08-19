@@ -5,7 +5,6 @@
                               :editor="editor"
                               :line-definitions="product.line_definitions ?? []"
                               :personalize-data="inputData"
-                              :reverse-side-base="product.reverse_side_base"
                               :product="product"
                               :gallery="product.gallery"/>
         <div class="flex flex-col">

@@ -9,7 +9,6 @@ import {
     registerWindow,
     SVG
 } from '@svgdotjs/svg.js'
-import sharp from "sharp";
 import { useFragment } from "~/gql";
 import { applyTextsOnBlock } from "~/shared/utils/base-svg";
 import {
@@ -21,7 +20,6 @@ import {
     updTextAttributesSvgJs
 } from "~/utils/server/svg";
 import { Client } from '@urql/core'
-import { createGraphqlClient } from "~/system/createGraphqlClient";
 import { getClient } from "~/utils/server/graphql";
 
 export default defineEventHandler(async (event) => {
@@ -47,15 +45,11 @@ export default defineEventHandler(async (event) => {
     const document = window.document
 
     registerWindow(window, document)
-    const height = orderItem.product_size?.height || 25,
-        width = orderItem.product_size?.height || 25,
-        translateX = width + 9
-    const reverseSideBase = useFragment(BaseFragmentFragmentDoc, orderItem.product.reverse_side_base)
+    const height = orderItem.product_size?.height || 25
     const design = useFragment(DesignItemFragmentDoc, orderItem.design)
     const firstDesignBase = useFragment(BaseFragmentFragmentDoc, design?.bases[0])
     const canvas = SVG(`<svg width="210mm" height="297mm" viewBox="0 0 210 297" xmlns="http://www.w3.org/2000/svg">
-        ${reverseSideBase ? `<g data-base-id="${reverseSideBase.id}" transform="translate(5, 5)">${reverseSideBase.content}</g>` : ''}
-        ${firstDesignBase ? `<g data-base-id="${firstDesignBase.id}" transform="translate(${translateX}, 5)">${firstDesignBase.content}</g>` : ''}
+        ${firstDesignBase ? `<g data-base-id="${firstDesignBase.id}">${firstDesignBase.content}</g>` : ''}
     </svg>`)
     const textLinesRenderValues = new Map<string, string>()
     orderItem.text_lines?.forEach(textLine => {
@@ -66,9 +60,7 @@ export default defineEventHandler(async (event) => {
         const element = this as Element
         // @ts-ignore
         element.findOne('g#system > path').fill(orderItem.color?.hex ?? 'currentColor')
-        // @ts-ignore
-        const baseId = element.data('base-id') as string
-        const base = firstDesignBase?.id == baseId ? firstDesignBase : reverseSideBase
+        const base = firstDesignBase
         if (base && orderItem.product.line_definitions) {
             const svg = element.findOne('svg')
             svg?.attr('height', height + 2)

@@ -31,9 +31,6 @@ query CartItemToGen($id: ID!) {
                 hidden
                 sort
             }
-            reverse_side_base {
-                ...BaseFragment
-            }
         }
         updated_at
     }

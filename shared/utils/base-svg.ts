@@ -20,19 +20,21 @@ import {
 import { useFragment } from "~/gql";
 import {
     type BaseFragmentFragment,
+    type BasePreviewFragmentFragment,
     type Color,
     type ProductLineDefinition,
     type TextAreaFragment,
     TextAreaFragmentDoc
 } from "~/gql/graphql";
 
+export type BaseOrPreview = BaseFragmentFragment | BasePreviewFragmentFragment
+
 export const applyColorOnBlock = (block: SVGGElement, color: Color | null | undefined) => {
-    const systemPath = block.querySelector('g#system > path')
-    systemPath?.setAttribute('fill', color?.hex ?? 'currentColor')
+    block.setAttribute('fill', color?.hex ?? 'currentColor')
 }
 export const applyTextsOnBlock = (
     svg: SVGSVGElement,
-    base: BaseFragmentFragment,
+    base: BaseOrPreview,
     font: string | null | undefined,
     color: Color | null | undefined,
     lineDefinitions: ProductLineDefinition[],
@@ -101,7 +103,7 @@ export const applyTextsOnBlock = (
     }
 }
 const baseTextAreas = new Map<string, TextAreaFragment | null>()
-const getTextArea = (base: BaseFragmentFragment) => {
+const getTextArea = (base: BaseOrPreview) => {
     if (!baseTextAreas.get(base.id)) {
         baseTextAreas.set(base.id, useFragment(TextAreaFragmentDoc, base.text_areas ? base.text_areas[0] : null))
     }

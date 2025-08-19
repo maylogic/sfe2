@@ -8,6 +8,7 @@ import {
 } from "~/gql";
 import {
     BaseFragmentFragmentDoc,
+    BasePreviewFragmentFragmentDoc,
     type ProductLineDefinition
 } from "~/gql/graphql";
 import {
@@ -25,7 +26,9 @@ const props = defineProps<{
     lineDefinitions: ProductLineDefinition[],
     textLinesRenderValues: InputTextLinesMap
 }>()
-const base = useFragment(BaseFragmentFragmentDoc, props.baseData)
+const rootBase = useFragment(BaseFragmentFragmentDoc, props.baseData)
+const previewBase = useFragment(BasePreviewFragmentFragmentDoc, rootBase.base_preview)
+const base = previewBase ?? rootBase
 const block = useTemplateRef<SVGGElement>('block')
 
 watch(props.data, () => {
