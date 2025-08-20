@@ -450,7 +450,7 @@ export type Query = {
   font?: Maybe<Font>;
   getCart: Cart;
   getCartItemsCount: Scalars['Int']['output'];
-  getHomepageReviews: Array<Review>;
+  getHomepageReviews?: Maybe<Array<Review>>;
   getOrderById?: Maybe<Order>;
   getProductBySlug?: Maybe<Product>;
   getTopBanner?: Maybe<TopBanner>;
@@ -1009,10 +1009,10 @@ export type FontQuery = { __typename?: 'Query', font?: { __typename?: 'Font', id
 export type HomepageReviewsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type HomepageReviewsQuery = { __typename?: 'Query', getHomepageReviews: Array<(
+export type HomepageReviewsQuery = { __typename?: 'Query', getHomepageReviews?: Array<(
     { __typename?: 'Review' }
     & { ' $fragmentRefs'?: { 'ReviewFragment': ReviewFragment } }
-  )> };
+  )> | null };
 
 export type OrderItemToGenQueryVariables = Exact<{
   id: Scalars['ID']['input'];
