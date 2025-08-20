@@ -1,11 +1,11 @@
 <template>
-    <div class="homepage-reviews" v-if="data?.getHomepageReviews">
+    <div class="homepage-reviews" v-if="data?.getHomepageReviews && data.getHomepageReviews.length > 0">
         <u-container>
             <h2 class="font-fira-sans">Отчего все виляют хвостиками?</h2>
             <div class="relative max-w-[85%] mx-auto">
                 <div class="reviews swiper" ref="reviewsRef">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide" v-for="review in data?.getHomepageReviews">
+                        <div class="swiper-slide" v-for="review in data.getHomepageReviews">
                             <home-review :data="review"/>
                         </div>
                     </div>
