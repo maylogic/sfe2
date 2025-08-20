@@ -62,7 +62,7 @@ export default defineEventHandler(async (event) => {
         element.fill(orderItem.color?.hex ?? 'currentColor')
         if (base && orderItem.product.line_definitions) {
             const svg = element.findOne('svg')
-            svg?.attr('height', height)
+            svg?.attr('height', height + 5)
             svg?.attr('y', '10')
             applyTextsOnBlock(
                 svg,
