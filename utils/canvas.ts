@@ -1,4 +1,7 @@
-export const CANVAS_SIZE = 32
+import { getEnvOrPubVal } from "~/utils/env";
+
+export const CANVAS_SIZE = Number(getEnvOrPubVal('CANVAS_SIZE'))
+export const CANVAS_DPI = Number(getEnvOrPubVal('CANVAS_DPI'))
 let canvasContext: CanvasRenderingContext2D | null = null
 export const getCanvasContext = (dpi: number): CanvasRenderingContext2D | null => {
     if (!canvasContext) {
@@ -9,7 +12,4 @@ export const getCanvasContext = (dpi: number): CanvasRenderingContext2D | null =
         if (canvasContext) canvasContext.scale(dpi, dpi)
     }
     return canvasContext
-}
-export const getDpi = () => {
-    return 10
 }

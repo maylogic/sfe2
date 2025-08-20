@@ -11,6 +11,7 @@ import {
     CanvasRenderingContext2D,
     createCanvas
 } from "canvas";
+import { getEnvOrPubVal } from "~/utils/env";
 
 
 export const updTextAttributesSvgJs = (el: Text, data: TextRenderData) => {
@@ -29,12 +30,13 @@ export const findTextByIdSvgJs = (id: string, svg: Element) => {
     return svg.findOne(`text.text-data[data-id="${id}"]`) as Text
 }
 
-export const CANVAS_SIZE = 32
+export const CANVAS_SIZE = Number(getEnvOrPubVal('CANVAS_SIZE')) // если будет слишком малым то будет баг с шириной текста
+export const CANVAS_DPI = Number(getEnvOrPubVal('CANVAS_DPI'))
+
 export const getTextMetricsRealNodejs = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
-    const dpi = getDpi(),
-        width = CANVAS_SIZE * dpi,
-        height = CANVAS_SIZE * dpi
-    const ctx = getCanvasContext(dpi)
+    const width = CANVAS_SIZE * CANVAS_DPI,
+        height = CANVAS_SIZE * CANVAS_DPI
+    const ctx = getCanvasContext(CANVAS_DPI)
     if (!ctx) throw new Error('Cannot access canvas context')
     // Устанавливаем шрифт и текст
     const size = fontSize ?? data.size
@@ -69,13 +71,13 @@ export const getTextMetricsRealNodejs = (data: TextRenderData, fontSize?: number
     }
 
     return {
-        width: Math.max(0, (right - left) / dpi),
-        height: Math.max(0, (bottom - top) / dpi),
+        width: Math.max(0, (right - left) / CANVAS_DPI),
+        height: Math.max(0, (bottom - top) / CANVAS_DPI),
     }
 }
 
 export const getTextMetricsNodejs = (data: TextRenderData): { actualBoundingBoxDescent: number } => {
-    const ctx = getCanvasContext(getDpi())
+    const ctx = getCanvasContext(CANVAS_DPI)
     if (ctx) {
         const size = data.size
         ctx.textBaseline = 'alphabetic'
@@ -95,9 +97,6 @@ export const getCanvasContext = (dpi: number): CanvasRenderingContext2D | null =
         if (canvasContext) canvasContext.scale(dpi, dpi)
     }
     return canvasContext
-}
-export const getDpi = () => {
-    return 10
 }
 export const createTextElementNodejs = () => {
     return SVG('<text></text>')

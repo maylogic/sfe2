@@ -2,7 +2,7 @@ import { createTextElement } from "~/utils/element";
 import type { ProductLineDefinition } from "~/gql/graphql";
 import {
     getCanvasContext,
-    getDpi
+    CANVAS_DPI
 } from "~/utils/canvas";
 
 export type TextRenderData = {
@@ -152,7 +152,7 @@ export const removeTextsForUnusedDefIds = (
 }
 
 const getTextMetrics = (data: TextRenderData): { actualBoundingBoxDescent: number } => {
-    const ctx = getCanvasContext(getDpi())
+    const ctx = getCanvasContext(CANVAS_DPI)
     if (ctx) {
         const size = data.size
         ctx.textBaseline = 'alphabetic'
@@ -163,7 +163,7 @@ const getTextMetrics = (data: TextRenderData): { actualBoundingBoxDescent: numbe
 }
 
 const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
-    const dpi = getDpi(),
+    const dpi = CANVAS_DPI,
         width = CANVAS_SIZE * dpi,
         height = CANVAS_SIZE * dpi
     const ctx = getCanvasContext(dpi)

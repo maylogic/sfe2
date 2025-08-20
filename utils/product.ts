@@ -94,6 +94,8 @@ export const getNullValidation = () => ({
     size: null,
     options: null
 })
+
+// вернуть введенные тексты в том же порядке в котором идут definitions
 export const getSortedTextLines = (defs: ProductLineDefinition[], textLines: InputTextLinesMap): InputTextLinesMap => {
     const sortedTextLines = new Map<PersonalizeLineDefId, string | null>();
     for (const def of defs) {

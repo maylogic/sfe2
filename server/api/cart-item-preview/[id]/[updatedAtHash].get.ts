@@ -1,5 +1,6 @@
 import {
     BaseFragmentFragmentDoc,
+    BasePreviewFragmentFragmentDoc,
     CartItemToGenDocument,
     DesignItemFragmentDoc
 } from "~/gql/graphql";
@@ -47,9 +48,11 @@ export default defineEventHandler(async (event) => {
 
     registerWindow(window, document)
     const design = useFragment(DesignItemFragmentDoc, cartItem.design)
-    const firstDesignBase = useFragment(BaseFragmentFragmentDoc, design?.bases[0])
+    const firstDesignBase = useFragment(BaseFragmentFragmentDoc, design?.bases[0]),
+        firstDesignBasePreview = useFragment(BasePreviewFragmentFragmentDoc, firstDesignBase?.base_preview)
+    const base = firstDesignBasePreview ?? firstDesignBase
     const canvas = SVG(`<svg viewBox="0 0 200 100">
-        ${firstDesignBase ? `<g data-base-id="${firstDesignBase.id}">${firstDesignBase.content}</g>` : ''}
+        ${base ? `<g data-base-id="${base.id}">${base.content}</g>` : ''}
     </svg>`)
     const textLinesRenderValues = new Map<string, string>()
     cartItem.text_lines?.forEach(textLine => {
@@ -59,8 +62,7 @@ export default defineEventHandler(async (event) => {
         // @ts-ignore
         const element = this as Element
         // @ts-ignore
-        element.findOne('g#system > path').fill(cartItem.color?.hex ?? 'currentColor')
-        const base = firstDesignBase
+        element.fill(cartItem.color?.hex ?? 'currentColor')
         if (base && cartItem.product.line_definitions) {
             const svg = element.findOne('svg')
             applyTextsOnBlock(

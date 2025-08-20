@@ -47,65 +47,68 @@ export const applyTextsOnBlock = (
     creator?: () => SVGTextElement,
     appender?: (el: SVGTextElement, svg: SVGSVGElement) => void
 ) => {
-    const textData: TextRenderData[] = []
-    const rect = getTextArea(base)
-    if (!rect) return
-    const usedDefIds: string[] = []
-    let currentLineSeq = 0
-    for (const [id, value] of getSortedTextLines(lineDefinitions, textLinesRenderValues)) {
-        if (++currentLineSeq < rect.first_line) continue
-        if (currentLineSeq - rect.first_line >= rect.lines) continue
-        if (!value) continue
+    const usedDefIds: string[] = [] // используется для удаление не использованных
 
-        let fill = rect.text_color ?? '#fff'
-        if (rect.inherit_color && color) {
-            fill = color.hex
+    base.text_areas?.forEach(area => {
+        const rect = useFragment(TextAreaFragmentDoc, area)
+        if (import.meta.client) {
+            requestAnimationFrame(() => apply(rect))
+        } else {
+            apply(rect)
         }
-        const fontFamily = font ?? 'Arial'
-        textData.push({
-            id,
-            value,
-            font: fontFamily,
-            fill,
-            x: 0, // calculate
-            y: 0, // calculate
-            size: 0 // calculate
-        })
-        usedDefIds.push(id)
-    }
-    const pieceAreaHeight = rect.height / textData.length
-    const areas = new Map<string, TextPieceArea>
-    for (const piece of textData) {
-        const index = textData.indexOf(piece);
-        const area: TextPieceArea = {
-            id: piece.id,
-            height: pieceAreaHeight,
-            width: rect.width,
-            x: rect.left,
-            y: rect.top + pieceAreaHeight * index
+    })
+
+    function apply(rect: TextAreaFragment) {
+        const textData: TextRenderData[] = []
+        let currentLineSeq = 0
+        for (const [id, value] of getSortedTextLines(lineDefinitions, textLinesRenderValues)) {
+            if (++currentLineSeq < rect.first_line) continue
+            if (currentLineSeq - rect.first_line >= rect.lines) continue
+            if (!value) continue
+
+            let fill = rect.text_color ?? '#fff'
+            if (rect.inherit_color && color) {
+                fill = color.hex
+            }
+            const fontFamily = font ?? 'sans-serif'
+            textData.push({
+                id,
+                value,
+                font: fontFamily,
+                fill,
+                x: 0, // calculate
+                y: 0, // calculate
+                size: 0 // calculate
+            })
+            usedDefIds.push(id)
         }
-        areas.set(piece.id, area)
-        piece.size = calculateFontSize(piece, area, getMetricsReal)
-    }
-    const minFontSize = textData.reduce((min, current) => (current.size < min ? current.size : min), 30);
-    for (const piece of textData) {
-        piece.size = minFontSize
-        const area = areas.get(piece.id)
-        if (area) {
-            calculateTextDataPos(piece, area, getMetrics, getMetricsReal)
+        const pieceAreaHeight = rect.height / textData.length
+        const areas = new Map<string, TextPieceArea>
+        for (const piece of textData) {
+            const index = textData.indexOf(piece);
+            const area: TextPieceArea = {
+                id: piece.id,
+                height: pieceAreaHeight,
+                width: rect.width,
+                x: rect.left,
+                y: rect.top + pieceAreaHeight * index
+            }
+            areas.set(piece.id, area)
+            piece.size = calculateFontSize(piece, area, getMetricsReal)
+        }
+        const minFontSize = textData.reduce((min, current) => (current.size < min ? current.size : min), 30);
+        for (const piece of textData) {
+            piece.size = minFontSize
+            const area = areas.get(piece.id)
+            if (area) {
+                calculateTextDataPos(piece, area, getMetrics, getMetricsReal)
+            }
+        }
+        removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, svg, finder)
+        createOrUpdateTexts(textData, svg, updater, finder, creator, appender)
+        if (renderAreas && import.meta.dev) {
+            removeAreas(svg)
+            createOrUpdateAreaRects([...areas.values()], svg)
         }
     }
-    removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, svg, finder)
-    createOrUpdateTexts(textData, svg, updater, finder, creator, appender)
-    if (renderAreas && import.meta.dev) {
-        removeAreas(svg)
-        createOrUpdateAreaRects([...areas.values()], svg)
-    }
-}
-const baseTextAreas = new Map<string, TextAreaFragment | null>()
-const getTextArea = (base: BaseOrPreview) => {
-    if (!baseTextAreas.get(base.id)) {
-        baseTextAreas.set(base.id, useFragment(TextAreaFragmentDoc, base.text_areas ? base.text_areas[0] : null))
-    }
-    return baseTextAreas.get(base.id)
 }

@@ -52,6 +52,8 @@ export default defineNuxtConfig({
         public: {
             graphqlUrl: 'http://localhost/apila/graphql',
             storageUrl: 'http://localhost/storage',
+            canvasSize: 60,
+            canvasDpi: 10,
             devTerminal: 'dev_terminal',
             devTerminalPass: 'dev_terminal_pass',
             prodTerminal: 'prod_terminal',
