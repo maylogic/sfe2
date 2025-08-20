@@ -1,6 +1,5 @@
 import {
     BaseFragmentFragmentDoc,
-    BasePreviewFragmentFragmentDoc,
     DesignItemFragmentDoc,
     OrderItemToGenDocument
 } from "~/gql/graphql";
@@ -30,7 +29,7 @@ export default defineEventHandler(async (event) => {
     if (!orderItemId) {
         throw createError({
             statusCode: 404,
-            statusMessage: 'Страница не найдена'
+            statusMessage: 'Страница не найдена1'
         })
     }
     const {data} = await getOrderItem(client, orderItemId)
@@ -63,7 +62,8 @@ export default defineEventHandler(async (event) => {
         element.fill(orderItem.color?.hex ?? 'currentColor')
         if (base && orderItem.product.line_definitions) {
             const svg = element.findOne('svg')
-            svg?.attr('height', height + 2)
+            svg?.attr('height', height)
+            svg?.attr('y', '10')
             applyTextsOnBlock(
                 svg,
                 base,
