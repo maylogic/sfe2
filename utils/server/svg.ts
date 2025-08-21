@@ -22,6 +22,7 @@ export const updTextAttributesSvgJs = (el: Text, data: TextRenderData) => {
     el.attr('text-anchor', 'middle')
     el.attr('x', data.x.toFixed(4))
     el.attr('y', data.y.toFixed(4))
+    el.attr('dominant-baseline', 'central')
     el.addClass('text-data')
     el.text(data.value)
 }
@@ -30,13 +31,15 @@ export const findTextByIdSvgJs = (id: string, svg: Element) => {
     return svg.findOne(`text.text-data[data-id="${id}"]`) as Text
 }
 
-export const CANVAS_SIZE = Number(getEnvOrPubVal('CANVAS_SIZE')) // если будет слишком малым то будет баг с шириной текста
-export const CANVAS_DPI = Number(getEnvOrPubVal('CANVAS_DPI'))
+export const getCanvasNodejsSize = () => Number(getEnvOrPubVal('CANVAS_SIZE')) // если будет слишком малым то будет баг с шириной текста
+export const getCanvasNodejsDpi = () => Number(getEnvOrPubVal('CANVAS_DPI'))
 
 export const getTextMetricsRealNodejs = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
-    const width = CANVAS_SIZE * CANVAS_DPI,
-        height = CANVAS_SIZE * CANVAS_DPI
-    const ctx = getCanvasContext(CANVAS_DPI)
+    const canvasSize = getCanvasNodejsSize(),
+        dpi = getCanvasNodejsDpi()
+    const width = canvasSize * dpi,
+        height = canvasSize * dpi
+    const ctx = getCanvasContext(dpi)
     if (!ctx) throw new Error('Cannot access canvas context')
     // Устанавливаем шрифт и текст
     const size = fontSize ?? data.size
@@ -71,13 +74,14 @@ export const getTextMetricsRealNodejs = (data: TextRenderData, fontSize?: number
     }
 
     return {
-        width: Math.max(0, (right - left) / CANVAS_DPI),
-        height: Math.max(0, (bottom - top) / CANVAS_DPI),
+        width: Math.max(0, (right - left) / dpi),
+        height: Math.max(0, (bottom - top) / dpi),
     }
 }
 
 export const getTextMetricsNodejs = (data: TextRenderData): { actualBoundingBoxDescent: number } => {
-    const ctx = getCanvasContext(CANVAS_DPI)
+    const dpi = getCanvasNodejsDpi()
+    const ctx = getCanvasContext(dpi)
     if (ctx) {
         const size = data.size
         ctx.textBaseline = 'alphabetic'
@@ -90,11 +94,15 @@ export const getTextMetricsNodejs = (data: TextRenderData): { actualBoundingBoxD
 let canvasContext: CanvasRenderingContext2D | null = null
 export const getCanvasContext = (dpi: number): CanvasRenderingContext2D | null => {
     if (!canvasContext) {
-        const width = CANVAS_SIZE * dpi,
-            height = CANVAS_SIZE * dpi
+        const canvasSize = getCanvasNodejsSize()
+        const width = canvasSize * dpi,
+            height = canvasSize * dpi
         const sharedCanvas = createCanvas(width, height)
         canvasContext = sharedCanvas.getContext('2d', {alpha: true});
-        if (canvasContext) canvasContext.scale(dpi, dpi)
+        if (canvasContext) {
+            canvasContext.scale(dpi, dpi)
+            canvasContext.textBaseline = 'middle'
+        }
     }
     return canvasContext
 }

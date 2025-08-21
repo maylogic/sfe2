@@ -2,8 +2,10 @@ import { createTextElement } from "~/utils/element";
 import type { ProductLineDefinition } from "~/gql/graphql";
 import {
     getCanvasContext,
-    CANVAS_DPI
+    getCanvasDpi,
+    getCanvasSize
 } from "~/utils/canvas";
+import type { CanvasRenderingContext2D } from "canvas";
 
 export type TextRenderData = {
     id: string,
@@ -26,6 +28,7 @@ export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.setAttribute('text-anchor', 'middle')
     el.setAttribute('x', data.x.toFixed(4))
     el.setAttribute('y', data.y.toFixed(4))
+    el.setAttribute('dominant-baseline', 'central')
     el.classList.add('text-data')
     el.children[0].innerHTML = data.value
 }
@@ -70,18 +73,13 @@ export const calculateTextDataPos = (
     getMetrics?: (data: TextRenderData) => { actualBoundingBoxDescent: number },
     getMetricsReal?: (data: TextRenderData, fontSize?: number) => TextMetricsReal
 ) => {
-    const metricsFn = getMetrics ?? getTextMetrics,
-        metricsRealFn = getMetricsReal ?? getTextMetricsReal
+    const metricsRealFn = getMetricsReal ?? getTextMetricsReal
 
-    const realMetrics = metricsRealFn(data),
-        metrics = metricsFn(data),
-        hasDescentSymbols = metrics.actualBoundingBoxDescent > 0,
-        fakeDescent = realMetrics.height * 0.15
+    const realMetrics = metricsRealFn(data)
     const leftovers = area.height - realMetrics.height,
         zoneTop = area.y + leftovers / 2,
-        zoneBottom = zoneTop + realMetrics.height
-    const baselineY = zoneBottom - (hasDescentSymbols ? fakeDescent : 0);
-    data.y = baselineY
+        zoneHeight = area.height - leftovers
+    data.y = zoneTop + zoneHeight / 2
     data.x = area.x + area.width / 2
 }
 
@@ -151,21 +149,11 @@ export const removeTextsForUnusedDefIds = (
         })
 }
 
-const getTextMetrics = (data: TextRenderData): { actualBoundingBoxDescent: number } => {
-    const ctx = getCanvasContext(CANVAS_DPI)
-    if (ctx) {
-        const size = data.size
-        ctx.textBaseline = 'alphabetic'
-        ctx.font = `${size}px ${data.font}`;
-        return ctx.measureText(data.value);
-    }
-    throw new Error('Cannot access canvas context')
-}
-
 const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
-    const dpi = CANVAS_DPI,
-        width = CANVAS_SIZE * dpi,
-        height = CANVAS_SIZE * dpi
+    const dpi = getCanvasDpi(),
+        canvasSize = getCanvasSize(),
+        width = canvasSize * dpi,
+        height = canvasSize * dpi
     const ctx = getCanvasContext(dpi)
     if (!ctx) throw new Error('Cannot access canvas context')
     // Устанавливаем шрифт и текст
