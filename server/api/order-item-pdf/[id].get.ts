@@ -15,7 +15,6 @@ import {
     appendTextToSvgNodejs,
     createTextElementNodejs,
     findTextByIdSvgJs,
-    getTextMetricsNodejs,
     getTextMetricsRealNodejs,
     updTextAttributesSvgJs
 } from "~/utils/server/svg";
@@ -74,7 +73,6 @@ export default defineEventHandler(async (event) => {
                 updTextAttributesSvgJs,
                 findTextByIdSvgJs,
                 false,
-                getTextMetricsNodejs,
                 getTextMetricsRealNodejs,
                 createTextElementNodejs,
                 appendTextToSvgNodejs

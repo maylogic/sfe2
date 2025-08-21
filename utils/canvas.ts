@@ -12,7 +12,6 @@ export const getCanvasContext = (dpi: number): CanvasRenderingContext2D | null =
         canvasContext = sharedCanvas.getContext('2d', {willReadFrequently: true});
         if (canvasContext) {
             canvasContext.scale(dpi, dpi)
-            canvasContext.textBaseline = 'middle'
         }
     }
     return canvasContext

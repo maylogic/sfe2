@@ -12,10 +12,12 @@ import {
     getSortedTextLines,
     type InputTextLinesMap
 } from "~/utils/product";
-import type { TextPieceArea } from "~/utils/text_area";
 import {
     createOrUpdateAreaRects,
-    removeAreas
+    createOrUpdateBaselines,
+    removeAreas,
+    removeLines,
+    type TextPieceArea
 } from "~/utils/text_area";
 import { useFragment } from "~/gql";
 import {
@@ -42,26 +44,44 @@ export const applyTextsOnBlock = (
     updater?: (el: SVGTextElement, data: TextRenderData) => void,
     finder?: (id: string, el: SVGSVGElement) => SVGTextElement | null,
     renderAreas: boolean = true,
-    getMetrics?: (data: TextRenderData) => { actualBoundingBoxDescent: number },
     getMetricsReal?: (data: TextRenderData, fontSize?: number) => TextMetricsReal,
     creator?: () => SVGTextElement,
     appender?: (el: SVGTextElement, svg: SVGSVGElement) => void
 ) => {
     const usedDefIds: string[] = [] // используется для удаление не использованных
+    const areas = new Map<string, TextPieceArea>
+    const textsData: TextRenderData[] = []
+    const textsByArea = new Map<string, TextRenderData[]>
+    const sortedLines = getSortedTextLines(lineDefinitions, textLinesRenderValues)
 
     base.text_areas?.forEach(area => {
         const rect = useFragment(TextAreaFragmentDoc, area)
-        if (import.meta.client) {
-            requestAnimationFrame(() => apply(rect))
-        } else {
-            apply(rect)
-        }
+        apply(rect)
     })
 
+    if (import.meta.client) {
+        requestAnimationFrame(() => {
+            removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, svg, finder)
+        })
+        requestAnimationFrame(() => {
+            createOrUpdateTexts(textsData, svg, updater, finder, creator, appender)
+        })
+    } else {
+        removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, svg, finder)
+        createOrUpdateTexts(textsData, svg, updater, finder, creator, appender)
+    }
+
+    if (renderAreas && import.meta.dev) {
+        removeLines(svg)
+        // removeAreas(svg)
+        // createOrUpdateAreaRects([...areas.values()], svg)
+        createOrUpdateBaselines(textsData, svg)
+    }
+
     function apply(rect: TextAreaFragment) {
-        const textData: TextRenderData[] = []
         let currentLineSeq = 0
-        for (const [id, value] of getSortedTextLines(lineDefinitions, textLinesRenderValues)) {
+        const rectTexts = textsByArea.get(rect.id) ?? []
+        for (const [id, value] of sortedLines) {
             if (++currentLineSeq < rect.first_line) continue
             if (currentLineSeq - rect.first_line >= rect.lines) continue
             if (!value) continue
@@ -71,7 +91,7 @@ export const applyTextsOnBlock = (
                 fill = color.hex
             }
             const fontFamily = font ?? 'sans-serif'
-            textData.push({
+            const textData = {
                 id,
                 value,
                 font: fontFamily,
@@ -79,13 +99,15 @@ export const applyTextsOnBlock = (
                 x: 0, // calculate
                 y: 0, // calculate
                 size: 0 // calculate
-            })
+            }
+            textsData.push(textData)
+            rectTexts.push(textData)
+            textsByArea.set(rect.id, rectTexts)
             usedDefIds.push(id)
         }
-        const pieceAreaHeight = rect.height / textData.length
-        const areas = new Map<string, TextPieceArea>
-        for (const piece of textData) {
-            const index = textData.indexOf(piece);
+        const pieceAreaHeight = rect.height / rectTexts.length
+        for (const piece of rectTexts) {
+            const index = rectTexts.indexOf(piece);
             const area: TextPieceArea = {
                 id: piece.id,
                 height: pieceAreaHeight,
@@ -96,19 +118,13 @@ export const applyTextsOnBlock = (
             areas.set(piece.id, area)
             piece.size = calculateFontSize(piece, area, getMetricsReal)
         }
-        const minFontSize = textData.reduce((min, current) => (current.size < min ? current.size : min), 30);
-        for (const piece of textData) {
+        const minFontSize = rectTexts.reduce((min, current) => (current.size < min ? current.size : min), 30);
+        for (const piece of rectTexts) {
             piece.size = minFontSize
             const area = areas.get(piece.id)
             if (area) {
-                calculateTextDataPos(piece, area, getMetrics, getMetricsReal)
+                calculateTextDataPos(piece, area, getMetricsReal)
             }
-        }
-        removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, svg, finder)
-        createOrUpdateTexts(textData, svg, updater, finder, creator, appender)
-        if (renderAreas && import.meta.dev) {
-            removeAreas(svg)
-            createOrUpdateAreaRects([...areas.values()], svg)
         }
     }
 }

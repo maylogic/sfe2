@@ -13,3 +13,10 @@ export const createAreaRectElement = (): SVGRectElement => {
     rect.setAttribute('fill-opacity', '0.05')
     return rect
 }
+
+export const createLineElement = (): SVGLineElement => {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('stroke', 'red')
+    line.setAttribute('stroke-width', '1')
+    return line
+}

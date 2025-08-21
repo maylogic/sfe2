@@ -5,7 +5,6 @@ import {
     getCanvasDpi,
     getCanvasSize
 } from "~/utils/canvas";
-import type { CanvasRenderingContext2D } from "canvas";
 
 export type TextRenderData = {
     id: string,
@@ -28,7 +27,6 @@ export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.setAttribute('text-anchor', 'middle')
     el.setAttribute('x', data.x.toFixed(4))
     el.setAttribute('y', data.y.toFixed(4))
-    el.setAttribute('dominant-baseline', 'central')
     el.classList.add('text-data')
     el.children[0].innerHTML = data.value
 }
@@ -70,7 +68,6 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
 export const calculateTextDataPos = (
     data: TextRenderData,
     area: TextPieceArea,
-    getMetrics?: (data: TextRenderData) => { actualBoundingBoxDescent: number },
     getMetricsReal?: (data: TextRenderData, fontSize?: number) => TextMetricsReal
 ) => {
     const metricsRealFn = getMetricsReal ?? getTextMetricsReal
@@ -79,7 +76,7 @@ export const calculateTextDataPos = (
     const leftovers = area.height - realMetrics.height,
         zoneTop = area.y + leftovers / 2,
         zoneHeight = area.height - leftovers
-    data.y = zoneTop + zoneHeight / 2
+    data.y = zoneTop + zoneHeight - realMetrics.descent
     data.x = area.x + area.width / 2
 }
 
@@ -149,36 +146,51 @@ export const removeTextsForUnusedDefIds = (
         })
 }
 
+const getTextMetrics = (data: TextRenderData) => {
+    const ctx = getCanvasContext(getCanvasDpi())
+    if (ctx) {
+        const size = data.size
+        ctx.textBaseline = 'alphabetic'
+        ctx.font = `${size}px ${data.font}`;
+        ctx.textAlign = "center"
+        return ctx.measureText(data.value);
+    }
+    throw new Error('Cannot access canvas context')
+}
+
 const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
     const dpi = getCanvasDpi(),
         canvasSize = getCanvasSize(),
-        width = canvasSize * dpi,
-        height = canvasSize * dpi
+        canvasWidth = canvasSize * dpi,
+        canvasHeight = canvasSize * dpi
     const ctx = getCanvasContext(dpi)
     if (!ctx) throw new Error('Cannot access canvas context')
     // Устанавливаем шрифт и текст
     const size = fontSize ?? data.size
-    ctx.clearRect(0, 0, width, height)
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     ctx.font = `${size}px ${data.font}`;
-    ctx.textBaseline = 'top';
-    ctx.fillText(data.value, 1, 1);
+    ctx.textBaseline = 'alphabetic';
+    ctx.textAlign = "center"
+    const baselineLogical = canvasSize / 2;
+    const baselinePhysical = baselineLogical * dpi;
+    ctx.fillText(data.value, canvasSize / 2, baselineLogical);
 
     // Получаем пиксельные данные текста
-    const imageData = ctx.getImageData(0, 0, width, height);
+    const imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
     const pixels = imageData.data;
 
     // Анализируем пиксельные данные
-    let top = height;
+    let top = canvasHeight;
     let bottom = 0;
-    let left = width;
+    let left = canvasWidth;
     let right = 0;
 
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-            const index = (y * width + x) * 4; // Индекс пикселя
+    for (let y = 0; y < canvasHeight; y++) {
+        for (let x = 0; x < canvasWidth; x++) {
+            const index = (y * canvasWidth + x) * 4; // Индекс пикселя
             const alpha = pixels[index + 3]; // Альфа-канал
 
-            if (alpha > 254) {
+            if (alpha > 0) {
                 // Обновляем границы текста
                 if (x < left) left = x;
                 if (x > right) right = x;
@@ -188,13 +200,19 @@ const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetric
         }
     }
 
+    const width = Math.max(0, (right - left) / dpi),
+        height = Math.max(0, (bottom - top) / dpi),
+        descent = Math.max(0, (bottom - baselinePhysical) / dpi)
+
     return {
-        width: Math.max(0, (right - left) / dpi),
-        height: Math.max(0, (bottom - top) / dpi),
+        width,
+        height,
+        descent
     }
 }
 
 export type TextMetricsReal = {
     width: number,
     height: number,
+    descent: number
 }
