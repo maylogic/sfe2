@@ -39,6 +39,7 @@ fragment TextArea on BaseTextArea {
     text_color
     width
     top
+    padding_y
 }
 fragment Customer on User {
     id

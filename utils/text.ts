@@ -26,8 +26,7 @@ export type TextRenderData = {
 
 export type SvgContainer = SVGSVGElement | Element
 
-const AREA_PADDING_Y = 0.1,
-    AREA_PADDING_X = 0.1
+const AREA_PADDING_X = 0.1
 
 export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.setAttribute('data-id', data.id)
@@ -91,11 +90,11 @@ export const calculateTextDataPos = (
         zoneHeight = area.height - leftovers,
         zoneBottom = zoneTop + zoneHeight,
         areaBottom = area.y + area.height
-    data.y = zoneBottom - metrics.descent/2
+    data.y = zoneBottom - metrics.descent / 2
     data.x = area.x + area.width / 2
 }
 
-const getTargetHeight = (area: TextPieceArea) => area.height - AREA_PADDING_Y * area.height,
+const getTargetHeight = (area: TextPieceArea) => area.height - area.padding_y * area.height,
     getTargetWidth = (area: TextPieceArea) => area.width - AREA_PADDING_X * area.width
 
 export const calculateFontSize = (data: TextRenderData,

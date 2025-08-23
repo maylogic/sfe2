@@ -10,8 +10,6 @@ import {
     type InputTextLinesMap
 } from "~/utils/product";
 import {
-    createOrUpdateAreaRects,
-    createOrUpdateBaselines,
     removeAreas,
     removeLines,
     type TextPieceArea
@@ -105,7 +103,8 @@ export const applyTextsOnBlock = (
                 height: pieceAreaHeight,
                 width: rect.width,
                 x: rect.left,
-                y: rect.top + pieceAreaHeight * index
+                y: rect.top + pieceAreaHeight * index,
+                padding_y: rect.padding_y
             }
             areas.set(piece.id, area)
             piece.size = calculateFontSize(piece, area)

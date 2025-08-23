@@ -8,7 +8,8 @@ export type TextPieceArea = {
     x: number,
     y: number,
     width: number,
-    height: number
+    height: number,
+    padding_y: number
 }
 
 export const createOrUpdateAreaRects = (areas: TextPieceArea[], svg: SVGSVGElement) => {
