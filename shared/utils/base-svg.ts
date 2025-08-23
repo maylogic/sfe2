@@ -1,7 +1,4 @@
-import type {
-    TextMetricsReal,
-    TextRenderData
-} from "~/utils/text";
+import type { TextRenderData } from "~/utils/text";
 import {
     calculateFontSize,
     calculateTextDataPos,
@@ -41,12 +38,7 @@ export const applyTextsOnBlock = (
     color: Color | null | undefined,
     lineDefinitions: ProductLineDefinition[],
     textLinesRenderValues: InputTextLinesMap,
-    updater?: (el: SVGTextElement, data: TextRenderData) => void,
-    finder?: (id: string, el: SVGSVGElement) => SVGTextElement | null,
-    renderAreas: boolean = true,
-    getMetricsReal?: (data: TextRenderData, fontSize?: number) => TextMetricsReal,
-    creator?: () => SVGTextElement,
-    appender?: (el: SVGTextElement, svg: SVGSVGElement) => void
+    renderAreas: boolean = false
 ) => {
     const usedDefIds: string[] = [] // используется для удаление не использованных
     const areas = new Map<string, TextPieceArea>
@@ -61,21 +53,21 @@ export const applyTextsOnBlock = (
 
     if (import.meta.client) {
         requestAnimationFrame(() => {
-            removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, svg, finder)
+            removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, svg)
         })
         requestAnimationFrame(() => {
-            createOrUpdateTexts(textsData, svg, updater, finder, creator, appender)
+            createOrUpdateTexts(textsData, svg)
         })
     } else {
-        removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, svg, finder)
-        createOrUpdateTexts(textsData, svg, updater, finder, creator, appender)
+        removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, svg)
+        createOrUpdateTexts(textsData, svg)
     }
 
     if (renderAreas && import.meta.dev) {
         removeLines(svg)
-        // removeAreas(svg)
+        removeAreas(svg)
         // createOrUpdateAreaRects([...areas.values()], svg)
-        createOrUpdateBaselines(textsData, svg)
+        // createOrUpdateBaselines(textsData, svg)
     }
 
     function apply(rect: TextAreaFragment) {
@@ -116,14 +108,14 @@ export const applyTextsOnBlock = (
                 y: rect.top + pieceAreaHeight * index
             }
             areas.set(piece.id, area)
-            piece.size = calculateFontSize(piece, area, getMetricsReal)
+            piece.size = calculateFontSize(piece, area)
         }
         const minFontSize = rectTexts.reduce((min, current) => (current.size < min ? current.size : min), 30);
         for (const piece of rectTexts) {
             piece.size = minFontSize
             const area = areas.get(piece.id)
             if (area) {
-                calculateTextDataPos(piece, area, getMetricsReal)
+                calculateTextDataPos(piece, area)
             }
         }
     }

@@ -11,13 +11,6 @@ import {
 } from '@svgdotjs/svg.js'
 import { useFragment } from "~/gql";
 import { applyTextsOnBlock } from "~/shared/utils/base-svg";
-import {
-    appendTextToSvgNodejs,
-    createTextElementNodejs,
-    findTextByIdSvgJs,
-    getTextMetricsRealNodejs,
-    updTextAttributesSvgJs
-} from "~/utils/server/svg";
 import { Client } from '@urql/core'
 import { getClient } from "~/utils/server/graphql";
 
@@ -70,12 +63,7 @@ export default defineEventHandler(async (event) => {
                 orderItem.color,
                 orderItem.product.line_definitions,
                 textLinesRenderValues,
-                updTextAttributesSvgJs,
-                findTextByIdSvgJs,
-                false,
-                getTextMetricsRealNodejs,
-                createTextElementNodejs,
-                appendTextToSvgNodejs
+                false
             )
         }
     })

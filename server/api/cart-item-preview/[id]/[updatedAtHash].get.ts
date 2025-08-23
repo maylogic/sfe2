@@ -15,14 +15,6 @@ import { useFragment } from "~/gql";
 import { createGraphqlClient } from "~/system/createGraphqlClient";
 import { applyTextsOnBlock } from "~/shared/utils/base-svg";
 
-import {
-    appendTextToSvgNodejs,
-    createTextElementNodejs,
-    findTextByIdSvgJs,
-    getTextMetricsRealNodejs,
-    updTextAttributesSvgJs
-} from "~/utils/server/svg";
-
 export default defineEventHandler(async (event) => {
     const cartItemId = getRouterParam(event, 'id'),
         updatedAtHash = getRouterParam(event, 'updatedAtHash')
@@ -71,12 +63,7 @@ export default defineEventHandler(async (event) => {
                 cartItem.color,
                 cartItem.product.line_definitions,
                 textLinesRenderValues,
-                updTextAttributesSvgJs,
-                findTextByIdSvgJs,
-                false,
-                getTextMetricsRealNodejs,
-                createTextElementNodejs,
-                appendTextToSvgNodejs
+                false
             )
         }
     })

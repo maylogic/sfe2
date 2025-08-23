@@ -1,10 +1,17 @@
 import { createTextElement } from "~/utils/element";
 import type { ProductLineDefinition } from "~/gql/graphql";
+import { getCanvasContext } from "~/utils/canvas";
 import {
-    getCanvasContext,
-    getCanvasDpi,
-    getCanvasSize
-} from "~/utils/canvas";
+    appendTextToSvgNodejs,
+    createTextElementNodejs,
+    findTextByIdSvgJs,
+    getCanvasContextNodeJs,
+    updTextAttributesSvgJs
+} from "~/utils/server/svg";
+import {
+    Element,
+    Text
+} from "@svgdotjs/svg.js";
 
 export type TextRenderData = {
     id: string,
@@ -15,6 +22,8 @@ export type TextRenderData = {
     y: number,
     size: number
 }
+
+export type SvgContainer = SVGSVGElement | Element
 
 const AREA_PADDING_Y = 0.2,
     AREA_PADDING_X = 0.1
@@ -33,26 +42,31 @@ export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
 
 export const createOrUpdateTexts = (
     textData: TextRenderData[],
-    svg: SVGSVGElement,
-    updater?: (el: SVGTextElement, data: TextRenderData) => void,
-    finder?: (id: string, el: SVGSVGElement) => SVGTextElement | null,
-    creator?: () => SVGTextElement,
-    appender?: (el: SVGTextElement, svg: SVGSVGElement) => void
+    svg: SvgContainer
 ) => {
-    const updateFn = updater ?? updTextAttributes,
-        findFn = finder ?? findTextById,
-        createFn = creator ?? createTextElement,
-        appendFn = appender ?? appendTextToSvg
+    const createFn = import.meta.client ? createTextElement : createTextElementNodejs
     textData.forEach(data => {
-        const existingEl = findFn(data.id, svg)
+        const existingEl = import.meta.client
+            ? findTextById(data.id, svg as SVGSVGElement)
+            : findTextByIdSvgJs(data.id, svg as Element)
         if (existingEl) {
-            updateFn(existingEl, data)
+            if (import.meta.client) {
+                updTextAttributes(existingEl as SVGTextElement, data)
+            } else {
+                updTextAttributesSvgJs(existingEl as Text, data)
+            }
             return
         }
 
         const el = createFn()
-        updateFn(el, data)
-        appendFn(el, svg)
+        if (import.meta.client) {
+            updTextAttributes(el as SVGTextElement, data)
+        } else {
+            updTextAttributesSvgJs(el as Text, data)
+        }
+        import.meta.client
+            ? appendTextToSvg(el as SVGTextElement, svg as SVGSVGElement)
+            : appendTextToSvgNodejs(el as Text, svg as Element)
     })
 }
 
@@ -67,14 +81,14 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
 }
 export const calculateTextDataPos = (
     data: TextRenderData,
-    area: TextPieceArea,
-    getMetricsReal?: (data: TextRenderData, fontSize?: number) => TextMetricsReal
+    area: TextPieceArea
 ) => {
-    // const metricsRealFn = getMetricsReal ?? getTextMetricsReal
-    const metricsRealFn = getMetricsReal ?? getTextMetrics
+    const metrics = getTextMetrics(data)
 
-    const realMetrics = metricsRealFn(data)
-    data.y = area.y + area.height - realMetrics.descent
+    const leftovers = area.height - metrics.height,
+        zoneTop = area.y + leftovers / 2,
+        zoneHeight = area.height - leftovers
+    data.y = zoneTop + metrics.ascent + metrics.descent / 2
     data.x = area.x + area.width / 2
 }
 
@@ -83,16 +97,13 @@ const getTargetHeight = (area: TextPieceArea) => area.height - AREA_PADDING_Y * 
 
 export const calculateFontSize = (data: TextRenderData,
                                   area: TextPieceArea,
-                                  getMetricsReal?: (data: TextRenderData, fontSize?: number) => TextMetricsReal,
                                   precision: number = 0.01
 ) => {
-    // const metricsRealFn = getMetricsReal ?? getTextMetricsReal
-    const metricsRealFn = getMetricsReal ?? getTextMetrics
     const targetWidth = getTargetWidth(area),
         targetHeight = getTargetHeight(area)
 
     const doesTextFit = (fontSize: number): boolean => {
-        const metrics = metricsRealFn(data, fontSize)
+        const metrics = getTextMetrics(data, fontSize)
         const textWidth = metrics.width;
         const textHeight = metrics.height
 
@@ -134,19 +145,21 @@ export const calculateFontSize = (data: TextRenderData,
 export const removeTextsForUnusedDefIds = (
     usedDefIds: string[],
     defs: ProductLineDefinition[],
-    svg: SVGSVGElement,
-    finder?: (id: string, el: SVGSVGElement) => SVGTextElement | null
+    svg: SvgContainer,
 ) => {
-    const findFn = finder ?? findTextById
     defs.map(line => line.id) // get def ids
         .filter((id) => !usedDefIds.includes(id)) // include only unused def ids
         .forEach((id) => {
-            findFn(id, svg)?.remove() // remove text elements for unused def ids
+            if (import.meta.client) {
+                findTextById(id, svg as SVGSVGElement)?.remove()
+            } else {
+                findTextByIdSvgJs(id, svg as Element)?.remove()
+            }
         })
 }
 
-const getTextMetrics = (data: TextRenderData, fontSize?: number) => {
-    const ctx = getCanvasContext(getCanvasDpi())
+const getTextMetrics = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
+    const ctx = import.meta.client ? getCanvasContext() : getCanvasContextNodeJs()
     if (ctx) {
         const size = fontSize ?? data.size
         ctx.textBaseline = 'alphabetic'
@@ -158,67 +171,16 @@ const getTextMetrics = (data: TextRenderData, fontSize?: number) => {
         return {
             width: metrics.width,
             height,
-            descent: metrics.actualBoundingBoxDescent
+            descent: metrics.actualBoundingBoxDescent,
+            ascent: metrics.actualBoundingBoxAscent
         }
     }
     throw new Error('Cannot access canvas context')
 }
 
-const getTextMetricsReal = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
-    const dpi = getCanvasDpi(),
-        canvasSize = getCanvasSize(),
-        canvasWidth = canvasSize * dpi,
-        canvasHeight = canvasSize * dpi
-    const ctx = getCanvasContext(dpi)
-    if (!ctx) throw new Error('Cannot access canvas context')
-    // Устанавливаем шрифт и текст
-    const size = fontSize ?? data.size
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
-    ctx.font = `${size}px ${data.font}`;
-    ctx.textBaseline = 'alphabetic';
-    ctx.textAlign = "center"
-    const baselineLogical = canvasSize / 2;
-    const baselinePhysical = baselineLogical * dpi;
-    ctx.fillText(data.value, canvasSize / 2, baselineLogical);
-
-    // Получаем пиксельные данные текста
-    const imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
-    const pixels = imageData.data;
-
-    // Анализируем пиксельные данные
-    let top = canvasHeight;
-    let bottom = 0;
-    let left = canvasWidth;
-    let right = 0;
-
-    for (let y = 0; y < canvasHeight; y++) {
-        for (let x = 0; x < canvasWidth; x++) {
-            const index = (y * canvasWidth + x) * 4; // Индекс пикселя
-            const alpha = pixels[index + 3]; // Альфа-канал
-
-            if (alpha > 0) {
-                // Обновляем границы текста
-                if (x < left) left = x;
-                if (x > right) right = x;
-                if (y < top) top = y;
-                if (y > bottom) bottom = y;
-            }
-        }
-    }
-
-    const width = Math.max(0, (right - left) / dpi),
-        height = Math.max(0, (bottom - top) / dpi),
-        descent = Math.max(0, (bottom - baselinePhysical) / dpi)
-
-    return {
-        width,
-        height,
-        descent
-    }
-}
-
 export type TextMetricsReal = {
     width: number,
     height: number,
-    descent: number
+    descent: number,
+    ascent: number
 }
