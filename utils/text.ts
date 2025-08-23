@@ -12,6 +12,7 @@ import {
     Element,
     Text
 } from "@svgdotjs/svg.js";
+import type { TextPieceArea } from "~/utils/text_area";
 
 export type TextRenderData = {
     id: string,
