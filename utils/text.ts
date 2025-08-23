@@ -70,13 +70,11 @@ export const calculateTextDataPos = (
     area: TextPieceArea,
     getMetricsReal?: (data: TextRenderData, fontSize?: number) => TextMetricsReal
 ) => {
-    const metricsRealFn = getMetricsReal ?? getTextMetricsReal
+    // const metricsRealFn = getMetricsReal ?? getTextMetricsReal
+    const metricsRealFn = getMetricsReal ?? getTextMetrics
 
     const realMetrics = metricsRealFn(data)
-    const leftovers = area.height - realMetrics.height,
-        zoneTop = area.y + leftovers / 2,
-        zoneHeight = area.height - leftovers
-    data.y = zoneTop + zoneHeight - realMetrics.descent
+    data.y = area.y + area.height - realMetrics.descent
     data.x = area.x + area.width / 2
 }
 
@@ -88,7 +86,8 @@ export const calculateFontSize = (data: TextRenderData,
                                   getMetricsReal?: (data: TextRenderData, fontSize?: number) => TextMetricsReal,
                                   precision: number = 0.01
 ) => {
-    const metricsRealFn = getMetricsReal ?? getTextMetricsReal
+    // const metricsRealFn = getMetricsReal ?? getTextMetricsReal
+    const metricsRealFn = getMetricsReal ?? getTextMetrics
     const targetWidth = getTargetWidth(area),
         targetHeight = getTargetHeight(area)
 
@@ -146,14 +145,21 @@ export const removeTextsForUnusedDefIds = (
         })
 }
 
-const getTextMetrics = (data: TextRenderData) => {
+const getTextMetrics = (data: TextRenderData, fontSize?: number) => {
     const ctx = getCanvasContext(getCanvasDpi())
     if (ctx) {
-        const size = data.size
+        const size = fontSize ?? data.size
         ctx.textBaseline = 'alphabetic'
         ctx.font = `${size}px ${data.font}`;
         ctx.textAlign = "center"
-        return ctx.measureText(data.value);
+        const metrics = ctx.measureText(data.value);
+        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+
+        return {
+            width: metrics.width,
+            height,
+            descent: metrics.actualBoundingBoxDescent
+        }
     }
     throw new Error('Cannot access canvas context')
 }
