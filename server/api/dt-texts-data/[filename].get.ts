@@ -10,7 +10,8 @@ type ElementsData = {
     invitations: Array<MinimalTemplateElement>,
     "stick-on": Array<MinimalTemplateElement>
 }
-export default defineEventHandler(() => {
+export default defineEventHandler(async (event) => {
+    const filename = getRouterParam(event, 'filename')
     const keys = Object.keys(dogTagsData.props.pageProps.initialApolloState)
     const elements = new Map<number, ElementsData>,
         svgFileNameToTemplateId = new Map<string, number>
@@ -36,7 +37,7 @@ export default defineEventHandler(() => {
     const needle =
         elements.get(
             Number(
-                svgFileNameToTemplateId.get('LOVE-TATTOO-Mini-Dog-Tag-Designer-Download_SVGs.svg')
+                svgFileNameToTemplateId.get(filename)
             )
         )
     return [
