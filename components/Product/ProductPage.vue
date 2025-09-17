@@ -315,7 +315,7 @@ if (primaryImage) {
 }
 useHead({
     link: [
-        ...[...usedFonts.values()].map(font => getRemoteFontPreloadLink(font.filename_woff2))
+        ...[...usedFonts.values()].map(font => getRemoteFontPreloadLink(font))
     ],
     style: [
         {textContent: generateFontFace([...usedFonts.values()])}
