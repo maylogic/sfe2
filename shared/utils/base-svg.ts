@@ -23,6 +23,10 @@ import {
     type TextAreaFragment,
     TextAreaFragmentDoc
 } from "~/gql/graphql";
+import {
+    type CANVAS_CONTEXT_GETTER,
+    getCanvasContext
+} from "~/utils/canvas";
 
 export type BaseOrPreview = BaseFragmentFragment | BasePreviewFragmentFragment
 
@@ -36,7 +40,8 @@ export const applyTextsOnBlock = (
     color: Color | null | undefined,
     lineDefinitions: ProductLineDefinition[],
     textLinesRenderValues: InputTextLinesMap,
-    renderAreas: boolean = false
+    renderAreas: boolean = false,
+    canvasContextGetter?: CANVAS_CONTEXT_GETTER = getCanvasContext
 ) => {
     const usedDefIds: string[] = [] // используется для удаление не использованных
     const areas = new Map<string, TextPieceArea>
@@ -107,14 +112,14 @@ export const applyTextsOnBlock = (
                 padding_y: rect.padding_y
             }
             areas.set(piece.id, area)
-            piece.size = calculateFontSize(piece, area)
+            piece.size = calculateFontSize(canvasContextGetter, piece, area)
         }
         const minFontSize = rectTexts.reduce((min, current) => (current.size < min ? current.size : min), 30);
         for (const piece of rectTexts) {
             piece.size = minFontSize
             const area = areas.get(piece.id)
             if (area) {
-                calculateTextDataPos(piece, area)
+                calculateTextDataPos(piece, area, canvasContextGetter)
             }
         }
     }

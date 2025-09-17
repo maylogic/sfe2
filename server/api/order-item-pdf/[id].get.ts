@@ -14,6 +14,7 @@ import { useFragment } from "~/gql";
 import { applyTextsOnBlock } from "~/shared/utils/base-svg";
 import { Client } from '@urql/core'
 import { getClient } from "~/utils/server/graphql";
+import { getCanvasContextNodeJs } from "~/utils/server/canvas";
 
 export default defineEventHandler(async (event) => {
     const orderItemId = getRouterParam(event, 'id')
@@ -138,7 +139,8 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
                 orderItem.color,
                 orderItem.product.line_definitions,
                 textLinesRenderValues,
-                false
+                false,
+                getCanvasContextNodeJs
             );
         }
 
@@ -182,7 +184,8 @@ function getSingleItemCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIt
                 orderItem.color,
                 orderItem.product.line_definitions,
                 textLinesRenderValues,
-                false
+                false,
+                getCanvasContextNodeJs
             )
         }
     })

@@ -14,6 +14,7 @@ import sharp from "sharp";
 import { useFragment } from "~/gql";
 import { createGraphqlClient } from "~/system/createGraphqlClient";
 import { applyTextsOnBlock } from "~/shared/utils/base-svg";
+import { getCanvasContextNodeJs } from "~/utils/server/canvas";
 
 export default defineEventHandler(async (event) => {
     const cartItemId = getRouterParam(event, 'id'),
@@ -63,7 +64,8 @@ export default defineEventHandler(async (event) => {
                 cartItem.color,
                 cartItem.product.line_definitions,
                 textLinesRenderValues,
-                false
+                false,
+                getCanvasContextNodeJs
             )
         }
     })

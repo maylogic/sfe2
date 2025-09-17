@@ -4,12 +4,7 @@ import {
     Text
 } from "@svgdotjs/svg.js";
 import type { TextRenderData } from "~/utils/text";
-import {
-    CanvasRenderingContext2D,
-    createCanvas
-} from "canvas";
 import { getEnvOrPubVal } from "~/utils/env";
-
 
 export const updTextAttributesSvgJs = (el: Text, data: TextRenderData) => {
     el.data('id', data.id)
@@ -29,15 +24,6 @@ export const findTextByIdSvgJs = (id: string, svg: Element) => {
 
 export const getCanvasNodejsSize = () => Number(getEnvOrPubVal('CANVAS_SIZE')) // если будет слишком малым то будет баг с шириной текста
 
-let canvasContext: CanvasRenderingContext2D | null = null
-export const getCanvasContextNodeJs = (): CanvasRenderingContext2D | null => {
-    if (!canvasContext) {
-        const canvasSize = getCanvasNodejsSize()
-        const sharedCanvas = createCanvas(canvasSize, canvasSize)
-        canvasContext = sharedCanvas.getContext('2d', {alpha: true});
-    }
-    return canvasContext
-}
 export const createTextElementNodejs = () => {
     return SVG('<text></text>')
 }

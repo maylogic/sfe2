@@ -1,11 +1,9 @@
 import { createTextElement } from "~/utils/element";
 import type { ProductLineDefinition } from "~/gql/graphql";
-import { getCanvasContext } from "~/utils/canvas";
 import {
     appendTextToSvgNodejs,
     createTextElementNodejs,
     findTextByIdSvgJs,
-    getCanvasContextNodeJs,
     updTextAttributesSvgJs
 } from "~/utils/server/svg";
 import {
@@ -13,6 +11,7 @@ import {
     Text
 } from "@svgdotjs/svg.js";
 import type { TextPieceArea } from "~/utils/text_area";
+import type { CANVAS_CONTEXT_GETTER } from "~/utils/canvas";
 
 export type TextRenderData = {
     id: string,
@@ -81,9 +80,10 @@ export const findTextById = (id: string, svg: SVGSVGElement) => {
 }
 export const calculateTextDataPos = (
     data: TextRenderData,
-    area: TextPieceArea
+    area: TextPieceArea,
+    canvasContextGetter: CANVAS_CONTEXT_GETTER
 ) => {
-    const metrics = getTextMetrics(data)
+    const metrics = getTextMetrics(data, canvasContextGetter)
 
     const leftovers = area.height - metrics.height,
         zoneTop = area.y + leftovers / 2,
@@ -97,15 +97,17 @@ export const calculateTextDataPos = (
 const getTargetHeight = (area: TextPieceArea) => area.height - area.padding_y * area.height,
     getTargetWidth = (area: TextPieceArea) => area.width - AREA_PADDING_X * area.width
 
-export const calculateFontSize = (data: TextRenderData,
-                                  area: TextPieceArea,
-                                  precision: number = 0.01
+export const calculateFontSize = (
+    canvasContextGetter: CANVAS_CONTEXT_GETTER,
+    data: TextRenderData,
+    area: TextPieceArea,
+    precision: number = 0.01
 ) => {
     const targetWidth = getTargetWidth(area),
         targetHeight = getTargetHeight(area)
 
     const doesTextFit = (fontSize: number): boolean => {
-        const metrics = getTextMetrics(data, fontSize)
+        const metrics = getTextMetrics(data, canvasContextGetter, fontSize)
         const textWidth = metrics.width;
         const textHeight = metrics.height
 
@@ -160,8 +162,8 @@ export const removeTextsForUnusedDefIds = (
         })
 }
 
-const getTextMetrics = (data: TextRenderData, fontSize?: number): TextMetricsReal => {
-    const ctx = import.meta.client ? getCanvasContext() : getCanvasContextNodeJs()
+const getTextMetrics = (data: TextRenderData, canvasContextGetter: CANVAS_CONTEXT_GETTER, fontSize?: number): TextMetricsReal => {
+    const ctx = canvasContextGetter()
     if (ctx) {
         const size = fontSize ?? data.size
         ctx.textBaseline = 'alphabetic'
