@@ -4,14 +4,15 @@ import type { CanvasRenderingContext2D as NodeCanvasRenderingContext2D } from "s
 export const getCanvasSize = () => Number(getEnvOrPubVal('CANVAS_SIZE'))
 let canvasContext: CanvasRenderingContext2D | null = null
 export const getCanvasContext = (): CanvasRenderingContext2D | null => {
-    if (!canvasContext) {
+    // if (!canvasContext) {
         const size = getCanvasSize()
         const sharedCanvas = document.createElement('canvas');
         sharedCanvas.width = size
         sharedCanvas.height = size
-        canvasContext = sharedCanvas.getContext('2d', {willReadFrequently: true});
-    }
-    return canvasContext
+        // canvasContext = sharedCanvas.getContext('2d', {willReadFrequently: true});
+        return sharedCanvas.getContext('2d');
+    // }
+    // return canvasContext
 }
 
 export type CANVAS_CONTEXT_GETTER =

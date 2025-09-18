@@ -41,7 +41,7 @@ export const applyTextsOnBlock = (
     lineDefinitions: ProductLineDefinition[],
     textLinesRenderValues: InputTextLinesMap,
     renderAreas: boolean = false,
-    canvasContextGetter?: CANVAS_CONTEXT_GETTER = getCanvasContext
+    canvasContextGetter: CANVAS_CONTEXT_GETTER = getCanvasContext
 ) => {
     const usedDefIds: string[] = [] // используется для удаление не использованных
     const areas = new Map<string, TextPieceArea>
