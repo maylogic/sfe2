@@ -40,7 +40,7 @@ export const applyTextsOnBlock = (
     color: Color | null | undefined,
     lineDefinitions: ProductLineDefinition[],
     textLinesRenderValues: InputTextLinesMap,
-    renderAreas: boolean = false,
+    renderAreas: boolean = true,
     canvasContextGetter: CANVAS_CONTEXT_GETTER = getCanvasContext
 ) => {
     const usedDefIds: string[] = [] // используется для удаление не использованных
@@ -69,8 +69,9 @@ export const applyTextsOnBlock = (
     if (renderAreas && import.meta.dev) {
         removeLines(svg)
         removeAreas(svg)
-        // createOrUpdateAreaRects([...areas.values()], svg)
-        // createOrUpdateBaselines(textsData, svg)
+        console.log('renreding')
+        createOrUpdateAreaRects([...areas.values()], svg)
+        createOrUpdateBaselines(textsData, svg)
     }
 
     function apply(rect: TextAreaFragment) {

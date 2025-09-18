@@ -31,6 +31,7 @@ export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.setAttribute('data-id', data.id)
     el.setAttribute('font-family', data.font)
     el.setAttribute('font-size', data.size.toFixed(4))
+    el.setAttribute('dominant-baseline', 'middle')
     el.setAttribute('fill', data.fill)
     el.setAttribute('text-anchor', 'middle')
     el.setAttribute('x', data.x.toFixed(4))
@@ -90,7 +91,9 @@ export const calculateTextDataPos = (
         zoneHeight = area.height - leftovers,
         zoneBottom = zoneTop + zoneHeight,
         areaBottom = area.y + area.height
-    data.y = zoneBottom - metrics.descent / 2
+
+    data.y = area.y + area.height / 2; // ← Середина области
+    // data.y = zoneTop + metrics.ascent
     data.x = area.x + area.width / 2
 }
 
@@ -166,7 +169,7 @@ const getTextMetrics = (data: TextRenderData, canvasContextGetter: CANVAS_CONTEX
     const ctx = canvasContextGetter()
     if (ctx) {
         const size = fontSize ?? data.size
-        ctx.textBaseline = 'alphabetic'
+        ctx.textBaseline = 'middle'
         ctx.font = `${size}px ${data.font}`;
         ctx.textAlign = "center"
         const metrics = ctx.measureText(data.value);

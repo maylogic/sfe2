@@ -11,6 +11,7 @@ export const updTextAttributesSvgJs = (el: Text, data: TextRenderData) => {
     el.fill(data.fill)
     el.attr('font-family', data.font)
     el.attr('font-size', data.size.toFixed(4))
+    el.attr('dominant-baseline', 'middle')
     el.attr('text-anchor', 'middle')
     el.attr('x', data.x.toFixed(4))
     el.attr('y', data.y.toFixed(4))
