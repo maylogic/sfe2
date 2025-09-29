@@ -1,6 +1,6 @@
 <template>
     <Suspense>
-        <page-product-slug :slug="slug"/>
+        <page-product-slug :slug="slug" :key="`product-page-slug-${slug}`"/>
         <template #fallback>
             <loading-page/>
         </template>
