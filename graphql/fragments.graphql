@@ -87,6 +87,7 @@ fragment DesignItem on Design {
         label
         filename_ttf
         filename_otf
+        system_name
         updated_at
     }
 }

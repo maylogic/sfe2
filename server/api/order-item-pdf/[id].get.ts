@@ -15,6 +15,9 @@ import { applyTextsOnBlock } from "~/shared/utils/base-svg";
 import { Client } from '@urql/core'
 import { getClient } from "~/utils/server/graphql";
 import { getCanvasContextNodeJs } from "~/utils/server/canvas";
+import { circularIterator } from "~/utils/iterators";
+
+const ADD_HEIGHT = 8
 
 export default defineEventHandler(async (event) => {
     const orderItemId = getRouterParam(event, 'id')
@@ -64,9 +67,11 @@ function getItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderItem']>
 function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderItem']>) {
     const design = useFragment(DesignItemFragmentDoc, orderItem.design);
     const base = useFragment(BaseFragmentFragmentDoc, design?.bases[0]);
-    if (!base) {
+    if (!design || !base) {
         return
     }
+    const availableColors = circularIterator(design.colors ?? []),
+        availableFonts = circularIterator(design.fonts ?? [])
     const gap = 5; // отступ 10 мм
     const pageWidth = 210;
     const pageHeight = 297;
@@ -96,7 +101,7 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
     }
 
     // Целевая высота в мм
-    const itemHeight = (orderItem.product_size?.height || 40) + 8;
+    const itemHeight = (orderItem.product_size?.height || 40) + ADD_HEIGHT;
     const itemWidth = (width / height) * itemHeight; // пропорциональная ширина
 
     // Сколько элементов помещается в строке и столбцах
@@ -107,6 +112,8 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
 
     // Генерируем каждый элемент в нужной позиции
     for (let i = 0; i < totalItems; i++) {
+        const color = availableColors.next().value,
+            font = availableFonts.next().value
         const row = Math.floor(i / itemsPerRow);
         const col = i % itemsPerRow;
 
@@ -135,8 +142,8 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
             applyTextsOnBlock(
                 innerSvg,
                 base,
-                orderItem.font?.system_name,
-                orderItem.color,
+                font?.system_name,
+                color,
                 orderItem.product.line_definitions,
                 textLinesRenderValues,
                 false,
@@ -148,7 +155,7 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
         itemGroup.each(function () {
             // @ts-ignore
             const el = this as Element;
-            el.fill(orderItem.color?.hex ?? 'currentColor');
+            el.fill(color?.hex ?? 'currentColor');
         });
 
         canvas.add(itemGroup);
@@ -175,7 +182,7 @@ function getSingleItemCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIt
         element.fill(orderItem.color?.hex ?? 'currentColor')
         if (base && orderItem.product.line_definitions) {
             const svg = element.findOne('svg')
-            svg?.attr('height', height + 8)
+            svg?.attr('height', height + ADD_HEIGHT)
             svg?.attr('y', '10')
             applyTextsOnBlock(
                 svg,
@@ -194,8 +201,8 @@ function getSingleItemCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIt
 
 function cleanSVGContent(svgContent: string): string {
     return svgContent
-        .replace('<?xml version="1.0" encoding="utf-8"?>', '') // удаляем декларацию
-        .replace(/<!--[\s\S]*?-->/g, '') // удаляем комментарии
+        .replace(/<\?xml[^?]*\?>/gi, '')
+        .replace(/<!--[\s\S]*?-->/g, '')
         .trim();
 }
 
