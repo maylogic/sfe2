@@ -1,5 +1,5 @@
 <template>
-    <g v-html="base.content" ref="block"/>
+    <g class="base" v-html="base.content" ref="block"/>
 </template>
 <script lang="ts" setup>
 import {
@@ -18,7 +18,7 @@ import {
 import {
     applyColorOnBlock,
     applyTextsOnBlock
-} from "~/shared/utils/base-svg";
+} from "~/utils/svg";
 
 const props = defineProps<{
     baseData: FragmentType<typeof BaseFragmentFragmentDoc>

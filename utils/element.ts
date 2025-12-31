@@ -4,7 +4,11 @@ export const createTextElement = (): SVGTextElement => {
     text.appendChild(tspan)
     return text
 }
-
+export const createTextsContainer = (): SVGGElement => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+    g.classList.add('texts')
+    return g;
+}
 export const createAreaRectElement = (): SVGRectElement => {
     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     rect.setAttribute('stroke', 'red')

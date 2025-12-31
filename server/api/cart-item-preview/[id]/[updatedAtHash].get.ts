@@ -13,8 +13,7 @@ import {
 import sharp from "sharp";
 import { useFragment } from "~/gql";
 import { createGraphqlClient } from "~/system/createGraphqlClient";
-import { applyTextsOnBlock } from "~/shared/utils/base-svg";
-import { getCanvasContextNodeJs } from "~/utils/server/canvas";
+import { applyTextsOnBlockNodeJs } from "~/server/utils/svg.server";
 
 export default defineEventHandler(async (event) => {
     const cartItemId = getRouterParam(event, 'id'),
@@ -56,16 +55,14 @@ export default defineEventHandler(async (event) => {
         // @ts-ignore
         element.fill(cartItem.color?.hex ?? 'currentColor')
         if (base && cartItem.product.line_definitions) {
-            const svg = element.findOne('svg')
-            applyTextsOnBlock(
+            const svg = element.findOne('svg') as Element
+            applyTextsOnBlockNodeJs(
                 svg,
                 base,
                 cartItem.font?.system_name,
                 cartItem.color,
                 cartItem.product.line_definitions,
-                textLinesRenderValues,
-                false,
-                getCanvasContextNodeJs
+                textLinesRenderValues
             )
         }
     })

@@ -2,7 +2,7 @@ import {
     Canvas,
     type CanvasRenderingContext2D
 } from "skia-canvas";
-import { getCanvasNodejsSize } from "~/utils/server/svg";
+import { getCanvasNodejsSize } from "~/server/utils/svg.server";
 
 let canvasContext: CanvasRenderingContext2D | null = null
 export const getCanvasContextNodeJs = (): CanvasRenderingContext2D | null => {

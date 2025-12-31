@@ -1,83 +1,19 @@
-import { createTextElement } from "~/utils/element";
-import type { ProductLineDefinition } from "~/gql/graphql";
-import {
-    appendTextToSvgNodejs,
-    createTextElementNodejs,
-    findTextByIdSvgJs,
-    updTextAttributesSvgJs
-} from "~/utils/server/svg";
-import {
-    Element,
-    Text
-} from "@svgdotjs/svg.js";
-import type { TextPieceArea } from "~/utils/text_area";
-import type { CANVAS_CONTEXT_GETTER } from "~/utils/canvas";
-
-export type TextRenderData = {
-    id: string,
-    value: string,
-    font: string,
-    fill: string,
-    x: number,
-    y: number,
-    size: number
-}
-
-export type SvgContainer = SVGSVGElement | Element
+import type {
+    Color,
+    TextAreaFragment
+} from "~/gql/graphql";
+import { TextAreaFragmentDoc } from "~/gql/graphql";
+import { useFragment } from "~/gql";
+import type {
+    BaseOrPreview,
+    TextPieceArea,
+    TextRenderData
+} from "~/types/svg";
+import type { CANVAS_CONTEXT_GETTER } from "~/types/canvas";
+import type { InputTextLinesMap } from "~/types/product";
 
 const AREA_PADDING_X = 0.1
 
-export const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
-    el.setAttribute('data-id', data.id)
-    el.setAttribute('font-family', data.font)
-    el.setAttribute('font-size', data.size.toFixed(4))
-    el.setAttribute('fill', data.fill)
-    el.setAttribute('text-anchor', 'middle')
-    el.setAttribute('x', data.x.toFixed(4))
-    el.setAttribute('y', data.y.toFixed(4))
-    el.classList.add('text-data')
-    el.children[0].innerHTML = data.value
-}
-
-export const createOrUpdateTexts = (
-    textData: TextRenderData[],
-    svg: SvgContainer
-) => {
-    const createFn = import.meta.client ? createTextElement : createTextElementNodejs
-    textData.forEach(data => {
-        const existingEl = import.meta.client
-            ? findTextById(data.id, svg as SVGSVGElement)
-            : findTextByIdSvgJs(data.id, svg as Element)
-        if (existingEl) {
-            if (import.meta.client) {
-                updTextAttributes(existingEl as SVGTextElement, data)
-            } else {
-                updTextAttributesSvgJs(existingEl as Text, data)
-            }
-            return
-        }
-
-        const el = createFn()
-        if (import.meta.client) {
-            updTextAttributes(el as SVGTextElement, data)
-        } else {
-            updTextAttributesSvgJs(el as Text, data)
-        }
-        import.meta.client
-            ? appendTextToSvg(el as SVGTextElement, svg as SVGSVGElement)
-            : appendTextToSvgNodejs(el as Text, svg as Element)
-    })
-}
-
-const appendTextToSvg = (el: SVGTextElement, svg: SVGSVGElement) => {
-    if (svg) {
-        svg.appendChild(el)
-    }
-}
-
-export const findTextById = (id: string, svg: SVGSVGElement) => {
-    return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
-}
 export const calculateTextDataPos = (
     data: TextRenderData,
     area: TextPieceArea,
@@ -90,7 +26,7 @@ export const calculateTextDataPos = (
         zoneHeight = area.height - leftovers,
         zoneBottom = zoneTop + zoneHeight,
         areaBottom = area.y + area.height
-    data.y = zoneBottom - metrics.descent/2
+    data.y = zoneBottom - metrics.descent / 2
     data.x = area.x + area.width / 2
 }
 
@@ -146,22 +82,6 @@ export const calculateFontSize = (
     return doesTextFit(fontSize) ? fontSize : fontSize - lastAdjustment;
 }
 
-export const removeTextsForUnusedDefIds = (
-    usedDefIds: string[],
-    defs: ProductLineDefinition[],
-    svg: SvgContainer,
-) => {
-    defs.map(line => line.id) // get def ids
-        .filter((id) => !usedDefIds.includes(id)) // include only unused def ids
-        .forEach((id) => {
-            if (import.meta.client) {
-                findTextById(id, svg as SVGSVGElement)?.remove()
-            } else {
-                findTextByIdSvgJs(id, svg as Element)?.remove()
-            }
-        })
-}
-
 const getTextMetrics = (data: TextRenderData, canvasContextGetter: CANVAS_CONTEXT_GETTER, fontSize?: number): TextMetricsReal => {
     const ctx = canvasContextGetter()
     if (ctx) {
@@ -182,9 +102,88 @@ const getTextMetrics = (data: TextRenderData, canvasContextGetter: CANVAS_CONTEX
     throw new Error('Cannot access canvas context')
 }
 
-export type TextMetricsReal = {
+type TextMetricsReal = {
     width: number,
     height: number,
     descent: number,
     ascent: number
+}
+
+export function computeTextLayout(
+    base: BaseOrPreview,
+    font: string | null | undefined,
+    color: Color | null | undefined,
+    sortedLines: InputTextLinesMap,
+    canvasContextGetter: CANVAS_CONTEXT_GETTER
+) {
+    const usedDefIds: string[] = [];
+    const areas = new Map<string, TextPieceArea>();
+    const textsData: TextRenderData[] = [];
+
+    function processTextArea(rect: TextAreaFragment): TextRenderData[] {
+        let currentLineSeq = 0;
+        const rectTexts: TextRenderData[] = [];
+
+        for (const [id, value] of sortedLines) {
+            if (++currentLineSeq < rect.first_line) continue;
+            if (currentLineSeq - rect.first_line >= rect.lines) continue;
+            if (!value) continue;
+
+            const fill = rect.inherit_color && color ? color.hex : rect.text_color ?? '#fff';
+            const fontFamily = font ?? 'sans-serif';
+
+            const textData: TextRenderData = {
+                id,
+                value,
+                font: fontFamily,
+                fill,
+                x: 0,
+                y: 0,
+                size: 0,
+            };
+
+            rectTexts.push(textData);
+            usedDefIds.push(id);
+        }
+
+        if (rectTexts.length === 0) return rectTexts;
+
+        const pieceAreaHeight = rect.height / rectTexts.length;
+
+        for (let i = 0; i < rectTexts.length; i++) {
+            const piece = rectTexts[i];
+            const area: TextPieceArea = {
+                id: piece.id,
+                height: pieceAreaHeight,
+                width: rect.width,
+                x: rect.left,
+                y: rect.top + pieceAreaHeight * i,
+                padding_y: rect.padding_y,
+            };
+            areas.set(piece.id, area);
+            piece.size = calculateFontSize(canvasContextGetter, piece, area);
+        }
+
+        const minFontSize = Math.max(1,
+            rectTexts.reduce((min, t) => Math.min(t.size, min), Infinity)
+        );
+
+        for (const piece of rectTexts) {
+            piece.size = minFontSize;
+            const area = areas.get(piece.id);
+            if (area) {
+                calculateTextDataPos(piece, area, canvasContextGetter);
+            }
+        }
+
+        return rectTexts;
+    }
+
+    base.text_areas?.forEach(area => {
+        const rect = useFragment(TextAreaFragmentDoc, area);
+        const textsInArea = processTextArea(rect);
+        textsData.push(...textsInArea);
+    });
+
+    return {textsData, areas, usedDefIds};
 }

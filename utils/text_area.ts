@@ -2,15 +2,10 @@ import {
     createAreaRectElement,
     createLineElement
 } from "~/utils/element";
-
-export type TextPieceArea = {
-    id: string,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    padding_y: number
-}
+import type {
+    TextPieceArea,
+    TextRenderData
+} from "~/types/svg";
 
 export const createOrUpdateAreaRects = (areas: TextPieceArea[], svg: SVGSVGElement) => {
     areas.forEach(data => {

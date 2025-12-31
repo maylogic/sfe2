@@ -10,6 +10,7 @@ import {
     useFragment
 } from "~/gql";
 import { getDiscount } from "~/utils/price";
+import type { PersonalizeInputData } from "~/types/product";
 
 export const getCartItemToTrack = (itemFrag: FragmentType<typeof SidebarCartItemFragmentDoc>) => {
     const item = useFragment(SidebarCartItemFragmentDoc, itemFrag),

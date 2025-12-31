@@ -11,11 +11,10 @@ import {
     SVG
 } from '@svgdotjs/svg.js'
 import { useFragment } from "~/gql";
-import { applyTextsOnBlock } from "~/shared/utils/base-svg";
 import { Client } from '@urql/core'
-import { getClient } from "~/utils/server/graphql";
-import { getCanvasContextNodeJs } from "~/utils/server/canvas";
+import { getClient } from "~/server/utils/graphql.server";
 import { circularIterator } from "~/utils/iterators";
+import { applyTextsOnBlockNodeJs } from "~/server/utils/svg.server";
 
 const ADD_HEIGHT = 8
 
@@ -47,11 +46,11 @@ export default defineEventHandler(async (event) => {
     const canvas = getItemsCanvas(orderItem, many)
 
     try {
-        const svg = canvas.svg()
+        if (!canvas) throw new Error
 
         event.node.res.setHeader('Content-Type', 'image/svg+xml')
 
-        return svg
+        return canvas.svg()
     } catch (error) {
         throw createError({statusCode: 500, statusMessage: 'Ошибка при обработке изображения'})
     }
@@ -122,6 +121,7 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
 
         // Создаём отдельный элемент (аналогично getSingleItemCanvas)
         const itemGroup = SVG(`<g transform="translate(${x}, ${y})"></g>`);
+        const holeMark = SVG(`<g transform="translate(${x}, ${y})"></g>`);
 
         if (base && orderItem.product.line_definitions) {
             const baseGroup = itemGroup.attr('data-base-id', base.id);
@@ -129,26 +129,23 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
             baseGroup.add(basePiece)
 
             // Теперь ищем вложенный <svg>
-            const innerSvg = baseGroup.findOne('svg');
+            const innerSvg = baseGroup.findOne('svg') as Element;
             if (innerSvg) {
                 innerSvg.attr('width', itemWidth);
                 innerSvg.attr('height', itemHeight);
                 innerSvg.attr('x', 0);
                 innerSvg.attr('y', 0);
                 innerSvg.attr('viewBox', innerSvg.attr('viewBox') || '0 0 100 100'); // если нет — можно задать дефолт
-            }
 
-            // Применяем тексты
-            applyTextsOnBlock(
-                innerSvg,
-                base,
-                font?.system_name,
-                color,
-                orderItem.product.line_definitions,
-                textLinesRenderValues,
-                false,
-                getCanvasContextNodeJs
-            );
+                applyTextsOnBlockNodeJs(
+                    innerSvg,
+                    base,
+                    font?.system_name,
+                    color,
+                    orderItem.product.line_definitions,
+                    textLinesRenderValues
+                );
+            }
         }
 
         // Заливка цветом
@@ -181,18 +178,16 @@ function getSingleItemCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIt
         // @ts-ignore
         element.fill(orderItem.color?.hex ?? 'currentColor')
         if (base && orderItem.product.line_definitions) {
-            const svg = element.findOne('svg')
+            const svg = element.findOne('svg') as Element
             svg?.attr('height', height + ADD_HEIGHT)
             svg?.attr('y', '10')
-            applyTextsOnBlock(
+            applyTextsOnBlockNodeJs(
                 svg,
                 base,
                 orderItem.font?.system_name,
                 orderItem.color,
                 orderItem.product.line_definitions,
-                textLinesRenderValues,
-                false,
-                getCanvasContextNodeJs
+                textLinesRenderValues
             )
         }
     })
