@@ -100,7 +100,8 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
     }
 
     // Целевая высота в мм
-    const itemHeight = (orderItem.product_size?.height || 40) + ADD_HEIGHT;
+    const orderedHeight = (orderItem.product_size?.height || 40)
+    const itemHeight = orderedHeight + ADD_HEIGHT;
     const itemWidth = (width / height) * itemHeight; // пропорциональная ширина
 
     // Сколько элементов помещается в строке и столбцах
@@ -108,6 +109,7 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
     const itemsPerCol = Math.floor((pageHeight + gap) / (itemHeight + gap));
 
     const totalItems = itemsPerRow * itemsPerCol;
+
 
     // Генерируем каждый элемент в нужной позиции
     for (let i = 0; i < totalItems; i++) {
@@ -121,7 +123,6 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
 
         // Создаём отдельный элемент (аналогично getSingleItemCanvas)
         const itemGroup = SVG(`<g transform="translate(${x}, ${y})"></g>`);
-        const holeMark = SVG(`<g transform="translate(${x}, ${y})"></g>`);
 
         if (base && orderItem.product.line_definitions) {
             const baseGroup = itemGroup.attr('data-base-id', base.id);
@@ -131,6 +132,8 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
             // Теперь ищем вложенный <svg>
             const innerSvg = baseGroup.findOne('svg') as Element;
             if (innerSvg) {
+                addMarkHoles(innerSvg, width, height)
+                addCuttingCircles(innerSvg, width, height)
                 innerSvg.attr('width', itemWidth);
                 innerSvg.attr('height', itemHeight);
                 innerSvg.attr('x', 0);
@@ -159,6 +162,25 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
     }
 
     return canvas;
+}
+
+function addCuttingCircles(svg: Element, width:number, height:number) {
+    const cutCircle1 = SVG(`<circle class="cut-circle-1" r="${height/2}" fill="none" stroke="white" stroke-width="10" cx="${height/2}" cy="${height/2}"></circle>`),
+        cutCircle2 = SVG(`<circle class="cut-circle-2" r="${height/2}" fill="none" stroke="white" stroke-width="10" cx="${width - height/2}" cy="${height/2}"></circle>`)
+
+    svg.add(cutCircle1)
+    svg.add(cutCircle2)
+}
+
+function addMarkHoles(svg:Element, width: number, height: number) {
+    const holeMarkRadius = 1,
+        holeMark1X = height / 2,
+        holeMark2X = width - holeMark1X,
+        holeMarkY = 15
+    const holeMark1 = SVG(`<circle class="hole-mark-1" r="${holeMarkRadius}" fill="white" cx="${holeMark1X}" cy="${holeMarkY}"></circle>`),
+        holeMark2 = SVG(`<circle class="hole-mark-2" r="${holeMarkRadius}" fill="white" cx="${holeMark2X}" cy="${holeMarkY}"></circle>`)
+    svg.add(holeMark1)
+    svg.add(holeMark2)
 }
 
 function getSingleItemCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderItem']>) {
