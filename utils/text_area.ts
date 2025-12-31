@@ -7,7 +7,7 @@ import type {
     TextRenderData
 } from "~/types/svg";
 
-export const createOrUpdateAreaRects = (areas: TextPieceArea[], svg: SVGSVGElement) => {
+export const createOrUpdateAreaRects = (areas: TextPieceArea[], svg: SVGElement) => {
     areas.forEach(data => {
         const existingEl = findAreaById(data.id, svg)
         if (existingEl) {
@@ -26,7 +26,7 @@ export const createOrUpdateAreaRects = (areas: TextPieceArea[], svg: SVGSVGEleme
         }
     })
 }
-export const createOrUpdateBaselines = (texts: TextRenderData[], svg: SVGSVGElement) => {
+export const createOrUpdateBaselines = (texts: TextRenderData[], svg: SVGElement) => {
     texts.forEach(data => {
         const existingEl = findLineById(data.id, svg)
         if (existingEl) {
@@ -46,18 +46,18 @@ export const createOrUpdateBaselines = (texts: TextRenderData[], svg: SVGSVGElem
     })
 }
 
-export const findAreaById = (id: string, svg: SVGSVGElement) => {
+export const findAreaById = (id: string, svg: SVGElement) => {
     return svg.querySelector<SVGRectElement>(`rect.text-area[data-id="${id}"]`)
 }
 
-export const findLineById = (id: string, svg: SVGSVGElement) => {
+export const findLineById = (id: string, svg: SVGElement) => {
     return svg.querySelector<SVGLineElement>(`line.text-baseline[data-id="${id}"]`)
 }
 
-export const removeAreas = (svg: SVGSVGElement) => {
+export const removeAreas = (svg: SVGElement) => {
     svg.querySelectorAll<SVGRectElement>(`rect.text-area`).forEach(rect => rect.remove())
 }
 
-export const removeLines = (svg: SVGSVGElement) => {
+export const removeLines = (svg: SVGElement) => {
     svg.querySelectorAll<SVGLineElement>(`line.text-baseline`).forEach(line => line.remove())
 }

@@ -42,15 +42,16 @@ export const applyTextsOnBlock = (
         getCanvasContext
     );
 
+    const container = findOrCreateTextsContainer(svg)
     const applyDOMChanges = () => {
-        removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, svg);
-        createOrUpdateTexts(textsData, svg);
+        removeTextsForUnusedDefIds(usedDefIds, lineDefinitions, container);
+        createOrUpdateTexts(textsData, container);
 
         if (renderAreas && import.meta.dev) {
-            removeLines(svg);
-            removeAreas(svg);
-            createOrUpdateAreaRects([...areas.values()], svg);
-            createOrUpdateBaselines(textsData, svg);
+            removeLines(container);
+            removeAreas(container);
+            createOrUpdateAreaRects([...areas.values()], container);
+            createOrUpdateBaselines(textsData, container);
         }
     };
 
@@ -71,47 +72,44 @@ const updTextAttributes = (el: SVGTextElement, data: TextRenderData) => {
     el.children[0].innerHTML = data.value
 }
 
-export const createOrUpdateTexts = (
+const createOrUpdateTexts = (
     textData: TextRenderData[],
-    svg: SVGSVGElement
+    svg: SVGElement
 ) => {
-    const createFn = createTextElement
-    const createContainerFn = createTextsContainer
     textData.forEach(data => {
-        const existingEl = findTextById(data.id, svg as SVGSVGElement)
+        const existingEl = findTextById(data.id, svg)
         if (existingEl) {
-            updTextAttributes(existingEl as SVGTextElement, data)
+            updTextAttributes(existingEl, data)
             return
         }
 
-        const el = createFn()
-        updTextAttributes(el as SVGTextElement, data)
-        appendTextToSvg(el as SVGTextElement, svg as SVGSVGElement)
+        const el = createTextElement()
+        updTextAttributes(el, data)
+        svg.appendChild(el)
     })
 }
 
-const appendTextToSvg = (el: SVGTextElement, svg: SVGSVGElement) => {
-    if (svg) {
-        svg.appendChild(el)
-    }
-}
-
-const findTextById = (id: string, svg: SVGSVGElement) => {
+const findTextById = (id: string, svg: SVGElement) => {
     return svg.querySelector<SVGTextElement>(`text.text-data[data-id="${id}"]`)
 }
 
-const findTextsContainer = (svg: SVGSVGElement) => {
-    return svg.querySelector<SVGTextElement>('g.texts')
+const findOrCreateTextsContainer = (svg: SVGElement) => {
+    let container = svg.querySelector<SVGGElement>('g.texts')
+    if (!container) {
+        container = createTextsContainer()
+        svg.appendChild(container)
+    }
+    return container
 }
 
-export const removeTextsForUnusedDefIds = (
+const removeTextsForUnusedDefIds = (
     usedDefIds: string[],
     defs: ProductLineDefinition[],
-    svg: SVGSVGElement,
+    svg: SVGElement,
 ) => {
     defs.map(line => line.id) // get def ids
         .filter((id) => !usedDefIds.includes(id)) // include only unused def ids
         .forEach((id) => {
-            findTextById(id, svg as SVGSVGElement)?.remove()
+            findTextById(id, svg)?.remove()
         })
 }
