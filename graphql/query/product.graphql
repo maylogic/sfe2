@@ -1,3 +1,26 @@
+query ProductBySlug($slug: String!) {
+    getProductBySlug(
+        slug: $slug
+    ) {
+        ...ProductPage
+    }
+}
+query ProductCards($first: Int!, $page: Int!) {
+    products(first: $first, page: $page) {
+        data {
+            id
+            slug
+            key
+            ...ProductMini
+        }
+        paginatorInfo {
+            ...Pagination
+        }
+    }
+}
+query ProductSlugs {
+    productSlugs
+}
 query ProductsFeed($first: Int!, $page: Int!) {
     products(first: $first, page: $page) {
         data {

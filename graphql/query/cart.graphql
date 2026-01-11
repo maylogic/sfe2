@@ -1,3 +1,11 @@
+query GetCart {
+    getCart {
+        ...SidebarCart
+    }
+}
+query GetCartItemsCount {
+    getCartItemsCount
+}
 query CartItem($id: ID!) {
     cartItem(
         id: $id

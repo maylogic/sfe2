@@ -1,7 +1,0 @@
-query OrderById($id: ID!) {
-    getOrderById(
-        id: $id
-    ) {
-        ...OrderData
-    }
-}

@@ -1,5 +1,0 @@
-mutation UpdateCartItemQuantity($cartItemId: String!, $quantity: Int!) {
-    updateCartItemQuantity(cartItemId:$cartItemId, quantity:$quantity) {
-        ...SidebarCart
-    }
-}

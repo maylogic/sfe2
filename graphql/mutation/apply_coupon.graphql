@@ -1,5 +1,0 @@
-mutation ApplyCoupon($code: String!) {
-    applyCoupon(code:$code) {
-        ...SidebarCart
-    }
-}

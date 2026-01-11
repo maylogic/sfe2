@@ -1,7 +1,0 @@
-query ProductBySlug($slug: String!) {
-    getProductBySlug(
-        slug: $slug
-    ) {
-        ...ProductPage
-    }
-}

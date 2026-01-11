@@ -1,8 +1,0 @@
-query GetCart {
-    getCart {
-        ...SidebarCart
-    }
-}
-query GetCartItemsCount {
-    getCartItemsCount
-}

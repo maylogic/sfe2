@@ -1,0 +1,66 @@
+mutation CreateShippingAddress(
+    $address1: String,
+    $address2: String,
+    $city: String,
+    $country: String,
+    $first_name: String,
+    $last_name: String,
+    $phone_number: String,
+    $postal_code: String,
+    $state: String,
+) {
+    createShippingAddress(
+        address1: $address1,
+        address2: $address2,
+        city: $city,
+        country: $country,
+        first_name: $first_name,
+        last_name: $last_name,
+        phone_number: $phone_number,
+        postal_code: $postal_code,
+        state: $state,
+    ) {
+        ...SidebarCart
+    }
+}
+mutation SetShippingAddress($customerAddressId: String!) {
+    setShippingAddress(customerAddressId: $customerAddressId) {
+        ...SidebarCart
+    }
+}
+mutation SetShippingMethod(
+    $shippingMethodId: String!
+) {
+    setShippingMethod(
+        shippingMethodId: $shippingMethodId
+    ) {
+        ...SidebarCart
+    }
+}
+mutation UpdateShippingAddress(
+    $customerAddressId: String!,
+    $address1: String,
+    $address2: String,
+    $city: String,
+    $country: String,
+    $first_name: String,
+    $last_name: String,
+    $phone_number: String,
+    $postal_code: String,
+    $state: String,
+) {
+    updateShippingAddress(
+        customerAddressId: $customerAddressId,
+        address1: $address1,
+        address2: $address2,
+        city: $city,
+        country: $country,
+        first_name: $first_name,
+        last_name: $last_name,
+        phone_number: $phone_number,
+        postal_code: $postal_code,
+        state: $state,
+    ) {
+        ...SidebarCart
+    }
+}

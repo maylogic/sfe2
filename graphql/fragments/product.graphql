@@ -65,3 +65,24 @@ fragment ProductMini on Product {
         ...GalleryItem
     }
 }
+fragment Pagination on PaginatorInfo {
+    count
+    currentPage
+    firstItem
+    hasMorePages
+    lastItem
+    lastPage
+    perPage
+    total
+}
+fragment Price on Price {
+    regular
+    is_discounted
+    discounted
+}
+fragment GalleryItem on ProductGalleryItem {
+    filename
+    is_video
+    label
+    id
+}

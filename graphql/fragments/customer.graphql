@@ -10,3 +10,15 @@ fragment CustomerAddress on CustomerAddress {
     postal_code
     state
 }
+fragment Customer on User {
+    id
+    email
+    email_verified_at
+    name
+    role
+}
+fragment CustomerData on User {
+    id
+    email
+    name
+}

@@ -1,0 +1,30 @@
+mutation AddCartItem($productId: String!, $quantity: Int!, $personalize: PersonalizeInput!) {
+    addCartItem(productId:$productId, quantity:$quantity, personalize: $personalize) {
+        ...SidebarCart
+    }
+}
+mutation RemoveCartItem($cartItemId: String!) {
+    removeCartItem(cartItemId:$cartItemId) {
+        ...SidebarCart
+    }
+}
+mutation SetCartEmail($email: String!) {
+    setCartEmail(email: $email) {
+        ...SidebarCart
+    }
+}
+mutation ToggleApplyBalance {
+    toggleApplyBalance {
+        ...SidebarCart
+    }
+}
+mutation UpdateCartItem($cartItemId: String!, $personalize: PersonalizeInput!) {
+    updateCartItem(cartItemId:$cartItemId, personalize: $personalize) {
+        ...SidebarCart
+    }
+}
+mutation UpdateCartItemQuantity($cartItemId: String!, $quantity: Int!) {
+    updateCartItemQuantity(cartItemId:$cartItemId, quantity:$quantity) {
+        ...SidebarCart
+    }
+}

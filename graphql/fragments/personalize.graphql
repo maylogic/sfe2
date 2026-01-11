@@ -1,0 +1,61 @@
+
+fragment TextArea on BaseTextArea {
+    first_line
+    height
+    id
+    inherit_color
+    left
+    lines
+    text_color
+    width
+    top
+    padding_y
+}
+fragment BaseFragment on Base {
+    filename
+    content
+    id
+    label
+    text_areas {
+        ...TextArea
+    }
+    base_preview {
+        ...BasePreviewFragment
+    }
+}
+fragment BasePreviewFragment on BasePreview {
+    filename
+    content
+    id
+    label
+    text_areas {
+        ...TextArea
+    }
+}
+fragment DesignItem on Design {
+    id
+    preview
+    label
+    colors {
+        id
+        label
+        hex
+    }
+    bases {
+        ...BaseFragment
+    }
+    fonts {
+        id
+        name
+        label
+        filename_ttf
+        filename_otf
+        system_name
+        updated_at
+    }
+}
+fragment TextLineDefinition on ProductLineDefinition {
+    label
+    max_length
+    required
+}
