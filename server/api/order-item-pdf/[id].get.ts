@@ -134,6 +134,8 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
             if (innerSvg) {
                 addMarkHoles(innerSvg, width, height)
                 addCuttingCircles(innerSvg, width, height)
+                addBendingLine(innerSvg, width, height)
+                addCuttingRect(innerSvg, width, height)
                 innerSvg.attr('width', itemWidth);
                 innerSvg.attr('height', itemHeight);
                 innerSvg.attr('x', 0);
@@ -164,23 +166,55 @@ function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderIte
     return canvas;
 }
 
-function addCuttingCircles(svg: Element, width:number, height:number) {
-    const cutCircle1 = SVG(`<circle class="cut-circle-1" r="${height/2}" fill="none" stroke="white" stroke-width="10" cx="${height/2}" cy="${height/2}"></circle>`),
-        cutCircle2 = SVG(`<circle class="cut-circle-2" r="${height/2}" fill="none" stroke="white" stroke-width="10" cx="${width - height/2}" cy="${height/2}"></circle>`)
+function addCuttingCircles(svg: Element, width: number, height: number) {
+    const cutCircle1 = SVG(`<circle class="cut-circle-1" r="${height / 2}" fill="none" stroke="white" stroke-width="10" cx="${height / 2}" cy="${height / 2}"></circle>`),
+        cutCircle2 = SVG(`<circle class="cut-circle-2" r="${height / 2}" fill="none" stroke="white" stroke-width="10" cx="${width - height / 2}" cy="${height / 2}"></circle>`)
 
     svg.add(cutCircle1)
     svg.add(cutCircle2)
 }
 
-function addMarkHoles(svg:Element, width: number, height: number) {
-    const holeMarkRadius = 1,
+function addMarkHoles(svg: Element, width: number, height: number) {
+    const holeMarkRadius = 2,
+        holeMarkSmallerRadius = 1.5,
+        holeMarkSmallestRadius = 0.8,
+        holeDotRadius = 0.3,
         holeMark1X = height / 2,
         holeMark2X = width - holeMark1X,
         holeMarkY = 15
     const holeMark1 = SVG(`<circle class="hole-mark-1" r="${holeMarkRadius}" fill="white" cx="${holeMark1X}" cy="${holeMarkY}"></circle>`),
         holeMark2 = SVG(`<circle class="hole-mark-2" r="${holeMarkRadius}" fill="white" cx="${holeMark2X}" cy="${holeMarkY}"></circle>`)
+
+    const holeSmaller1 = SVG(`<circle class="hole-mark-Smaller-1" r="${holeMarkSmallerRadius}" fill="none" stroke="black" stroke-width="0.2" cx="${holeMark1X}" cy="${holeMarkY}"></circle>`),
+        holeSmaller2 = SVG(`<circle class="hole-mark-Smaller-2" r="${holeMarkSmallerRadius}" fill="none" stroke="black" stroke-width="0.2" cx="${holeMark2X}" cy="${holeMarkY}"></circle>`)
+
+    const holeSmallest1 = SVG(`<circle class="hole-mark-Smallest-1" r="${holeMarkSmallestRadius}" fill="none" stroke="black" stroke-width="0.2" cx="${holeMark1X}" cy="${holeMarkY}"></circle>`),
+        holeSmallest2 = SVG(`<circle class="hole-mark-Smallest-2" r="${holeMarkSmallestRadius}" fill="none" stroke="black" stroke-width="0.2" cx="${holeMark2X}" cy="${holeMarkY}"></circle>`)
+
+    const holeDot1 = SVG(`<circle class="hole-dot-1" r="${holeDotRadius}" fill="black" cx="${holeMark1X}" cy="${holeMarkY}"></circle>`),
+        holeDot2 = SVG(`<circle class="hole-dot-2" r="${holeDotRadius}" fill="black" cx="${holeMark2X}" cy="${holeMarkY}"></circle>`)
+
     svg.add(holeMark1)
     svg.add(holeMark2)
+    svg.add(holeSmaller1)
+    svg.add(holeSmaller2)
+    svg.add(holeSmallest1)
+    svg.add(holeSmallest2)
+    svg.add(holeDot1)
+    svg.add(holeDot2)
+}
+
+function addBendingLine(svg: Element, width: number, height: number) {
+    const x = width / 2,
+        y1 = 0,
+        y2 = height
+    const bendingLine = SVG(`<line class="bending-line" stroke="black" stroke-width="0.05" x1="${x}" x2="${x}" y1="${y1}" y2="${y2}"></line>`)
+    svg.add(bendingLine)
+}
+
+function addCuttingRect(svg: Element, width: number, height: number) {
+    const cuttingRect = SVG(`<rect class="cutting-rect" fill="none" stroke="black" stroke-width="0.2" x="0" y="0" width="${width}" height="${height}"></rect>`)
+    svg.add(cuttingRect)
 }
 
 function getSingleItemCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderItem']>) {

@@ -82,7 +82,7 @@ fragment SidebarCart on Cart {
     can_apply_coupon
     can_place_order
     email
-    can_login
+    user_with_cart_email_exists
     customer_addresses {
         ...CustomerAddress
     }

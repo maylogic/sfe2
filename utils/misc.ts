@@ -6,3 +6,5 @@ export function num_word(value: number, words: string[]) {
     if (num == 1) return words[0];
     return words[2];
 }
+
+export const allTrue = (arr: any[]) => arr.every(Boolean);

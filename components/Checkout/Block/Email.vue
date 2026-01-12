@@ -3,29 +3,36 @@
         <u-form-group name="email">
             <form-input-username v-model="state.email"/>
         </u-form-group>
-        <u-form-group name="signup" v-if="cart.email && !cart.can_login">
+
+        <!-- Регистрация: новый email или email без аккаунта -->
+        <u-form-group name="signup" v-if="canRegister">
             <u-checkbox v-model="state.register" label="Зарегистрироваться и получить 200 баллов"/>
         </u-form-group>
-        <u-form-group name="signup" v-if="!emailChanged && cart.can_login">
+
+        <!-- Вход: существующий email с аккаунтом -->
+        <u-form-group name="signup" v-if="canLogin">
             <u-checkbox v-model="state.login" label="Войти и получить бонус за заказ"/>
         </u-form-group>
+
+        <!-- Пароль нужен, если выбран вход или регистрация -->
         <u-form-group label="Пароль" name="password"
-                      v-if="state.register || willLogin">
+                      v-if="(canLogin && state.login) || (canRegister && state.register)">
             <form-input-password
                 v-model="state.password"
                 :show="showPassword"
                 @toggle="showPassword = !showPassword"
             />
         </u-form-group>
-        <button type="submit" class="continue-button"
-                v-if="!willBeGuest">
+
+        <!-- Кнопки -->
+        <button type="submit" class="continue-button" v-if="!guestFlow">
             <span>Продолжить</span>
         </button>
-        <button type="button" @click.prevent="continueAsGuest" class="continue-button"
-                v-if="willBeGuest">
+        <button type="button" @click.prevent="continueAsGuest" class="continue-button" v-else>
             <span>Продолжить как гость</span>
         </button>
     </u-form>
+
     <div v-else class="current-value">
         {{ cart.email }}
     </div>
@@ -48,6 +55,7 @@ import {
     SetCartEmailDocument
 } from "~/gql/graphql";
 import type { FormSubmitEvent } from "#ui/types";
+import { allTrue } from "~/utils/misc";
 
 defineProps<{ valid: boolean | null }>()
 
@@ -71,17 +79,40 @@ const state = reactive({
 
 watch(() => state.email, () => {
     state.register = false
+    state.login = false
 })
 
-const emailChanged = computed(() => state.email != cart.value.email),
-    willLogin = computed(() => !emailChanged.value && cart.value.can_login && state.login),
-    willRegister = computed(() => !emailChanged.value && !cart.value.can_login && state.register),
-    willBeGuest = computed(() => cart.value.email && !emailChanged.value && !willLogin.value && !state.register)
+const emailChanged = computed(() => state.email !== cart.value.email)
+
+const canBeGuest = computed(() => {
+    return allTrue([
+        cart.value.email,
+        !emailChanged.value
+    ])
+})
+
+const canLogin = computed(() => {
+    return allTrue([
+        cart.value.email,
+        !emailChanged.value,
+        cart.value.user_with_cart_email_exists
+    ])
+})
+
+const canRegister = computed(() => {
+    return allTrue([
+        cart.value.email,
+        !emailChanged.value,
+        !cart.value.user_with_cart_email_exists
+    ])
+})
+
+const guestFlow = computed(() => allTrue([canBeGuest.value, !state.register, !state.login]))
 
 const schema = computed(() => object({
     email: emailValidation,
     password: string().when("email", (email, schema): StringSchema => {
-        if (willLogin.value || state.register) {
+        if (state.login || state.register) {
             return passwordValidationFn(schema)
         }
         return schema
@@ -97,13 +128,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     emit('loading:update', true)
     if (cart.value.email !== event.data.email) {
         await setEmail(event.data.email)
-    } else if (willLogin.value) {
+    } else if (canLogin.value) {
         const {data} = await login({
             email: event.data.email,
             password: event.data.password ?? ''
         })
         authStore.setData(data?.loginCustomer)
-    } else if (willRegister.value) {
+    } else if (canRegister.value) {
         const {data} = await register({
             email: event.data.email,
             name: event.data.email,

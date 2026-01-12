@@ -35,7 +35,7 @@
                 <div v-if="!!item.option_items?.length" class="option-items">
                     <div v-for="option in item.option_items" :key="option.id">
                         <span class="def">{{ option.label }}</span>
-                        <fragment-price :hide-free="true" :data="option.price"/>
+                        <fragment-price :hide-free="true" :data="option.price" additional/>
                     </div>
                 </div>
 
@@ -43,7 +43,7 @@
                 <div v-if="item.product_size" class="size">
                     <span class="def">Размер:</span>
                     <span class="val">{{ item.product_size.label }}</span>
-                    <fragment-price :hide-free="true" :data="item.product_size.price"/>
+                    <fragment-price :hide-free="true" :data="item.product_size.price" additional/>
                 </div>
 
                 <div v-if="item.design" class="design">

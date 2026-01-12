@@ -7,10 +7,10 @@
             {{ formatPrice(discounted, 2) }}
         </span>
         <span class="regular-price">
-            {{ formatPrice(regular) }}
+            <slot name="prefix"/>{{ formatPrice(regular) }}
         </span>
-        <span class="hidden" v-if="is_discounted" itemprop="price">{{discounted}}</span>
-        <span class="hidden" v-if="!is_discounted" itemprop="price">{{regular}}</span>
+        <span class="hidden" v-if="is_discounted" itemprop="price">{{ discounted }}</span>
+        <span class="hidden" v-if="!is_discounted" itemprop="price">{{ regular }}</span>
         <span class="hidden" itemprop="priceCurrency">RUB</span>
     </div>
 </template>

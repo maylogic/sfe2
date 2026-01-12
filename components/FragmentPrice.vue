@@ -1,6 +1,8 @@
 <template>
     <block-price v-if="price.regular > 0 || !hideFree" :regular="price.regular" :is_discounted="price.is_discounted"
-                 :discounted="price.discounted"/>
+                 :discounted="price.discounted">
+        <template #prefix v-if="additional">+</template>
+    </block-price>
 </template>
 
 <script setup lang="ts">
@@ -12,8 +14,10 @@ import BlockPrice from "~/components/BlockPrice.vue";
 const props = withDefaults(defineProps<{
     data: FragmentType<typeof PriceFragmentDoc>
     hideFree?: boolean
+    additional?: boolean
 }>(), {
-    hideFree: false
+    hideFree: false,
+    additional: false
 })
 
 const price = useFragment(PriceFragmentDoc, props.data)
