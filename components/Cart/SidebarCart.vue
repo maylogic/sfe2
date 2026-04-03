@@ -15,12 +15,12 @@
         </div>
         <pay-logos class="mx-auto mt-5"/>
     </div>
-    <div class="sidebar-cart p-5" :key="cart.key" v-else>
+    <div class="sidebar-cart p-5" :key="`sidebar-cart-${cart.id}`" v-else>
         <loading-overlay v-if="loading">
             <loading-page/>
         </loading-overlay>
         <div class="cart-items">
-            <cart-sidebar-cart-item v-for="item in cart.items" :key="cart.key+item.id" :data="item"/>
+            <cart-sidebar-cart-item v-for="item in cart.items" :key="`${cart.id}-item-${item.id}`" :data="item"/>
         </div>
 
         <div class="mt-auto flex flex-col gap-2 pt-5">

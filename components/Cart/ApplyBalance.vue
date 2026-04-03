@@ -24,6 +24,6 @@ const applyBalance = ref(props.data)
 const toggle = async () => {
     cartStore.loading = true
     const {data} = await executeMutation({})
-    cartStore.setData(data?.toggleApplyBalance)
+    await cartStore.setData(data?.toggleApplyBalance)
 }
 </script>

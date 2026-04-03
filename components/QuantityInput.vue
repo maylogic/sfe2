@@ -45,7 +45,7 @@ const decrementQuantity = () => {
         color: #000 !important;
 
         &:disabled {
-            @apply text-black opacity-100;
+            @apply text-black dark:text-white opacity-100;
         }
     }
 }

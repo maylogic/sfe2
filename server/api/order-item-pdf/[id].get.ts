@@ -20,7 +20,9 @@ const ADD_HEIGHT = 8
 
 export default defineEventHandler(async (event) => {
     const orderItemId = getRouterParam(event, 'id')
-    const many = getQuery(event).hasOwnProperty('many')
+    const query = getQuery(event)
+    const many = query.hasOwnProperty('many'),
+        page = Number(query.page ?? 1)
     const client = getClient(event)
 
     if (!orderItemId) {
@@ -43,7 +45,7 @@ export default defineEventHandler(async (event) => {
 
     registerWindow(window, document)
 
-    const canvas = getItemsCanvas(orderItem, many)
+    const canvas = getItemsCanvas(orderItem, many, page)
 
     try {
         if (!canvas) throw new Error
@@ -56,14 +58,14 @@ export default defineEventHandler(async (event) => {
     }
 })
 
-function getItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderItem']>, many: boolean) {
+function getItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderItem']>, many: boolean, page: number) {
     if (!many) {
         return getSingleItemCanvas(orderItem)
     }
-    return getManyItemsCanvas(orderItem)
+    return getManyItemsCanvas(orderItem, page)
 }
 
-function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderItem']>) {
+function getManyItemsCanvas(orderItem: NonNullable<OrderItemToGenQuery['orderItem']>, page: number) {
     const design = useFragment(DesignItemFragmentDoc, orderItem.design);
     const base = useFragment(BaseFragmentFragmentDoc, design?.bases[0]);
     if (!design || !base) {
@@ -196,10 +198,10 @@ function addMarkHoles(svg: Element, width: number, height: number) {
 
     svg.add(holeMark1)
     svg.add(holeMark2)
-    svg.add(holeSmaller1)
-    svg.add(holeSmaller2)
-    svg.add(holeSmallest1)
-    svg.add(holeSmallest2)
+    // svg.add(holeSmaller1)
+    // svg.add(holeSmaller2)
+    // svg.add(holeSmallest1)
+    // svg.add(holeSmallest2)
     svg.add(holeDot1)
     svg.add(holeDot2)
 }

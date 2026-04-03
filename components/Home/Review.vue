@@ -26,12 +26,12 @@ const date = computed(() => new Date(review.value.created_at))
 <style lang="scss">
 .homepage-review {
     @apply flex flex-col items-center text-center h-full;
-    @apply bg-white py-8 px-6;
+    @apply bg-white dark:bg-black py-8 px-6;
     h3 {
         @apply font-black uppercase my-1 tracking-wide;
     }
     span {
-        @apply text-sm text-storm-dust-300;
+        @apply text-sm text-storm-dust-300 dark:text-storm-dust-700;
     }
     p {
         @apply py-2;

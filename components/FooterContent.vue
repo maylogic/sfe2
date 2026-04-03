@@ -1,5 +1,5 @@
 <template>
-    <footer class="bg-white mt-2 py-5">
+    <footer class="bg-white dark:bg-black mt-2 py-5">
         <u-container>
             <div class="flex flex-col gap-2 max-w-[280px] md:max-w-none mx-auto items-center md:items-start text-center md:text-left">
                 <div class="text-sm flex flex-col md:flex-row items-center gap-2 w-full">

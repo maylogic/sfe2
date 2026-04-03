@@ -38,7 +38,7 @@ const apply = async () => {
     const {data, error} = await executeMutation({
         code: code.value,
     })
-    cartStore.setData(data?.applyCoupon)
+    await cartStore.setData(data?.applyCoupon)
     if (error) {
         errorHandler(error)
     }

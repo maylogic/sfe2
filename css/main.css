@@ -178,7 +178,7 @@ html, body {
     font-family: "Fira Sans", sans-serif;
 }
 .narrow-form {
-    @apply flex flex-col gap-2 max-w-[320px] mx-auto bg-white p-2;
+    @apply flex flex-col gap-2 max-w-[320px] mx-auto bg-white dark:bg-black p-2;
 }
 
 a {

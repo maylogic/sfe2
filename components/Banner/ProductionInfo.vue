@@ -50,7 +50,7 @@ onMounted(() => {
 .production-info {
     @apply border-t-[1px] border-storm-dust-100;
     .swiper-slide {
-        @apply text-center py-2 tracking-wide text-black relative text-sm;
+        @apply text-center py-2 tracking-wide text-black dark:text-white relative text-sm;
         &:not(:last-child):after {
             @apply bg-storm-dust-100 absolute right-0 top-1/2 -translate-y-1/2 hidden md:block;
             content: '';

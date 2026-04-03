@@ -14,7 +14,7 @@ defineProps<{
 <style lang="scss">
 .personalize-block {
     @apply w-full select-none;
-    @apply p-[6px] pr-0 bg-white border-l-storm-dust-100 border-l-[6px];
+    @apply p-[6px] pr-0 bg-white dark:bg-black border-l-storm-dust-100 border-l-[6px];
 
     h3 {
         @apply pb-2 pt-0 indent-3 text-lg;

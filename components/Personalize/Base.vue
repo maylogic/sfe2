@@ -14,7 +14,7 @@ import {
 import {
     type InputTextLinesMap,
     type PersonalizeInputData
-} from "~/utils/product";
+} from "~/types/product";
 import {
     applyColorOnBlock,
     applyTextsOnBlock
@@ -28,7 +28,7 @@ const props = defineProps<{
 }>()
 const rootBase = useFragment(BaseFragmentFragmentDoc, props.baseData)
 const previewBase = useFragment(BasePreviewFragmentFragmentDoc, rootBase.base_preview)
-const base = previewBase ?? rootBase
+const base = previewBase
 const block = useTemplateRef<SVGGElement>('block')
 
 watch(props.data, () => {

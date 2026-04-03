@@ -65,7 +65,7 @@ const fetchSuggestions = async (searchQuery: AddressFormState['address1']): Prom
 .suggestions-container {
     @apply relative;
     .suggestions {
-        @apply absolute left-0 bg-storm-dust-50 z-10 overflow-y-auto max-h-72;
+        @apply absolute left-0 bg-storm-dust-50 dark:bg-storm-dust-950 z-10 overflow-y-auto max-h-72;
         @apply rounded-b-md;
         .suggestion-item {
             @apply px-4 py-2 cursor-pointer hover:bg-storm-dust-100 text-sm;

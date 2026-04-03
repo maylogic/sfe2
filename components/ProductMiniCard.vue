@@ -72,9 +72,14 @@ onUnmounted(() => {
 
         .product-card-content {
             @apply relative;
+            &:is(.dark *) {
+                &:after {
+                    box-shadow: 0 .25rem .625rem 0 #fff6;
+                }
+            }
             &:after {
-                content: "";
                 box-shadow: 0 .25rem .625rem 0 #0006;
+                content: "";
                 position: absolute;
                 background: transparent;
                 z-index: 1;

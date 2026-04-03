@@ -20,16 +20,21 @@ export const useAuthStore = defineStore('auth', {
     }),
     actions: {
         setAuthData(user: FragmentType<typeof CustomerDataFragmentDoc>) {
-            this.user = useFragment(
+            const userData = useFragment(
                 CustomerDataFragmentDoc,
                 user
             )
+            this.$patch({
+                'user': userData
+            })
             if (import.meta.client) {
                 localStorage.setItem('user', JSON.stringify(this.user))
             }
         },
         clearAuthData() {
-            this.user = null
+            this.$patch({
+                'user': null
+            })
             if (import.meta.client) {
                 localStorage.removeItem('user')
             }
@@ -37,7 +42,9 @@ export const useAuthStore = defineStore('auth', {
         hydrateFromLocalStorage() {
             const userData = localStorage.getItem('user')
             if (userData) {
-                this.user = JSON.parse(userData)
+                this.$patch({
+                    'user': JSON.parse(userData)
+                })
             }
         },
         setData(user?: FragmentType<typeof CustomerDataFragmentDoc> | null) {
@@ -50,8 +57,7 @@ export const useAuthStore = defineStore('auth', {
         async hydrate() {
             const {data, error} = await useQuery({
                 query: CurrentUserDocument,
-                variables: {},
-                requestPolicy: "network-only"
+                variables: {}
             })
             this.setData(data.value?.currentUser)
         },

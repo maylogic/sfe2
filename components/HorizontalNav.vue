@@ -15,8 +15,8 @@ import type {
 defineProps<{
     items: {
         label: string,
-        to: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric | undefined,
-        onClick: () => void
+        to?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric | undefined,
+        onClick?: () => void
     }[]
 }>()
 </script>
@@ -24,9 +24,9 @@ defineProps<{
 .horizontal-nav {
     @apply sm:flex hidden items-center gap-5;
     .nav-item {
-        @apply text-black uppercase tracking-wider cursor-pointer;
+        @apply text-black dark:text-white uppercase tracking-wider cursor-pointer;
         &:hover {
-            @apply text-viking-500;
+            @apply text-viking-500 dark:text-brilliant-rose-500;
         }
     }
 }

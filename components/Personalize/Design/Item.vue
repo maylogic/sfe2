@@ -34,7 +34,7 @@ const emit = defineEmits(['update:design'])
 .design-item {
     @apply relative;
     .label {
-        @apply hidden absolute w-full h-full top-0 left-0 bg-white/80 text-storm-dust-950 text-sm;
+        @apply hidden absolute w-full h-full top-0 left-0 bg-white/80 dark:bg-black/80 text-storm-dust-950 dark:text-storm-dust-50 text-sm;
     }
 
     &:hover {

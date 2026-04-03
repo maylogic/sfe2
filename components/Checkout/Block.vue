@@ -34,7 +34,7 @@ const emit = defineEmits(['update:valid'])
 <style lang="scss">
 .checkout-block {
     @apply relative;
-    @apply bg-white w-full;
+    @apply bg-white dark:bg-black w-full;
     &.invalid {
         @apply opacity-80;
     }
@@ -56,7 +56,7 @@ const emit = defineEmits(['update:valid'])
     .title {
         @apply text-xl flex items-center gap-5;
         .edit, .valid-action-label {
-            @apply ml-auto uppercase text-xs text-storm-dust-800/50 cursor-pointer;
+            @apply ml-auto uppercase text-xs text-storm-dust-800/50 dark:text-storm-dust-200/50 cursor-pointer;
         }
 
         .valid-action-label {

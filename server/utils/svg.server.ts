@@ -6,16 +6,14 @@ import {
 } from "@svgdotjs/svg.js";
 import { computeTextLayout } from "~/utils/text";
 import type {
+    BaseFragmentFragment,
     Color,
     ProductLineDefinition
 } from "~/gql/graphql";
 import { getSortedTextLines } from "~/utils/product";
 import { getCanvasContextNodeJs } from "~/server/utils/canvas.server";
 import { InputTextLinesMap } from "~/types/product";
-import {
-    BaseOrPreview,
-    TextRenderData
-} from "~/types/svg";
+import { TextRenderData } from "~/types/svg";
 
 export const findTextByIdNodeJs = (id: string, container: Element) => {
     return container.findOne(`text.text-data[data-id="${id}"]`) as Text | null
@@ -32,7 +30,7 @@ export const findOrCreateTextsContainerNodeJs = (svg: Element) => {
 
 export const applyTextsOnBlockNodeJs = (
     svg: Element,
-    base: BaseOrPreview,
+    base: BaseFragmentFragment,
     font: string | null | undefined,
     color: Color | null | undefined,
     lineDefinitions: ProductLineDefinition[],

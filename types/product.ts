@@ -21,3 +21,4 @@ export type PersonalizeInputData = {
 export type PersonalizeValidity = {
     [K in keyof PersonalizeInputData]: boolean | null
 }
+

@@ -46,11 +46,17 @@ export const useCartStore = defineStore('cart', {
     }),
     actions: {
         async setData(data: undefined | FragmentType<typeof SidebarCartFragmentDoc>) {
+            console.log('setdata')
             return new Promise<void>((resolve, reject) => {
                 this.error = false
                 if (data) {
-                    this.cart = useFragment(SidebarCartFragmentDoc, data)
-                    this.count = this.cart.items?.length || 0
+                    console.log(this.cart?.key)
+                    const cartData = useFragment(SidebarCartFragmentDoc, data)
+                    this.$patch({
+                        cart: cartData,
+                        count: cartData.items?.length || 0
+                    })
+                    console.log(this.cart?.key)
                     resolve()
                 } else {
                     reject()
@@ -60,14 +66,14 @@ export const useCartStore = defineStore('cart', {
             })
         },
         async hydrate() {
+            console.log('hydrate')
             this.error = false
             this.loading = true
             const {data, error} = await useQuery({
                 query: GetCartDocument,
-                variables: {},
-                requestPolicy: "network-only"
+                variables: {}
             })
-
+            console.log(data)
             const {$gtm} = useNuxtApp()
             this.setData(data.value?.getCart).then(() => {
                 if ($gtm) {
@@ -88,12 +94,12 @@ export const useCartStore = defineStore('cart', {
             }
         },
         async getItemsCount() {
+            console.log('get items count')
             this.error = false
             this.loading = true
             const {data} = await useQuery({
                 query: GetCartItemsCountDocument,
-                variables: {},
-                requestPolicy: "network-only"
+                variables: {}
             })
             this.count = data.value?.getCartItemsCount || 0
         }

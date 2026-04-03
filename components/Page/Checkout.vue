@@ -46,9 +46,10 @@
                     <u-checkbox class="checkbox-thin"
                                 v-model="agree">
                         <template #label>
-                            Подтверждаю, что введенные мною данные на 100% корректны и соглашаюсь с <a href="#"
+                            Подтверждаю, что введенные мною данные на 100% корректны и подтверждаю, что <a href="#"
                                                                                                        class="link"
-                                                                                                       @click.prevent="modalStore.returnPolicy=true">политикой возврата персонализированных товаров</a>
+                                                                                                       @click.prevent="modalStore.returnPolicy=true">политика
+                            возврата персонализированных товаров</a> прочитана
                         </template>
                     </u-checkbox>
                 </div>
@@ -66,7 +67,7 @@
             </div>
         </div>
         <div class="order-summary-container">
-            <order-summary :key="cart.key" :data="cart.totals">
+            <order-summary :key="`order-summary-${cart.id}`" :data="cart.totals">
                 <u-button variant="outline"
                           @click.prevent="showItemsOnMobile=!showItemsOnMobile"
                           :trailing-icon="`i-lucide-chevron-${showItemsOnMobile ? 'up' : 'down'}`">
@@ -84,9 +85,10 @@
                 </div>
                 <div class="px-2">
                     <div class="cart-items">
-                        <cart-sidebar-cart-item v-for="item in cart.items" :key="cart.key+item.id" :data="item"/>
+                        <cart-sidebar-cart-item v-for="item in cart.items" :key="`${cart.id}-item-${item.id}`"
+                                                :data="item"/>
                     </div>
-                    <totals :key="cart.key" :data="cart.totals"/>
+                    <totals :key="`${cart.id}-totals`" :data="cart.totals"/>
                 </div>
             </div>
         </div>
@@ -215,7 +217,7 @@ const addComment = ref(false),
     .order-summary-container {
         .cart-items-container {
             @apply hidden md:block;
-            @apply bg-white;
+            @apply bg-white dark:bg-black;
             &.mob-show {
                 @apply block;
             }
@@ -237,7 +239,7 @@ const addComment = ref(false),
     }
 
     .order-summary {
-        @apply md:hidden px-2 bg-white py-2;
+        @apply md:hidden px-2 bg-white dark:bg-black py-2;
     }
 
     .checkbox-thin {

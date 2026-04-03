@@ -41,7 +41,7 @@ const emit = defineEmits(['toggle-editor'])
 </script>
 <style lang="scss">
 .product-gallery {
-    @apply flex flex-col gap-2 top-0 md:top-[20px] self-start bg-white z-10 pb-2;
+    @apply flex flex-col gap-2 top-0 md:top-[20px] self-start bg-white dark:bg-black z-10 pb-2;
     @apply w-full sm:w-[320px] lg:w-[480px] xl:w-[550px];
     &.editor {
         @apply sticky;
@@ -58,7 +58,7 @@ const emit = defineEmits(['toggle-editor'])
         }
 
         .editor-item {
-            @apply flex flex-col gap-2 text-center items-center justify-center bg-storm-dust-50;
+            @apply flex flex-col gap-2 text-center items-center justify-center bg-storm-dust-50 dark:bg-storm-dust-950;
         }
     }
 }

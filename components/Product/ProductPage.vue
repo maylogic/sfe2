@@ -66,7 +66,7 @@
                         :disabled="fetching||addingToCart"
                         size="sm"
                         @click="addToCartInternal"
-                        class="uppercase font-fira-sans w-full flex items-center justify-center tracking-wide font-bold text-xl h-14"
+                        class="uppercase font-fira-sans dark:text-white w-full flex items-center justify-center tracking-wide font-bold text-xl h-14"
                     />
                 </u-form-group>
                 <font-preload-block :font="font" v-for="font in usedFonts.values()"/>
@@ -365,7 +365,7 @@ if (props.initData) {
 .product-page {
     @apply grid grid-cols-1 max-w-full sm:grid-cols-[max-content__1fr] gap-x-10 gap-y-2;
     .create-fields {
-        @apply bg-storm-dust-50 p-5 my-5 flex flex-col gap-3;
+        @apply bg-storm-dust-50 dark:bg-storm-dust-950 p-5 my-5 flex flex-col gap-3;
         h2 {
             @apply text-2xl text-center;
         }

@@ -48,7 +48,7 @@ const menuItems = [
     },
     {
         label: 'Возврат или отмена',
-        onClick: function() {
+        onClick: () => {
             modalStore.returnPolicy = true
         }
     },
@@ -63,6 +63,6 @@ const {count} = storeToRefs(cartStore)
 </script>
 <style lang="scss">
 .header-default {
-    @apply bg-white;
+    @apply bg-white dark:bg-black;
 }
 </style>

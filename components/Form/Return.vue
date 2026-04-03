@@ -14,7 +14,7 @@ const order = ref<OrderDataFragment | undefined | null>()
 </script>
 <style lang="scss">
 .order-found {
-    @apply max-w-[320px] mx-auto mt-2 bg-white p-2 flex flex-col gap-2;
+    @apply max-w-[320px] mx-auto mt-2 bg-white dark:bg-black p-2 flex flex-col gap-2;
     .title {
         @apply bg-picton-blue-500 text-white w-full p-2;
     }

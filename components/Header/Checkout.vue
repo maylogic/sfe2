@@ -1,6 +1,6 @@
 <template>
     <top-banner/>
-    <div class="py-5 px-0 w-full bg-white">
+    <div class="py-5 px-0 w-full bg-white dark:bg-black">
         <div class="flex items-center max-w-[960px] px-5 mx-auto">
             <horizontal-nav v-if="!!menuItems.length" :items="menuItems"/>
             <u-button

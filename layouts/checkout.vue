@@ -10,7 +10,7 @@
 </template>
 <style lang="scss">
 .checkout-page-layout {
-    @apply bg-storm-dust-50;
+    @apply bg-storm-dust-50 dark:bg-storm-dust-950;
 }
 
 .main-content-checkout {
