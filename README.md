@@ -174,3 +174,7 @@ without a browser) — pure functions over data, and the cheapest place to start
   exists only to read it.
 - `.npmrc` sets `shamefully-hoist=true` and `strict-peer-dependencies=false`; the lockfile is the
   single source of truth for versions.
+- `npm audit` on the committed lockfile reports 5 critical, 71 high, 14 moderate advisories. Most sit in
+  the build-time toolchain (GraphQL Codegen, `tar`, `simple-git`, `shell-quote`); the ones that touch
+  production code are `swiper` (prototype pollution in the carousel) and `@nuxt/devtools` < 3.3.1
+  (unauthenticated RPC → command execution on the developer's machine).
