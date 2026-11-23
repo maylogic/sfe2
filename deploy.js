@@ -4,17 +4,27 @@ import mime from 'mime-types'; // Для определения MIME-типов
 import AWS from 'aws-sdk';
 
 // Настройка AWS SDK
+// Секреты не хранятся в репозитории: ключи берутся из окружения.
+const requireEnv = (name) => {
+    const value = process.env[name];
+    if (!value) {
+        console.error(`Не задана переменная окружения ${name}. Пример: ${name}=... node deploy.js`);
+        process.exit(1);
+    }
+    return value;
+};
+
 AWS.config.update({
-    accessKeyId: 'YCAJEB3gcSanj6R1wlxb9ESXB',
-    secretAccessKey: 'YCM5VoB-rNpxv6Y6bXcaJ68Nkq4aS4NmrGJXTfuj',
+    accessKeyId: requireEnv('YANDEX_S3_ACCESS_KEY'),
+    secretAccessKey: requireEnv('YANDEX_S3_SECRET_KEY'),
     region: 'ru-central1',
-    endpoint: 'https://storage.yandexcloud.net'
+    endpoint: process.env.YANDEX_S3_ENDPOINT || 'https://storage.yandexcloud.net'
 });
 
 const s3 = new AWS.S3();
 
 // Параметры
-const bucketName = 'www.safepets.ru'; // Замените на имя вашего бакета
+const bucketName = requireEnv('YANDEX_S3_BUCKET');
 const localDirectory = './.output/public'; // Локальная директория с файлами
 
 // Рекурсивная загрузка файлов
